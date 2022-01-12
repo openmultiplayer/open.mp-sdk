@@ -103,6 +103,14 @@ struct IReadOnlyPool : virtual IExtensible {
     virtual T& get(int index) = 0;
 };
 
+template <typename T>
+struct PoolEventHandler {
+    /// Called right after a new entry was constructed
+    virtual void onPoolEntryCreated(T& entry) = 0;
+    /// Called just before an entry is destructed
+    virtual void onPoolEntryDestroyed(T& entry) = 0;
+};
+
 /// A statically sized pool interface
 template <typename T, size_t Count>
 struct IPool : IReadOnlyPool<T, Count> {
@@ -120,6 +128,9 @@ struct IPool : IReadOnlyPool<T, Count> {
 
     /// Unlock an entry at index and release it if needed
     virtual bool unlock(int index) = 0;
+
+    /// Get the event dispatcher of the pool
+    virtual IEventDispatcher<PoolEventHandler<T>>& getPoolEventDispatcher() = 0;
 
     /// Return the begin iterator
     inline Iterator begin()
@@ -303,6 +314,7 @@ struct StaticPoolStorageBase : public NoCopy {
             if constexpr (std::is_base_of<PoolIDProvider, Type>::value) {
                 getPtr(freeIdx)->poolID = freeIdx;
             }
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *getPtr(freeIdx));
         }
         return freeIdx;
     }
@@ -317,6 +329,7 @@ struct StaticPoolStorageBase : public NoCopy {
             if constexpr (std::is_base_of<PoolIDProvider, Type>::value) {
                 getPtr(hint)->poolID = hint;
             }
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *getPtr(hint));
             return hint;
         } else {
             return claim(std::forward<Args>(args)...);
@@ -350,6 +363,7 @@ struct StaticPoolStorageBase : public NoCopy {
     {
         // Placement destructor.
         for (Interface* const ptr : allocated_.entries()) {
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *ptr);
             static_cast<Type*>(ptr)->~Type();
         }
     }
@@ -368,6 +382,11 @@ struct StaticPoolStorageBase : public NoCopy {
         return allocated_.entries();
     }
 
+    DefaultEventDispatcher<PoolEventHandler<Interface>>& getEventDispatcher()
+    {
+        return eventDispatcher_;
+    }
+
 protected:
     inline Type* getPtr(int index)
     {
@@ -376,6 +395,8 @@ protected:
 
     char pool_[Count * sizeof(Type)];
     UniqueIDArray<Interface, Count> allocated_;
+    /// Implementation of the pool event dispatcher
+    DefaultEventDispatcher<PoolEventHandler<Interface>> eventDispatcher_;
 };
 
 template <typename Type, typename Iface, size_t Count>
@@ -409,6 +430,7 @@ struct DynamicPoolStorageBase : public NoCopy {
     ~DynamicPoolStorageBase()
     {
         for (Interface* const ptr : allocated_.entries()) {
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *ptr);
             delete static_cast<Type*>(ptr);
         }
     }
@@ -433,6 +455,7 @@ struct DynamicPoolStorageBase : public NoCopy {
             if constexpr (std::is_base_of<PoolIDProvider, Type>::value) {
                 pool_[freeIdx]->poolID = freeIdx;
             }
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *pool_[freeIdx]);
         }
         return freeIdx;
     }
@@ -447,6 +470,7 @@ struct DynamicPoolStorageBase : public NoCopy {
             if constexpr (std::is_base_of<PoolIDProvider, Type>::value) {
                 pool_[hint]->poolID = hint;
             }
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *pool_[hint]);
             return hint;
         } else {
             return claim(std::forward<Args>(args)...);
@@ -475,6 +499,7 @@ struct DynamicPoolStorageBase : public NoCopy {
     void remove(int index)
     {
         assert(index < Count);
+        eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *pool_[index]);
         allocated_.remove(*pool_[index]);
         delete pool_[index];
         pool_[index] = nullptr;
@@ -487,9 +512,16 @@ struct DynamicPoolStorageBase : public NoCopy {
         return allocated_.entries();
     }
 
+    DefaultEventDispatcher<PoolEventHandler<Interface>>& getEventDispatcher()
+    {
+        return eventDispatcher_;
+    }
+
 protected:
     StaticArray<Type*, Count> pool_;
     UniqueEntryArray<Interface> allocated_;
+    /// Implementation of the pool event dispatcher
+    DefaultEventDispatcher<PoolEventHandler<Interface>> eventDispatcher_;
 };
 
 template <class PoolBase>
