@@ -16,6 +16,23 @@ if(MSVC)
 	set(CMAKE_CXX_STANDARD_REQUIRED ON)
 endif()
 
+# Conan third-party libraries
+
+if (NOT CROSS_BUILD)
+	if (MSVC_CXX_ARCHITECTURE_ID)
+		string(TOLOWER ${MSVC_CXX_ARCHITECTURE_ID} LOWERCASE_CMAKE_SYSTEM_PROCESSOR)
+		if (LOWERCASE_CMAKE_SYSTEM_PROCESSOR MATCHES "(x64|x86_64|amd64)")
+			set(CROSS_BUILD_ARCH x86_64)
+		elseif (LOWERCASE_CMAKE_SYSTEM_PROCESSOR MATCHES "(i[3-6]86|x86)")
+			set(CROSS_BUILD_ARCH x86)
+		else ()
+			message(FATAL_ERROR "Unknown CPU '${LOWERCASE_CMAKE_SYSTEM_PROCESSOR}'")
+		endif ()
+	else ()
+		set(CROSS_BUILD_ARCH x86)
+	endif ()
+endif()
+
 include(lib/cmake-conan/conan.cmake)
 
 # Automatically download and set up paths to a library on Conan
