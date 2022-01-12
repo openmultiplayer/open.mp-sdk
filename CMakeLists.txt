@@ -59,7 +59,6 @@ add_library(SDK INTERFACE)
 
 if(MSVC)
 	target_compile_options(SDK INTERFACE
-		"/clang:-v"
 		"/fp:strict"
 		"/arch:SSE2"
 		"-Werror=format"
@@ -73,19 +72,10 @@ target_link_libraries(SDK INTERFACE
 	CONAN_PKG::abseil
 )
 
-# https://stackoverflow.com/questions/42946335/deprecated-header-codecvt-replacement
-# `codecvt` is deprecated, but is defined as remaining until a more secure replacement is
-# standardised, thus just defining `_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING` is fine.
 target_compile_definitions(SDK INTERFACE
 	GLM_FORCE_SSE2
 	GLM_FORCE_QUAT_DATA_WXYZ
 	NOMINMAX
-	_CRT_SECURE_NO_WARNINGS
-	_WINSOCK_DEPRECATED_NO_WARNINGS
-	_SILENCE_CXX17_CODECVT_HEADER_DEPRECATION_WARNING
-	WIN32_LEAN_AND_MEAN
-	_CRT_DECLARE_NONSTDC_NAMES
-	_CRT_NONSTDC_NO_WARNINGS
 )
 
 target_include_directories(SDK INTERFACE include/)
