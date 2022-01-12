@@ -51,11 +51,6 @@ elseif(UNIX)
 	target_compile_options(SDK INTERFACE -msse2 -mfpmath=sse)
 endif()
 
-if(MSVC)
-	target_link_libraries(SDK INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/lib/omp-server.lib)
-else()
-endif()
-
 target_link_libraries(SDK INTERFACE
 	CONAN_PKG::glm
 	CONAN_PKG::abseil
