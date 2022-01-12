@@ -356,6 +356,7 @@ struct StaticPoolStorageBase : public NoCopy {
     {
         assert(index < Count);
         allocated_.remove(index, *getPtr(index));
+        eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *getPtr(index));
         getPtr(index)->~Type();
     }
 
@@ -499,8 +500,8 @@ struct DynamicPoolStorageBase : public NoCopy {
     void remove(int index)
     {
         assert(index < Count);
-        eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *pool_[index]);
         allocated_.remove(*pool_[index]);
+        eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *pool_[index]);
         delete pool_[index];
         pool_[index] = nullptr;
     }
