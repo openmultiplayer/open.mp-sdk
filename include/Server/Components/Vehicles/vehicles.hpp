@@ -224,9 +224,6 @@ struct IVehicle : public IEntity {
     /// Puts the player inside this vehicle.
     virtual void putPlayer(IPlayer& player, int SeatID) = 0;
 
-    /// Removes the player from the vehicle.
-    virtual void removePlayer(IPlayer& player) = 0;
-
     /// Set the vehicle's Z angle.
     virtual void setZAngle(float angle) = 0;
 

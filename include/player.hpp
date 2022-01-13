@@ -717,6 +717,9 @@ struct IPlayer : public IEntity, public INetworkPeer {
     /// Get whether the player has camera targeting functions enabled
     virtual bool hasCameraTargeting() const = 0;
 
+    /// Remove the player from their vehicle
+    virtual void removeFromVehicle() = 0;
+
     /// Get the player the player is looking at or nullptr if none
     virtual IPlayer* getCameraTargetPlayer() = 0;
 
