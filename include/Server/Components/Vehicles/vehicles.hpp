@@ -2,8 +2,8 @@
 
 #include <chrono>
 #include <list>
-#include <netcode.hpp>
 #include <sdk.hpp>
+#include <vehicle_params.hpp>
 
 struct IPlayer;
 
@@ -77,6 +77,78 @@ enum VehicleModelInfoType {
     VehicleModelInfo_RearBumperZ
 };
 
+struct VehicleDriverSyncPacket {
+    int PlayerID;
+    uint16_t VehicleID;
+    uint16_t LeftRight;
+    uint16_t UpDown;
+    uint16_t Keys;
+    GTAQuat Rotation;
+    Vector3 Position;
+    Vector3 Velocity;
+    float Health;
+    Vector2 PlayerHealthArmour;
+    uint8_t Siren;
+    uint8_t LandingGear;
+    uint16_t TrailerID;
+    bool HasTrailer;
+
+    union {
+        uint8_t AdditionalKeyWeapon;
+        struct {
+            uint8_t WeaponID : 6;
+            uint8_t AdditionalKey : 2;
+        };
+    };
+
+    union {
+        uint32_t HydraThrustAngle;
+        float TrainSpeed;
+    };
+};
+
+struct VehiclePassengerSyncPacket {
+    int PlayerID;
+    int VehicleID;
+
+    union {
+        uint16_t DriveBySeatAdditionalKeyWeapon;
+        struct {
+            uint8_t SeatID : 2;
+            uint8_t DriveBy : 6;
+            uint8_t WeaponID : 6;
+            uint8_t AdditionalKey : 2;
+        };
+    };
+
+    Vector2 HealthArmour;
+    uint16_t LeftRight;
+    uint16_t UpDown;
+    uint16_t Keys;
+    Vector3 Position;
+};
+
+struct VehicleUnoccupiedSyncPacket {
+    int VehicleID;
+    int PlayerID;
+    uint8_t SeatID;
+    Vector3 Roll;
+    Vector3 Rotation;
+    Vector3 Position;
+    Vector3 Velocity;
+    Vector3 AngularVelocity;
+    float Health;
+};
+
+struct VehicleTrailerSyncPacket {
+    int VehicleID;
+    int PlayerID;
+    Vector3 Position;
+    Vector4 Quat;
+    Vector3 Velocity;
+    Vector3 TurnVelocity;
+};
+
 /// A vehicle interface
 struct IVehicle : public IEntity {
 
@@ -105,15 +177,16 @@ struct IVehicle : public IEntity {
     virtual float getHealth() = 0;
 
     /// Update the vehicle from a sync packet
-    virtual bool updateFromSync(const NetCode::Packet::PlayerVehicleSync& vehicleSync, IPlayer& player) = 0;
+    virtual bool updateFromDriverSync(const VehicleDriverSyncPacket& vehicleSync, IPlayer& player) = 0;
 
-    virtual bool updateFromPassengerSync(const NetCode::Packet::PlayerPassengerSync& passengerSync, IPlayer& player) = 0;
+    /// Update the vehicle from a passenger sync packet
+    virtual bool updateFromPassengerSync(const VehiclePassengerSyncPacket& passengerSync, IPlayer& player) = 0;
 
     /// Update the vehicle from an unoccupied sync packet
-    virtual bool updateFromUnoccupied(const NetCode::Packet::PlayerUnoccupiedSync& unoccupiedSync, IPlayer& player) = 0;
+    virtual bool updateFromUnoccupied(const VehicleUnoccupiedSyncPacket& unoccupiedSync, IPlayer& player) = 0;
 
     /// Update the vehicle from a trailer sync packet
-    virtual bool updateFromTrailerSync(const NetCode::Packet::PlayerTrailerSync& unoccupiedSync, IPlayer& player) = 0;
+    virtual bool updateFromTrailerSync(const VehicleTrailerSyncPacket& unoccupiedSync, IPlayer& player) = 0;
 
     /// Returns the current driver of the vehicle
     virtual IPlayer* getDriver() = 0;

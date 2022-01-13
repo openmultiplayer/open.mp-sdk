@@ -1,7 +1,6 @@
 #pragma once
 
 #include <component.hpp>
-#include <netcode.hpp>
 #include <player.hpp>
 #include <types.hpp>
 #include <values.hpp>
