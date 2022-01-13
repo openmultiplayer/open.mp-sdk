@@ -121,8 +121,12 @@ struct IComponent : virtual IExtensible, public IUUIDProvider {
     /// Should be used for interacting with other components, firing events, or any more complex logic
     virtual void onReady() { }
 
+    /// Called before the components are about to be freed
+    /// Should be used for disconnecting
+    virtual void onFree(IComponent* component) { }
+
     /// Frees the component data
-    virtual void free() { }
+    virtual void free() = 0;
 };
 
 struct IComponentList : public IExtensible {
