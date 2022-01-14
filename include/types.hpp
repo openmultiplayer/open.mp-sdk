@@ -409,6 +409,7 @@ private:
         lenDynamic = (len << 1) | isDynamic;
         if (isDynamic) {
             dynamicStorage = reinterpret_cast<char*>(omp_malloc(sizeof(char) * (len + 1)));
+            dynamicStorage[0] = 0;
         }
     }
 
