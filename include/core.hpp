@@ -59,7 +59,7 @@ struct IConfig : public IExtensible {
     virtual void removeBan(size_t index) = 0;
 
     /// Write bans to file
-    virtual void writeBans() const = 0;
+    virtual void writeBans() = 0;
 
     /// Get an option name from an alias if available
     /// @return A pair of bool which is true if the alias is deprecated and a string with the real config name
