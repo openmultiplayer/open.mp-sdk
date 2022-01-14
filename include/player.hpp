@@ -10,7 +10,6 @@
 #include <string>
 #include <type_traits>
 #include <utility>
-
 struct IVehicle;
 struct IObject;
 struct IPlayerObject;
@@ -591,7 +590,7 @@ struct IPlayer : public IEntity, public INetworkPeer {
     /// Apply an animation to the player
     /// @param animation The animation to apply
     /// @param syncType How to sync the animation
-    virtual void applyAnimation(const IAnimation& animation, PlayerAnimationSyncType syncType) = 0;
+    virtual void applyAnimation(const AnimationData& animation, PlayerAnimationSyncType syncType) = 0;
 
     /// Clear the player's animation
     /// @param syncType How to sync the animation

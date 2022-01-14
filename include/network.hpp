@@ -5,6 +5,7 @@
 #include "exports.hpp"
 #include "gtaquat.hpp"
 #include "types.hpp"
+#include "values.hpp"
 #include <array>
 #include <cassert>
 #include <string>
@@ -416,6 +417,8 @@ using is_network_packet = decltype(is_network_packet_impl(std::declval<T&>()));
 
 /// A peer address with support for IPv4 and IPv6
 struct PeerAddress {
+    using AddressString = StaticString<46>;
+
     bool ipv6; ///< True if IPv6 is used, false otherwise
     union {
         uint32_t v4; ///< The IPv4 address
@@ -440,31 +443,36 @@ struct PeerAddress {
     static OMP_API bool FromString(PeerAddress& out, StringView string);
 
     /// Get a string from an address
-    static OMP_API bool ToString(const PeerAddress& in, char* buf, size_t len);
+    static OMP_API bool ToString(const PeerAddress& in, AddressString& address);
 };
 
-struct IBanEntry {
-    PeerAddress address; ///< The banned address
+struct BanEntry {
+public:
+    PeerAddress::AddressString address; ///< The banned address
     WorldTimePoint time; ///< The time when the ban was issued
+    StaticString<MAX_PLAYER_NAME + 1> name; ///< The banned player's name
+    StaticString<32> reason; ///< The ban reason
 
-    /// Get the banned player's name
-    virtual StringView getPlayerName() const = 0;
-
-    /// Get the ban reason
-    virtual StringView getReason() const = 0;
-
-    IBanEntry(PeerAddress address, WorldTimePoint time = WorldTime::now())
+    BanEntry(StringView address, WorldTimePoint time = WorldTime::now())
         : address(address)
         , time(time)
     {
     }
 
-    bool operator<(const IBanEntry& other) const
+    BanEntry(StringView address, StringView name, StringView reason, WorldTimePoint time = WorldTime::now())
+        : address(address)
+        , time(time)
+        , name(name)
+        , reason(reason)
     {
-        return address < other.address;
     }
 
-    bool operator==(const IBanEntry& other) const
+    bool operator<(const BanEntry& other) const
+    {
+        return address.cmp(other.address) < 0;
+    }
+
+    bool operator==(const BanEntry& other) const
     {
         return address == other.address;
     }
@@ -518,10 +526,10 @@ struct INetwork : virtual IExtensible {
     virtual void disconnect(const INetworkPeer& peer) = 0;
 
     /// Ban a peer from the network
-    virtual void ban(const IBanEntry& entry, Milliseconds expire = Milliseconds(0)) = 0;
+    virtual void ban(const BanEntry& entry, Milliseconds expire = Milliseconds(0)) = 0;
 
     /// Unban a peer from the network
-    virtual void unban(const IBanEntry& entry) = 0;
+    virtual void unban(const BanEntry& entry) = 0;
 
     /// Update server parameters
     virtual void update() = 0;
@@ -617,64 +625,5 @@ struct INetworkPeer : virtual IExtensible {
         INetworkBitStream& bs = network.writeBitStream();
         packet.write(bs);
         return sendPacket(bs);
-    }
-};
-
-/* Implementation, NOT to be passed around */
-
-struct Network : public INetwork, public NoCopy {
-    DefaultEventDispatcher<NetworkEventHandler> networkEventDispatcher;
-    DefaultEventDispatcher<NetworkInOutEventHandler> inOutEventDispatcher;
-    DefaultIndexedEventDispatcher<SingleNetworkInOutEventHandler> rpcInOutEventDispatcher;
-    DefaultIndexedEventDispatcher<SingleNetworkInOutEventHandler> packetInOutEventDispatcher;
-
-    Network(size_t packetCount, size_t rpcCount)
-        : rpcInOutEventDispatcher(rpcCount)
-        , packetInOutEventDispatcher(packetCount)
-    {
-    }
-
-    IEventDispatcher<NetworkEventHandler>& getEventDispatcher() override
-    {
-        return networkEventDispatcher;
-    }
-
-    IEventDispatcher<NetworkInOutEventHandler>& getInOutEventDispatcher() override
-    {
-        return inOutEventDispatcher;
-    }
-
-    IIndexedEventDispatcher<SingleNetworkInOutEventHandler>& getPerRPCInOutEventDispatcher() override
-    {
-        return rpcInOutEventDispatcher;
-    }
-
-    IIndexedEventDispatcher<SingleNetworkInOutEventHandler>& getPerPacketInOutEventDispatcher() override
-    {
-        return packetInOutEventDispatcher;
-    }
-};
-
-struct BanEntry final : public IBanEntry {
-    String playerName;
-    String reason;
-
-    BanEntry(PeerAddress address, StringView playerName = "", StringView reason = "", WorldTimePoint time = WorldTime::now())
-        : IBanEntry(address, time)
-        , playerName(playerName)
-        , reason(reason)
-    {
-    }
-
-    /// Get the banned player's name
-    virtual StringView getPlayerName() const override
-    {
-        return playerName;
-    }
-
-    /// Get the ban reason
-    virtual StringView getReason() const override
-    {
-        return reason;
     }
 };

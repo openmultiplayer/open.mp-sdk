@@ -1,6 +1,6 @@
 #pragma once
-#include "Server/Components/Vehicles/vehicles.hpp"
-#include "types.hpp"
+#include "vehicles.hpp"
+#include <types.hpp>
 
 const StaticArray<VehicleComponentSlot, MAX_VEHICLE_COMPONENTS> allComponentSlots = {
     VehicleComponent_Spoiler,

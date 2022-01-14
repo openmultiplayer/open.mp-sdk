@@ -50,10 +50,10 @@ struct IConfig : public IExtensible {
     virtual size_t getBansCount() const = 0;
 
     /// Get a list of banned addresses
-    virtual const IBanEntry& getBan(size_t index) const = 0;
+    virtual const BanEntry& getBan(size_t index) const = 0;
 
     /// Add a ban
-    virtual void addBan(const IBanEntry& entry) = 0;
+    virtual void addBan(const BanEntry& entry) = 0;
 
     /// Remove a ban
     virtual void removeBan(size_t index) = 0;

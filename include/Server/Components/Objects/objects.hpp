@@ -76,18 +76,9 @@ struct ObjectMaterialData {
     };
 
     Colour backgroundColour; // Text
-};
 
-/// Object material data
-struct IObjectMaterial {
-    /// Get various data of the material
-    virtual const ObjectMaterialData& getData() const = 0;
-
-    /// Get the material's TXD name (for type Default) or text (for type Text)
-    virtual StringView getTXDOrText() const = 0;
-
-    /// Get the material's texture name (for type Default) or font name (for type Text)
-    virtual StringView getTextureOrFont() const = 0;
+    StaticString<64> textOrTXD; // Text or TXD
+    StaticString<64> fontOrTexture; // Font or texture
 };
 
 /// Object attachment data
@@ -161,7 +152,7 @@ struct IBaseObject : public IEntity {
     virtual const ObjectAttachmentData& getAttachmentData() const = 0;
 
     /// Get the object's material data
-    virtual bool getMaterialData(int index, const IObjectMaterial*& out) const = 0;
+    virtual bool getMaterialData(int index, const ObjectMaterialData*& out) const = 0;
 
     /// Set the object's material to a texture
     virtual void setMaterial(int index, int model, StringView txd, StringView texture, Colour colour) = 0;
@@ -255,28 +246,4 @@ struct IPlayerObjectData : public IPlayerData, public IPool<IPlayerObject, OBJEC
 
     /// Edit an attached object in an attachment slot for the player
     virtual void editAttachedObject(int index) = 0;
-};
-
-/* Implementation, NOT to be passed around */
-
-/// Default object material data implementation
-struct ObjectMaterial : public IObjectMaterial {
-    String txdOrText;
-    String textureOrFont;
-    ObjectMaterialData data;
-
-    const ObjectMaterialData& getData() const override
-    {
-        return data;
-    }
-
-    StringView getTXDOrText() const override
-    {
-        return txdOrText;
-    }
-
-    StringView getTextureOrFont() const override
-    {
-        return textureOrFont;
-    }
 };

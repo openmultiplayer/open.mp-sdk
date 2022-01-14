@@ -243,6 +243,182 @@ struct SemanticVersion {
     }
 };
 
+/// An ABI-stable, C-compatible string that allows for specifying a static allocation of a size before falling back to dynamic allocation
+template <size_t Size>
+struct StaticString {
+    /// The actualy usable size - this accounts for the trailing 0
+    constexpr static size_t UsableStaticSize = Size - 1;
+
+    /// Empty string constructor
+    StaticString()
+        : lenDynamic(0)
+    {
+        static_assert(Size > 0);
+        staticStorage[0] = 0;
+    }
+
+    /// StringView copy constructor
+    StaticString(StringView string)
+    {
+        initCopy(string.data(), string.length());
+    }
+
+    /// StringView copy assignment
+    StaticString<Size>& operator=(StringView string)
+    {
+        clear();
+        initCopy(string.data(), string.length());
+
+        return *this;
+    }
+
+    /// Copy constructor
+    StaticString(const StaticString<Size>& other)
+    {
+        initCopy(other.data(), other.length());
+    }
+
+    /// Copy assignment
+    StaticString<Size>& operator=(const StaticString<Size>& other)
+    {
+        clear();
+        initCopy(other.data(), other.length());
+
+        return *this;
+    }
+
+    /// Move constructor
+    StaticString(StaticString<Size>&& other)
+    {
+        initMove(other.data(), other.length());
+        other.lenDynamic = 0;
+    }
+
+    /// Move assignment
+    StaticString<Size>& operator=(StaticString<Size>&& other)
+    {
+        clear();
+        initMove(other.data(), other.length());
+        other.lenDynamic = 0;
+
+        return *this;
+    }
+
+    /// Destructor
+    ~StaticString()
+    {
+        clear();
+    }
+
+    /// Reserve a given length for outside filling
+    void reserve(size_t len)
+    {
+        clear();
+        initReserve(len);
+    }
+
+    /// Get the data
+    constexpr char* data()
+    {
+        return dynamic() ? dynamicStorage : staticStorage;
+    }
+
+    /// Get the data
+    constexpr const char* data() const
+    {
+        return dynamic() ? dynamicStorage : staticStorage;
+    }
+
+    /// Get whether the string is dynamically allocated
+    constexpr bool dynamic() const
+    {
+        return lenDynamic & 1;
+    }
+
+    /// Get the string's length
+    constexpr size_t length() const
+    {
+        return lenDynamic >> 1;
+    }
+
+    /// Clear the string and free any dynamic memory
+    void clear()
+    {
+        if (dynamic()) {
+            omp_free(dynamicStorage);
+        }
+        staticStorage[0] = 0;
+        lenDynamic = 0;
+    }
+
+    /// Compare the string to another string
+    int cmp(const StaticString<Size>& other) const
+    {
+        return strcmp(data(), other.data());
+    }
+
+    /// Return whether the string is equal to another string
+    bool operator==(const StaticString<Size>& other) const
+    {
+        if (length() != other.length()) {
+            return false;
+        }
+        return !strncmp(data(), other.data(), length());
+    }
+
+    /// Cast to StringView
+    operator StringView() const
+    {
+        return StringView(data(), length());
+    }
+
+private:
+    /// Copy data
+    void initCopy(const char* data, size_t len)
+    {
+        const bool isDynamic = len > UsableStaticSize;
+        lenDynamic = (len << 1) | isDynamic;
+        char* ptr;
+        if (isDynamic) {
+            dynamicStorage = reinterpret_cast<char*>(omp_malloc(sizeof(char) * (len + 1)));
+            ptr = dynamicStorage;
+        } else {
+            ptr = staticStorage;
+        }
+        memcpy(ptr, data, len);
+        ptr[len] = 0;
+    }
+
+    /// Move data
+    void initMove(char* data, size_t len)
+    {
+        const bool isDynamic = len > UsableStaticSize;
+        lenDynamic = (len << 1) | isDynamic;
+        if (isDynamic) {
+            dynamicStorage = data;
+        } else {
+            memcpy(staticStorage, data, len);
+            staticStorage[len] = 0;
+        }
+    }
+
+    /// Reserve data
+    void initReserve(size_t len)
+    {
+        const bool isDynamic = len > UsableStaticSize;
+        lenDynamic = (len << 1) | isDynamic;
+        if (isDynamic) {
+            dynamicStorage = reinterpret_cast<char*>(omp_malloc(sizeof(char) * (len + 1)));
+        }
+    }
+
+    size_t lenDynamic; ///< First bit is 1 if dynamic and 0 if static; the rest are the length
+    union {
+        char* dynamicStorage; ///< Used when first bit of lenDynamic is 1
+        char staticStorage[Size]; ///< Used when first bit of lenDynamic is 0
+    };
+};
+
 template <typename T, typename U>
 inline constexpr auto CEILDIV(T n, U d) -> decltype(n / d)
 {
