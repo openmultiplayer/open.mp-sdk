@@ -91,6 +91,12 @@ using StaticBitset = std::bitset<Size>;
 template <typename First, typename Second>
 using Pair = std::pair<First, Second>;
 
+template <typename T, typename... Args>
+inline auto variant_get(Args&&... args) -> decltype(absl_omp::get<T>(std::forward<Args>(args)...))
+{
+    return absl_omp::get<T>(std::forward<Args>(args)...);
+}
+
 struct NoCopy {
     NoCopy() = default;
 

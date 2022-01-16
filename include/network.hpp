@@ -327,7 +327,7 @@ struct INetworkBitStream {
         if (!read(input)) {
             return false;
         }
-        output = absl::get<NetworkBitStreamValue::DataTypeFromNetworkType<NetworkType>>(input.data);
+        output = variant_get<NetworkBitStreamValue::DataTypeFromNetworkType<NetworkType>>(input.data);
         return true;
     }
 };
