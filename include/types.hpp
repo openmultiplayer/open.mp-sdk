@@ -31,6 +31,8 @@
 #undef minor
 #endif
 
+namespace absl_omp = absl::lts_20210324;
+
 typedef glm::vec2 Vector2;
 typedef glm::vec3 Vector3;
 typedef glm::vec4 Vector4;
@@ -49,22 +51,22 @@ typedef std::chrono::duration<float> RealSeconds;
 using std::chrono::duration_cast;
 
 template <typename... Args>
-using Variant = absl::variant<Args...>;
+using Variant = absl_omp::variant<Args...>;
 
 template <typename T>
-using Optional = absl::optional<T>;
+using Optional = absl_omp::optional<T>;
 
 template <typename T>
-using Span = absl::Span<T>;
+using Span = absl_omp::Span<T>;
 
 /// Don't pass String around the SDK, only StringView
 using String = std::string;
-using StringView = absl::string_view;
+using StringView = absl_omp::string_view;
 
 template <typename T>
-using FlatHashSet = absl::flat_hash_set<T>;
+using FlatHashSet = absl_omp::flat_hash_set<T>;
 template <typename K, typename V>
-using FlatHashMap = absl::flat_hash_map<K, V>;
+using FlatHashMap = absl_omp::flat_hash_map<K, V>;
 
 template <typename T>
 using FlatRefHashSet = FlatHashSet<std::reference_wrapper<T>>;

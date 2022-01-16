@@ -2,7 +2,6 @@
 
 #include "entity.hpp"
 #include "types.hpp"
-#include <absl/container/flat_hash_set.h>
 #include <array>
 #include <bitset>
 #include <cassert>
