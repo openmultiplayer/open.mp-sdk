@@ -44,7 +44,11 @@ struct IConfig : public IExtensible {
     virtual float* getFloat(StringView key) = 0;
 
     /// Get a list of strings
-    virtual Span<const StringView> getStrings(StringView key) const = 0;
+    virtual size_t getStrings(StringView key, Span<StringView> output) const = 0;
+
+    /// Get the count of a list of strings
+    /// Useful for pre-allocating the container that will store the getStrings() result
+    virtual size_t getStringsCount(StringView key) const = 0;
 
     /// Get the number of bans
     virtual size_t getBansCount() const = 0;
@@ -66,35 +70,25 @@ struct IConfig : public IExtensible {
     virtual Pair<bool, StringView> getNameFromAlias(StringView alias) const = 0;
 };
 
-struct ICore;
-
 /// Used for filling config parameters by Config components
 struct IEarlyConfig : public IConfig {
+    /// Set or create a string in the config
     virtual void setString(StringView key, StringView value) = 0;
 
+    /// Set or create an int in the config
     virtual void setInt(StringView key, int value) = 0;
 
+    /// Set or create a float in the config
     virtual void setFloat(StringView key, float value) = 0;
 
+    /// Set or create a list of strings in the config
     virtual void setStrings(StringView key, Span<const StringView> value) = 0;
 
-    virtual ICore& getCore() = 0;
-};
-
-/// A component interface which allows for adding to the configuration
-struct IConfigProviderComponent : public IComponent {
-    /// Return Pool component type
-    ComponentType componentType() const override { return ComponentType::ConfigProvider; }
-
-    /// We probably won't need onLoad, override it implicitly
-    void onLoad(ICore* core) override { }
-
-    /// Fill a configuration object with custom configuration
-    virtual bool configure(IEarlyConfig& config) = 0;
-
-    /// Get an option name from an alias if available
-    /// @return A pair of bool which is true if the alias is deprecated and a string with the real config name
-    virtual Pair<bool, StringView> getNameFromAlias(StringView alias) const = 0;
+    /// Add an alias to another option in the config
+    /// @param alias The alias
+    /// @param key The real name
+    /// @param deprecated Whether the alias is deprecated
+    virtual void addAlias(StringView alias, StringView key, bool deprecated = false) = 0;
 };
 
 enum LogLevel {
@@ -104,11 +98,8 @@ enum LogLevel {
     Error
 };
 
-/// The core interface
-struct ICore : public IExtensible {
-    /// Get the SDK version
-    virtual SemanticVersion getSDKVersion() = 0;
-
+/// A basic logger interface
+struct ILogger {
     /// Print a new line to console
     __attribute__((__format__(__printf__, 2, 3))) virtual void printLn(const char* fmt, ...) = 0;
 
@@ -120,6 +111,12 @@ struct ICore : public IExtensible {
 
     /// Print a new line to console of a specified log type (receives va_list instead)
     __attribute__((__format__(__printf__, 3, 0))) virtual void vlogLn(LogLevel level, const char* fmt, va_list args) = 0;
+};
+
+/// The core interface
+struct ICore : public IExtensible, public ILogger {
+    /// Get the SDK version
+    virtual SemanticVersion getSDKVersion() = 0;
 
     /// Get the player pool
     virtual IPlayerPool& getPlayers() = 0;

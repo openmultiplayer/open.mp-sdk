@@ -90,11 +90,12 @@ enum ComponentType {
     Other,
     Network,
     Pool,
-    ConfigProvider,
 };
 
 struct ICore;
 struct IComponentList;
+struct ILogger;
+struct IEarlyConfig;
 
 /// A component interface
 struct IComponent : virtual IExtensible, public IUUIDProvider {
@@ -124,6 +125,9 @@ struct IComponent : virtual IExtensible, public IUUIDProvider {
     /// Called before the components are about to be freed
     /// Should be used for disconnecting
     virtual void onFree(IComponent* component) { }
+
+    /// Fill a configuration object with custom configuration
+    virtual void provideConfiguration(ILogger& logger, IEarlyConfig& config) { }
 
     /// Frees the component data
     virtual void free() = 0;

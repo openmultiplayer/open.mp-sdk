@@ -121,6 +121,12 @@ enum PlayerCameraCutType {
     PlayerCameraCutType_Move
 };
 
+enum PlayerMarkerMode {
+    PlayerMarkerMode_Off,
+    PlayerMarkerMode_Global,
+    PlayerMarkerMode_Streamed
+};
+
 enum PlayerWeapon {
     PlayerWeapon_Fist,
     PlayerWeapon_BrassKnuckle,
