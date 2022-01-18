@@ -39,10 +39,10 @@ struct IGangZone : public IIDProvider {
 struct GangZoneEventHandler {
 };
 
-static const UUID GangZoneComponent_UUID = UUID(0xb3351d11ee8d8056);
+static const UniqueID GangZoneComponent_UniqueID = UniqueID(0xb3351d11ee8d8056);
 
 struct IGangZonesComponent : public IPoolComponent<IGangZone, GANG_ZONE_POOL_SIZE> {
-    PROVIDE_UUID(GangZoneComponent_UUID);
+    PROVIDE_UniqueID(GangZoneComponent_UniqueID);
 
     /// Get the event dispatcher
     virtual IEventDispatcher<GangZoneEventHandler>& getEventDispatcher() = 0;

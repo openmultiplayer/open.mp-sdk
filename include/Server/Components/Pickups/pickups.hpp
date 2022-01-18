@@ -35,9 +35,9 @@ struct PickupEventHandler {
     virtual void onPlayerPickUpPickup(IPlayer& player, IPickup& pickup) { }
 };
 
-static const UUID PickupsComponent_UUID = UUID(0xcf304faa363dd971);
+static const UniqueID PickupsComponent_UniqueID = UniqueID(0xcf304faa363dd971);
 struct IPickupsComponent : public IPoolComponent<IPickup, PICKUP_POOL_SIZE> {
-    PROVIDE_UUID(PickupsComponent_UUID);
+    PROVIDE_UniqueID(PickupsComponent_UniqueID);
 
     virtual IEventDispatcher<PickupEventHandler>& getEventDispatcher() = 0;
 

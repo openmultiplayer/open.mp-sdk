@@ -350,7 +350,7 @@ struct PlayerBulletData {
 };
 
 /// A player data interface for per-player data
-struct IPlayerData : public IUUIDProvider {
+struct IPlayerData : public IUniqueIDProvider {
     /// Frees the player data object, called on player disconnect, usually defaults to delete this
     virtual void free() = 0;
 };
@@ -712,9 +712,9 @@ struct IPlayer : public IEntity, public INetworkPeer {
     virtual void addData(IPlayerData* playerData) = 0;
 
     /// Query player data by its ID
-    /// @param id The UUID of the data
+    /// @param id The UniqueID of the data
     /// @return A pointer to the data or nullptr if not available
-    virtual IPlayerData* queryData(UUID id) const = 0;
+    virtual IPlayerData* queryData(UniqueID id) const = 0;
 
     /// Toggle the camera targeting functions for the player
     virtual void toggleCameraTargeting(bool toggle) = 0;

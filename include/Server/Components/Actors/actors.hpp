@@ -51,9 +51,9 @@ struct ActorEventHandler {
     virtual void onActorStreamIn(IActor& actor, IPlayer& forPlayer) { }
 };
 
-static const UUID ActorsComponent_UUID = UUID(0xc81ca021eae2ad5c);
+static const UniqueID ActorsComponent_UniqueID = UniqueID(0xc81ca021eae2ad5c);
 struct IActorsComponent : public IPoolComponent<IActor, ACTOR_POOL_SIZE> {
-    PROVIDE_UUID(ActorsComponent_UUID);
+    PROVIDE_UniqueID(ActorsComponent_UniqueID);
 
     /// Get the ActorEventHandler event dispatcher
     virtual IEventDispatcher<ActorEventHandler>& getEventDispatcher() = 0;

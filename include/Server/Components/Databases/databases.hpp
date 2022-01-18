@@ -128,9 +128,9 @@ struct IDatabaseConnection : public IIDProvider {
     virtual IDatabaseResultSet* executeQuery(StringView query) = 0;
 };
 
-static const UUID DatabasesComponent_UUID = UUID(0x80092e7eb5821a96 /*0x80092e7eb5821a969640def7747a231a*/);
+static const UniqueID DatabasesComponent_UniqueID = UniqueID(0x80092e7eb5821a96 /*0x80092e7eb5821a969640def7747a231a*/);
 struct IDatabasesComponent : public IComponent {
-    PROVIDE_UUID(DatabasesComponent_UUID);
+    PROVIDE_UniqueID(DatabasesComponent_UniqueID);
 
     /// Opens a new database connection
     /// @param path Path to the database
