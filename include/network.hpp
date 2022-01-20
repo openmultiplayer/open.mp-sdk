@@ -544,9 +544,9 @@ struct INetworkComponent : public IComponent {
     virtual INetwork* getNetwork() = 0;
 };
 
-static const UniqueID NetworkQueryExtension_UniqueID = UniqueID(0xfd46e147ea474971);
+static const UID NetworkQueryExtension_UID = UID(0xfd46e147ea474971);
 struct INetworkQueryExtension : public IExtension {
-    PROVIDE_EXT_UniqueID(NetworkQueryExtension_UniqueID);
+    PROVIDE_EXT_UID(NetworkQueryExtension_UID);
 
     /// Add a rule to the network rules
     virtual void addRule(StringView rule, StringView value) = 0;

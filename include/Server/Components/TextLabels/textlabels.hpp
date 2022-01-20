@@ -65,10 +65,10 @@ struct ITextLabel : public ITextLabelBase {
 struct IPlayerTextLabel : public ITextLabelBase {
 };
 
-static const UniqueID TextLabelsComponent_UniqueID = UniqueID(0xa0c57ea80a009742);
+static const UID TextLabelsComponent_UID = UID(0xa0c57ea80a009742);
 /// The text label component which is a global text label pool
 struct ITextLabelsComponent : public IPoolComponent<ITextLabel, TEXT_LABEL_POOL_SIZE> {
-    PROVIDE_UniqueID(TextLabelsComponent_UniqueID);
+    PROVIDE_UID(TextLabelsComponent_UID);
 
     /// Create a text label
     virtual ITextLabel* create(StringView text, Colour colour, Vector3 pos, float drawDist, int vw, bool los) = 0;
@@ -80,10 +80,10 @@ struct ITextLabelsComponent : public IPoolComponent<ITextLabel, TEXT_LABEL_POOL_
     virtual ITextLabel* create(StringView text, Colour colour, Vector3 pos, float drawDist, int vw, bool los, IVehicle& attach) = 0;
 };
 
-static const UniqueID PlayerTextLabelData_UniqueID = UniqueID(0xb9e2bd0dc5148c3c);
+static const UID PlayerTextLabelData_UID = UID(0xb9e2bd0dc5148c3c);
 /// The text label player data which is a player text label pool
 struct IPlayerTextLabelData : public IPlayerData, public IPool<IPlayerTextLabel, TEXT_LABEL_POOL_SIZE> {
-    PROVIDE_UniqueID(PlayerTextLabelData_UniqueID);
+    PROVIDE_UID(PlayerTextLabelData_UID);
 
     /// Create a player text label
     virtual IPlayerTextLabel* create(StringView text, Colour colour, Vector3 pos, float drawDist, bool los) = 0;

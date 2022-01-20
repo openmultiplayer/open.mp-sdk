@@ -44,12 +44,12 @@ struct IVariableStorageBase {
     virtual int size() const = 0;
 };
 
-static const UniqueID VariablesComponent_UniqueID = UniqueID(0x75e121848bc01fa2);
+static const UID VariablesComponent_UID = UID(0x75e121848bc01fa2);
 struct IVariablesComponent : public IComponent, public IVariableStorageBase {
-    PROVIDE_UniqueID(VariablesComponent_UniqueID);
+    PROVIDE_UID(VariablesComponent_UID);
 };
 
-static const UniqueID PlayerVariableData_UniqueID = UniqueID(0x12debbc8a3bd23ad);
+static const UID PlayerVariableData_UID = UID(0x12debbc8a3bd23ad);
 struct IPlayerVariableData : public IPlayerData, public IVariableStorageBase {
-    PROVIDE_UniqueID(PlayerVariableData_UniqueID);
+    PROVIDE_UID(PlayerVariableData_UID);
 };

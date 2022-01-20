@@ -177,9 +177,9 @@ struct IPlayerObject : public IBaseObject {
 struct ObjectEventHandler;
 
 /// An object pool
-static const UniqueID ObjectsComponent_UniqueID = UniqueID(0x59f8415f72da6160);
+static const UID ObjectsComponent_UID = UID(0x59f8415f72da6160);
 struct IObjectsComponent : public IPoolComponent<IObject, OBJECT_POOL_SIZE> {
-    PROVIDE_UniqueID(ObjectsComponent_UniqueID)
+    PROVIDE_UID(ObjectsComponent_UID)
 
     /// Get the object event dispatcher
     virtual IEventDispatcher<ObjectEventHandler>& getEventDispatcher() = 0;
@@ -206,9 +206,9 @@ struct ObjectEventHandler {
     virtual void onPlayerAttachedObjectEdited(IPlayer& player, int index, bool saved, const ObjectAttachmentSlotData& data) { }
 };
 
-static const UniqueID PlayerObjectData_UniqueID = UniqueID(0x93d4ed2344b07456);
+static const UID PlayerObjectData_UID = UID(0x93d4ed2344b07456);
 struct IPlayerObjectData : public IPlayerData, public IPool<IPlayerObject, OBJECT_POOL_SIZE> {
-    PROVIDE_UniqueID(PlayerObjectData_UniqueID);
+    PROVIDE_UID(PlayerObjectData_UID);
 
     /// Create a new player object
     /// @return A pointer if succeeded or nullptr on failure

@@ -6,9 +6,9 @@ struct ConsoleEventHandler {
     virtual void onRconLoginAttempt(IPlayer& player, const StringView& password, bool success) { }
 };
 
-static const UniqueID ConsoleComponent_UniqueID = UniqueID(0xbfa24e49d0c95ee4);
+static const UID ConsoleComponent_UID = UID(0xbfa24e49d0c95ee4);
 struct IConsoleComponent : public IComponent {
-    PROVIDE_UniqueID(ConsoleComponent_UniqueID);
+    PROVIDE_UID(ConsoleComponent_UID);
 
     /// Get the ConsoleEventHandler event dispatcher
     virtual IEventDispatcher<ConsoleEventHandler>& getEventDispatcher() = 0;
@@ -17,9 +17,9 @@ struct IConsoleComponent : public IComponent {
     virtual void send(StringView command) = 0;
 };
 
-static const UniqueID PlayerConsoleData_UniqueID = UniqueID(0x9f8d20f2f471cbae);
+static const UID PlayerConsoleData_UID = UID(0x9f8d20f2f471cbae);
 struct IPlayerConsoleData : public IPlayerData {
-    PROVIDE_UniqueID(PlayerConsoleData_UniqueID);
+    PROVIDE_UID(PlayerConsoleData_UID);
 
     /// Check if player has console access
     virtual bool hasConsoleAccess() const = 0;

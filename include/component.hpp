@@ -7,21 +7,21 @@
 #endif
 
 /// Should always be used in classes inheriting IExtension
-#define PROVIDE_EXT_UniqueID(uuid)                 \
-    static constexpr UniqueID ExtensionIID = uuid; \
-    UniqueID getExtensionID() override { return ExtensionIID; }
+#define PROVIDE_EXT_UID(uuid)                 \
+    static constexpr UID ExtensionIID = uuid; \
+    UID getExtensionID() override { return ExtensionIID; }
 
 /// A class which should be inherited by extensions returned by IExtensible
 struct IExtension {
-    /// Get the extension's UniqueID
-    virtual UniqueID getExtensionID() = 0;
+    /// Get the extension's UID
+    virtual UID getExtensionID() = 0;
 };
 
 /// A class which should be inherited by classes which want to be extensible without breaking the ABI
 struct IExtensible {
-    /// Try to get an extension by its UniqueID
+    /// Try to get an extension by its UID
     /// @return A pointer to the extension or nullptr if it's not supported
-    virtual IExtension const* getExtension(UniqueID id) const { return nullptr; }
+    virtual IExtension const* getExtension(UID id) const { return nullptr; }
 
     /// Query an extension by its type
     /// Don't call directly, use global queryExtension() instead
@@ -76,14 +76,14 @@ ExtensionT* queryExtension(const IExtensible& extensible)
     return extensible._queryExtension<ExtensionT>();
 }
 
-/// Should always be used in classes inheriting IUniqueIDProvider
-#define PROVIDE_UniqueID(uuid)            \
-    static constexpr UniqueID IID = uuid; \
-    UniqueID getUniqueID() override { return uuid; }
+/// Should always be used in classes inheriting IUIDProvider
+#define PROVIDE_UID(uuid)            \
+    static constexpr UID IID = uuid; \
+    UID getUID() override { return uuid; }
 
-/// An interface providing UniqueIDs
-struct IUniqueIDProvider {
-    virtual UniqueID getUniqueID() = 0;
+/// An interface providing UIDs
+struct IUIDProvider {
+    virtual UID getUID() = 0;
 };
 
 enum ComponentType {
@@ -98,7 +98,7 @@ struct ILogger;
 struct IEarlyConfig;
 
 /// A component interface
-struct IComponent : virtual IExtensible, public IUniqueIDProvider {
+struct IComponent : virtual IExtensible, public IUIDProvider {
     /// Get the component's name
     virtual StringView componentName() const = 0;
 
@@ -135,9 +135,9 @@ struct IComponent : virtual IExtensible, public IUniqueIDProvider {
 
 struct IComponentList : public IExtensible {
     /// Query a component by its ID
-    /// @param id The UniqueID of the component
+    /// @param id The UID of the component
     /// @return A pointer to the component or nullptr if not available
-    virtual IComponent* queryComponent(UniqueID id) = 0;
+    virtual IComponent* queryComponent(UID id) = 0;
 
     /// Query a component by its type
     /// @typeparam ComponentT The component type, must derive from IComponent

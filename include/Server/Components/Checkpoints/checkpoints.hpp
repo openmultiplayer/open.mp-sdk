@@ -40,9 +40,9 @@ struct IPlayerRaceCheckpointData : public ICheckpointDataBase {
     virtual void setNextPosition(const Vector3& nextPosition) = 0;
 };
 
-static const UniqueID PlayerCheckpointData_UniqueID = UniqueID(0xbc07576aa3591a66);
+static const UID PlayerCheckpointData_UID = UID(0xbc07576aa3591a66);
 struct IPlayerCheckpointData : public IPlayerData {
-    PROVIDE_UniqueID(PlayerCheckpointData_UniqueID);
+    PROVIDE_UID(PlayerCheckpointData_UID);
 
     virtual IPlayerRaceCheckpointData& getRaceCheckpoint() = 0;
     virtual IPlayerStandardCheckpointData& getStandardCheckpoint() = 0;
@@ -55,9 +55,9 @@ struct PlayerCheckpointEventHandler {
     virtual void onPlayerLeaveRaceCheckpoint(IPlayer& player) { }
 };
 
-static const UniqueID CheckpointsComponent_UniqueID = UniqueID(0x44a937350d611dde);
+static const UID CheckpointsComponent_UID = UID(0x44a937350d611dde);
 struct ICheckpointsComponent : public IComponent {
-    PROVIDE_UniqueID(CheckpointsComponent_UniqueID)
+    PROVIDE_UID(CheckpointsComponent_UID)
 
     // Access to event dispatchers for other components to add handlers to
     virtual IEventDispatcher<PlayerCheckpointEventHandler>& getEventDispatcher() = 0;

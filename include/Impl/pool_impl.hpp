@@ -33,7 +33,7 @@ struct ScopedPoolReleaseLock {
 };
 
 template <typename T, size_t Size>
-struct UniqueIDArray : public NoCopy {
+struct UIDArray : public NoCopy {
     int findFreeIndex(int from) const
     {
         for (int i = from; i < Size; ++i) {
@@ -238,7 +238,7 @@ protected:
     }
 
     char pool_[Count * sizeof(Type)];
-    UniqueIDArray<Interface, Count> allocated_;
+    UIDArray<Interface, Count> allocated_;
     /// Implementation of the pool event dispatcher
     DefaultEventDispatcher<PoolEventHandler<Interface>> eventDispatcher_;
 };
