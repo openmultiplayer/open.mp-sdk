@@ -12,8 +12,8 @@ struct AnimationData {
     bool lockY; ///< Same as above but for the Y axis. Should be kept the same as the previous parameter
     bool freeze; ///< Setting this to 1 will freeze the player at the end of the animation. 0 will not
     uint32_t time; ///< Timer in milliseconds. For a never-ending loop it should be 0
-    StaticString<64> lib; ///< The animation library of the animation to apply
-    StaticString<64> name; ///< The name of the animation to apply
+    HybridString<64> lib; ///< The animation library of the animation to apply
+    HybridString<64> name; ///< The name of the animation to apply
 
     AnimationData()
         : delta(4.1f)

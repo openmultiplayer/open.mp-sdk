@@ -417,7 +417,7 @@ using is_network_packet = decltype(is_network_packet_impl(std::declval<T&>()));
 
 /// A peer address with support for IPv4 and IPv6
 struct PeerAddress {
-    using AddressString = StaticString<46>;
+    using AddressString = HybridString<46>;
 
     bool ipv6; ///< True if IPv6 is used, false otherwise
     union {
@@ -450,8 +450,8 @@ struct BanEntry {
 public:
     PeerAddress::AddressString address; ///< The banned address
     WorldTimePoint time; ///< The time when the ban was issued
-    StaticString<MAX_PLAYER_NAME + 1> name; ///< The banned player's name
-    StaticString<32> reason; ///< The ban reason
+    HybridString<MAX_PLAYER_NAME + 1> name; ///< The banned player's name
+    HybridString<32> reason; ///< The ban reason
 
     BanEntry(StringView address, WorldTimePoint time = WorldTime::now())
         : address(address)

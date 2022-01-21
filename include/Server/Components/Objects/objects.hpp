@@ -77,8 +77,8 @@ struct ObjectMaterialData {
 
     Colour backgroundColour; // Text
 
-    StaticString<64> textOrTXD; // Text or TXD
-    StaticString<64> fontOrTexture; // Font or texture
+    HybridString<64> textOrTXD; // Text or TXD
+    HybridString<64> fontOrTexture; // Font or texture
 };
 
 /// Object attachment data

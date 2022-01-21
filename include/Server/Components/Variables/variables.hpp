@@ -38,7 +38,7 @@ struct IVariableStorageBase {
     virtual bool erase(StringView key) = 0;
 
     /// Get variable name (key) by index
-    virtual bool getKeyAtIndex(int index, String& key) const = 0;
+    virtual bool getKeyAtIndex(int index, StringView key) const = 0;
 
     /// Get variables map size
     virtual int size() const = 0;

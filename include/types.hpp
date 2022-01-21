@@ -253,12 +253,12 @@ struct SemanticVersion {
 
 /// An ABI-stable, C-compatible string that allows for specifying a static allocation of a size before falling back to dynamic allocation
 template <size_t Size>
-struct StaticString {
+struct HybridString {
     /// The actualy usable size - this accounts for the trailing 0
     constexpr static size_t UsableStaticSize = Size - 1;
 
     /// Empty string constructor
-    StaticString()
+    HybridString()
         : lenDynamic(0)
     {
         static_assert(Size > 0);
@@ -266,13 +266,13 @@ struct StaticString {
     }
 
     /// StringView copy constructor
-    StaticString(StringView string)
+    HybridString(StringView string)
     {
         initCopy(string.data(), string.length());
     }
 
     /// StringView copy assignment
-    StaticString<Size>& operator=(StringView string)
+    HybridString<Size>& operator=(StringView string)
     {
         clear();
         initCopy(string.data(), string.length());
@@ -281,13 +281,13 @@ struct StaticString {
     }
 
     /// Copy constructor
-    StaticString(const StaticString<Size>& other)
+    HybridString(const HybridString<Size>& other)
     {
         initCopy(other.data(), other.length());
     }
 
     /// Copy assignment
-    StaticString<Size>& operator=(const StaticString<Size>& other)
+    HybridString<Size>& operator=(const HybridString<Size>& other)
     {
         clear();
         initCopy(other.data(), other.length());
@@ -296,14 +296,14 @@ struct StaticString {
     }
 
     /// Move constructor
-    StaticString(StaticString<Size>&& other)
+    HybridString(HybridString<Size>&& other)
     {
         initMove(other.data(), other.length());
         other.lenDynamic = 0;
     }
 
     /// Move assignment
-    StaticString<Size>& operator=(StaticString<Size>&& other)
+    HybridString<Size>& operator=(HybridString<Size>&& other)
     {
         clear();
         initMove(other.data(), other.length());
@@ -313,7 +313,7 @@ struct StaticString {
     }
 
     /// Destructor
-    ~StaticString()
+    ~HybridString()
     {
         clear();
     }
@@ -349,29 +349,46 @@ struct StaticString {
         return lenDynamic >> 1;
     }
 
+    constexpr bool empty() const
+    {
+        return length() == 0;
+    }
+
     /// Clear the string and free any dynamic memory
     void clear()
     {
         if (dynamic()) {
-            omp_free(dynamicStorage);
+            _free(dynamicStorage);
         }
         staticStorage[0] = 0;
         lenDynamic = 0;
     }
 
     /// Compare the string to another string
-    int cmp(const StaticString<Size>& other) const
+    int cmp(const HybridString<Size>& other) const
     {
         return strcmp(data(), other.data());
     }
 
     /// Return whether the string is equal to another string
-    bool operator==(const StaticString<Size>& other) const
+    bool operator==(const HybridString<Size>& other) const
     {
         if (length() != other.length()) {
             return false;
         }
         return !strncmp(data(), other.data(), length());
+    }
+
+    constexpr char& operator[](size_t index)
+    {
+        assert(index < length());
+        return data()[index];
+    }
+
+    constexpr const char& operator[](size_t index) const
+    {
+        assert(index < length());
+        return data()[index];
     }
 
     /// Cast to StringView
@@ -388,7 +405,7 @@ private:
         lenDynamic = (len << 1) | isDynamic;
         char* ptr;
         if (isDynamic) {
-            dynamicStorage = reinterpret_cast<char*>(omp_malloc(sizeof(char) * (len + 1)));
+            dynamicStorage = reinterpret_cast<char*>(_malloc(sizeof(char) * (len + 1)));
             ptr = dynamicStorage;
         } else {
             ptr = staticStorage;
@@ -416,7 +433,7 @@ private:
         const bool isDynamic = len > UsableStaticSize;
         lenDynamic = (len << 1) | isDynamic;
         if (isDynamic) {
-            dynamicStorage = reinterpret_cast<char*>(omp_malloc(sizeof(char) * (len + 1)));
+            dynamicStorage = reinterpret_cast<char*>(_malloc(sizeof(char) * (len + 1)));
             dynamicStorage[0] = 0;
         }
     }
@@ -426,6 +443,9 @@ private:
         char* dynamicStorage; ///< Used when first bit of lenDynamic is 1
         char staticStorage[Size]; ///< Used when first bit of lenDynamic is 0
     };
+
+    void*(__attribute__((__cdecl__)) * _malloc)(size_t) = malloc;
+    void(__attribute__((__cdecl__)) * _free)(void*) = free;
 };
 
 template <typename T, typename U>
