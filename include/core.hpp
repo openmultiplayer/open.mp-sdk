@@ -169,57 +169,49 @@ struct ICore : public IExtensible, public ILogger {
     virtual bool sha256(StringView password, StringView salt, StaticArray<char, 64 + 1>& output) const = 0;
 
     /// Add a per-RPC event handler for each network for the packet's network ID
-    template <class Packet>
+    template <int PktID>
     inline void addPerRPCEventHandler(SingleNetworkInOutEventHandler* handler, event_order_t priority = EventPriority_Default)
     {
-        static_assert(is_network_packet<Packet>(), "Packet must derive from NetworkPacketBase");
         const FlatPtrHashSet<INetwork>& networks = getNetworks();
         for (INetwork* network : networks) {
-            const int id = Packet::getID(network->getNetworkType());
-            if (id != INVALID_PACKET_ID) {
-                network->getPerRPCInOutEventDispatcher().addEventHandler(handler, id, priority);
+            if (PktID != INVALID_PACKET_ID) {
+                network->getPerRPCInOutEventDispatcher().addEventHandler(handler, PktID, priority);
             }
         }
     }
 
     /// Add a per-PACKET event handler for each network for the packet's network ID
-    template <class Packet>
+    template <int PktID>
     inline void addPerPacketEventHandler(SingleNetworkInOutEventHandler* handler, event_order_t priority = EventPriority_Default)
     {
-        static_assert(is_network_packet<Packet>(), "Packet must derive from NetworkPacketBase");
         const FlatPtrHashSet<INetwork>& networks = getNetworks();
         for (INetwork* network : networks) {
-            const int id = Packet::getID(network->getNetworkType());
-            if (id != INVALID_PACKET_ID) {
-                network->getPerPacketInOutEventDispatcher().addEventHandler(handler, id, priority);
+            if (PktID != INVALID_PACKET_ID) {
+                network->getPerPacketInOutEventDispatcher().addEventHandler(handler, PktID, priority);
             }
         }
     }
 
     /// Remove a per-RPC event handler for each network for the packet's network ID
-    template <class Packet, class EventHandlerType>
-    inline void removePerRPCEventHandler(EventHandlerType* handler)
+    template <int PktID>
+    inline void removePerRPCEventHandler(SingleNetworkInOutEventHandler* handler)
     {
-        static_assert(is_network_packet<Packet>(), "Packet must derive from NetworkPacketBase");
         const FlatPtrHashSet<INetwork>& networks = getNetworks();
         for (INetwork* network : networks) {
-            const int id = Packet::getID(network->getNetworkType());
-            if (id != INVALID_PACKET_ID) {
-                network->getPerRPCInOutEventDispatcher().removeEventHandler(handler, id);
+            if (PktID != INVALID_PACKET_ID) {
+                network->getPerRPCInOutEventDispatcher().removeEventHandler(handler, PktID);
             }
         }
     }
 
     /// Remove a per-PACKET event handler for each network for the packet's network ID
-    template <class Packet, class EventHandlerType>
+    template <int PktID, class EventHandlerType>
     inline void removePerPacketEventHandler(EventHandlerType* handler)
     {
-        static_assert(is_network_packet<Packet>(), "Packet must derive from NetworkPacketBase");
         const FlatPtrHashSet<INetwork>& networks = getNetworks();
         for (INetwork* network : networks) {
-            const int id = Packet::getID(network->getNetworkType());
-            if (id != INVALID_PACKET_ID) {
-                network->getPerPacketInOutEventDispatcher().removeEventHandler(handler, id);
+            if (PktID != INVALID_PACKET_ID) {
+                network->getPerPacketInOutEventDispatcher().removeEventHandler(handler, PktID);
             }
         }
     }

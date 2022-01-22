@@ -620,7 +620,7 @@ struct IPlayer : public IEntity, public INetworkPeer {
     virtual void streamOutForPlayer(IPlayer& other) = 0;
 
     /// Get the players which are streamed in for this player
-    virtual const FlatPtrHashSet<IPlayer>& streamedForPlayers() = 0;
+    virtual const FlatPtrHashSet<IPlayer>& streamedForPlayers() const = 0;
 
     /// Get the player's state
     virtual PlayerState getState() const = 0;
@@ -769,29 +769,25 @@ struct IPlayer : public IEntity, public INetworkPeer {
 
     /// Attempt to broadcast an RPC derived from NetworkPacketBase to the player's streamed peers
     /// @param packet The packet to send
-    template <class Packet>
-    inline void broadcastRPCToStreamed(const Packet& packet, bool skipFrom = false)
+    inline void broadcastRPCToStreamed(int id, Span<uint8_t> data, bool skipFrom = false) const
     {
-        static_assert(is_network_packet<Packet>(), "Packet must derive from NetworkPacketBase");
         for (IPlayer* player : streamedForPlayers()) {
             if (skipFrom && player == this) {
                 continue;
             }
-            player->sendRPC(packet);
+            player->sendRPC(id, data);
         }
     }
 
     /// Attempt to broadcast a packet derived from NetworkPacketBase to the player's streamed peers
     /// @param packet The packet to send
-    template <class Packet>
-    inline void broadcastPacketToStreamed(const Packet& packet, bool skipFrom = true)
+    inline void broadcastPacketToStreamed(Span<uint8_t> data, bool skipFrom = true) const
     {
-        static_assert(is_network_packet<Packet>(), "Packet must derive from NetworkPacketBase");
         for (IPlayer* player : streamedForPlayers()) {
             if (skipFrom && player == this) {
                 continue;
             }
-            player->sendPacket(packet);
+            player->sendPacket(data);
         }
     }
 };
@@ -875,16 +871,10 @@ struct IPlayerPool : virtual IExtensible, public IReadOnlyPool<IPlayer, PLAYER_P
 
     /// Attempt to broadcast an RPC derived from NetworkPacketBase to all peers
     /// @param packet The packet to send
-    template <class Packet>
-    inline void broadcastRPCToAll(const Packet& packet, const IPlayer* skipFrom = nullptr)
+    inline void broadcastRPC(int id, Span<uint8_t> data, const IPlayer* skipFrom = nullptr)
     {
-        static_assert(is_network_packet<Packet>(), "Packet must derive from NetworkPacketBase");
-
         for (INetwork* network : getNetworks()) {
-            ENetworkType type = network->getNetworkType();
-            INetworkBitStream& bs = network->writeBitStream();
-            packet.write(bs);
-            network->broadcastRPC(Packet::getID(type), bs, skipFrom);
+            network->broadcastRPC(id, data, skipFrom);
         }
     }
 };

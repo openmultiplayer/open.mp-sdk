@@ -23,265 +23,6 @@ enum PeerDisconnectReason {
     PeerDisconnectReason_Kicked
 };
 
-/// Used for specifying bit stream data types
-enum class NetworkBitStreamValueType {
-    NONE,
-    BIT, ///< bool
-    UINT8, ///< uint8_t
-    UINT16, ///< uint16_t
-    UINT32, ///< uint32_t
-    UINT64, ///< uint64_t
-    INT8, ///< int8_t
-    INT16, ///< int16_t
-    INT32, ///< int32_t
-    INT64, ///< int64_t
-    FLOAT, ///< float
-    DOUBLE, ///< double
-    VEC2, ///< vector3
-    VEC3, ///< vector3
-    VEC4, ///< vector4
-    VEC3_COMPRESSED, ///< vector3
-    VEC3_SAMP, ///< vector3
-    HP_ARMOR_COMPRESSED, ///< vector2
-    DYNAMIC_LEN_STR_8, ///< NetworkString
-    DYNAMIC_LEN_STR_16, ///< NetworkString
-    DYNAMIC_LEN_STR_32, ///< NetworkString
-    FIXED_LEN_STR, ///< NetworkString
-    FIXED_LEN_ARR_UINT8, ///< NetworkArray<uint8_t>
-    FIXED_LEN_ARR_UINT16, ///< NetworkArray<uint16_t>
-    FIXED_LEN_ARR_UINT32, ///< NetworkArray<uint32_t>
-    GTA_QUAT, ///< GTAQuat
-    COMPRESSED_STR ///< NetworkString
-};
-
-/// Type used for storing arrays to pass to the networks
-template <typename T>
-struct NetworkArray {
-    bool selfAllocated; ///< Whether we allocated the buffer and should free it on destruction
-    unsigned int count; ///< The count of the elements in the array
-    T* data; ///< The buffer that holds data - can be self-allocated or allocated externally
-
-    /// Default constructor
-    NetworkArray<T>()
-        : selfAllocated(false)
-        , count(0)
-        , data(nullptr)
-    {
-    }
-
-    /// Allocate memory and store it in the buffer
-    /// @param cnt The count of the elements to allocate
-    void allocate(unsigned int cnt)
-    {
-        if (selfAllocated) {
-            omp_free(data);
-        }
-        selfAllocated = true;
-        count = cnt;
-        data = reinterpret_cast<T*>(omp_malloc(sizeof(T) * cnt));
-    }
-
-    /// Constructor for holding external array data without copying or freeing it
-    /// @param data The external data buffer
-    /// @param cnt The count of the elements in the buffer
-    NetworkArray(T* data, int cnt)
-        : selfAllocated(false)
-        , count(cnt)
-        , data(data)
-    {
-    }
-
-    /// Constructor for holding StaticArray data without copying it or freeing it
-    /// @param array The StaticArray whose data to hold
-    template <size_t Size>
-    NetworkArray<T>(const StaticArray<T, Size>& array)
-        : selfAllocated(false)
-        , count(unsigned(array.size()))
-        , data(const_cast<T*>(array.data()))
-    {
-    }
-
-    template <size_t Size>
-    NetworkArray<T>(StaticArray<T, Size>&& array) = delete;
-
-    /// Copy constructor
-    NetworkArray<T>(const NetworkArray<T>& other)
-    {
-        selfAllocated = other.selfAllocated;
-        count = other.count;
-        if (other.selfAllocated) {
-            data = reinterpret_cast<T*>(omp_malloc(sizeof(T) * other.count));
-            memcpy(data, other.data, sizeof(T) * other.count);
-        } else {
-            data = other.data;
-        }
-    }
-
-    /// Copy assignment
-    NetworkArray<T>& operator=(const NetworkArray<T>& other)
-    {
-        selfAllocated = other.selfAllocated;
-        count = other.count;
-        if (other.selfAllocated) {
-            data = reinterpret_cast<T*>(omp_malloc(sizeof(T) * other.count));
-            memcpy(data, other.data, sizeof(T) * other.count);
-        } else {
-            data = other.data;
-        }
-        return *this;
-    }
-
-    /// Move constructor
-    NetworkArray<T>(NetworkArray<T>&& other)
-    {
-        selfAllocated = other.selfAllocated;
-        count = other.count;
-        data = other.data;
-    }
-
-    /// Move assignment
-    NetworkArray<T>& operator=(NetworkArray<T>&& other)
-    {
-        selfAllocated = other.selfAllocated;
-        count = other.count;
-        data = other.data;
-        return *this;
-    }
-
-    /// Destructor, frees self-allocated memory
-    ~NetworkArray()
-    {
-        if (selfAllocated) {
-            omp_free(data);
-        }
-    }
-};
-
-/// Type used for storing UTF-8 strings to pass to the networks
-struct NetworkString : NetworkArray<char> {
-    using NetworkArray<char>::NetworkArray;
-    using NetworkArray<char>::operator=;
-
-    /// Constructor for holding std::string data without copying it or freeing it
-    /// @param string The std::string whose data to hold
-    NetworkString(StringView str)
-        : NetworkArray<char>(const_cast<char*>(str.data()), str.length())
-    {
-    }
-
-    void allocate(unsigned int cnt)
-    {
-        // Guarantee null termination
-        if (cnt) {
-            NetworkArray::allocate(cnt + 1);
-            data[cnt] = 0;
-        }
-    }
-
-    /// Conversion operator for copying data to a std::string
-    operator String() const
-    {
-        return String(data, count);
-    }
-
-    operator StringView() const
-    {
-        // Return empty string if we don't have one
-        if (data == nullptr) {
-            return StringView("");
-        }
-        // Handle self-allocated data - a trailing 0 is added so remove it
-        if (selfAllocated) {
-            return StringView(data, count - 1);
-        }
-        // Handle other cases
-        return StringView(data, count);
-    }
-};
-
-/// Helper macro to quickly define a NetworkBitStreamValue constructor and bind it to a data type
-#define NBSVCONS(type, dataType)                                          \
-    static NetworkBitStreamValue type(const dataType& dat)                \
-    {                                                                     \
-        NetworkBitStreamValue res { NetworkBitStreamValueType::type };    \
-        res.data = dat;                                                   \
-        return res;                                                       \
-    }                                                                     \
-    template <>                                                           \
-    struct DataTypeFromNetworkTypeImpl<NetworkBitStreamValueType::type> { \
-        using value = dataType;                                           \
-    };
-
-struct NetworkBitStreamValue {
-    /// Template struct which has the data type for a specific network type
-    /// Specializations are added by NBSVCONS
-    /// @typeparam NetworkType The NetworkBitStreamValueType
-    template <NetworkBitStreamValueType NetworkType>
-    struct DataTypeFromNetworkTypeImpl {
-        using value = void;
-    };
-
-    /// Template helper struct which has the data type for a specific network type
-    /// @typeparam NetworkType The NetworkBitStreamValueType
-    template <NetworkBitStreamValueType NetworkType>
-    using DataTypeFromNetworkType = typename DataTypeFromNetworkTypeImpl<NetworkType>::value;
-
-    NetworkBitStreamValueType type; ///< The type of the value
-
-    using DataVariant = Variant<
-        bool,
-        uint8_t,
-        uint16_t,
-        uint32_t,
-        uint64_t,
-        int8_t,
-        int16_t,
-        int32_t,
-        int64_t,
-        float,
-        double,
-        Vector2,
-        Vector3,
-        Vector4,
-        NetworkString,
-        NetworkArray<uint8_t>,
-        NetworkArray<uint16_t>,
-        NetworkArray<uint32_t>,
-        GTAQuat>;
-
-    DataVariant data; ///< The union which holds all possible data types
-
-    // Constructors
-    NBSVCONS(BIT, bool);
-    NBSVCONS(UINT8, uint8_t);
-    NBSVCONS(UINT16, uint16_t);
-    NBSVCONS(UINT32, uint32_t);
-    NBSVCONS(UINT64, uint64_t);
-    NBSVCONS(INT8, int8_t);
-    NBSVCONS(INT16, int16_t);
-    NBSVCONS(INT32, int32_t);
-    NBSVCONS(INT64, int64_t);
-    NBSVCONS(FLOAT, float);
-    NBSVCONS(DOUBLE, double);
-    NBSVCONS(VEC2, Vector2);
-    NBSVCONS(VEC3, Vector3);
-    NBSVCONS(VEC4, Vector4);
-    NBSVCONS(VEC3_COMPRESSED, Vector3);
-    NBSVCONS(VEC3_SAMP, Vector3);
-    NBSVCONS(HP_ARMOR_COMPRESSED, Vector2);
-    NBSVCONS(DYNAMIC_LEN_STR_8, NetworkString);
-    NBSVCONS(DYNAMIC_LEN_STR_16, NetworkString);
-    NBSVCONS(DYNAMIC_LEN_STR_32, NetworkString);
-    NBSVCONS(FIXED_LEN_STR, NetworkString);
-    NBSVCONS(FIXED_LEN_ARR_UINT8, NetworkArray<uint8_t>);
-    NBSVCONS(FIXED_LEN_ARR_UINT16, NetworkArray<uint16_t>);
-    NBSVCONS(FIXED_LEN_ARR_UINT32, NetworkArray<uint32_t>);
-    NBSVCONS(GTA_QUAT, GTAQuat);
-    NBSVCONS(COMPRESSED_STR, NetworkString);
-};
-
-#undef NBSVCONS
-
 /// The network types
 enum ENetworkType {
     ENetworkType_RakNetLegacy,
@@ -298,39 +39,6 @@ enum ENetworkBitStreamReset {
 };
 
 /* Interfaces, to be passed around */
-
-/// An interface to a network bit stream
-struct INetworkBitStream {
-    /// Get the network type of the bit stream
-    /// @return The network type of the bit stream
-    virtual ENetworkType getNetworkType() const = 0;
-
-    /// Write a value into the bit stream
-    /// @param value The value to write to the bit stream
-    /// @return True on success, false on failure
-    virtual bool write(const NetworkBitStreamValue& value) = 0;
-
-    /// Read a value from the bit stream
-    /// @param[in,out] input The input whose type to use for knowing what data type to read and then write the value to
-    /// @return True on success, false on failure
-    virtual bool read(NetworkBitStreamValue& input) = 0;
-
-    /// Reset the stream
-    /// @param reset The type of reset to do
-    virtual void reset(ENetworkBitStreamReset reset) = 0;
-
-    /// Helper function that reads a bit stream value and sets it to a variable
-    template <NetworkBitStreamValueType NetworkType, typename Type, typename... Args>
-    bool read(Type& output, Args... args)
-    {
-        NetworkBitStreamValue input { NetworkType, std::forward<Args>(args)... };
-        if (!read(input)) {
-            return false;
-        }
-        output = variant_get<NetworkBitStreamValue::DataTypeFromNetworkType<NetworkType>>(input.data);
-        return true;
-    }
-};
 
 enum NewConnectionResult {
     NewConnectionResult_Ignore, ///< Ignore the result
@@ -378,42 +86,19 @@ struct NetworkEventHandler {
     virtual void onPeerDisconnect(IPlayer& peer, PeerDisconnectReason reason) { }
 };
 
+// Needs NetCode
+class NetworkBitStream;
+
 /// An event handler for network I/O events
 struct NetworkInOutEventHandler {
-    virtual bool receivedPacket(IPlayer& peer, int id, INetworkBitStream& bs) { return true; }
-    virtual bool receivedRPC(IPlayer& peer, int id, INetworkBitStream& bs) { return true; }
+    virtual bool receivedPacket(IPlayer& peer, int id, NetworkBitStream& bs) { return true; }
+    virtual bool receivedRPC(IPlayer& peer, int id, NetworkBitStream& bs) { return true; }
 };
 
 /// An event handler for I/O events bound to a specific RPC/packet ID
 struct SingleNetworkInOutEventHandler {
-    virtual bool received(IPlayer& peer, INetworkBitStream& bs) { return true; }
+    virtual bool received(IPlayer& peer, NetworkBitStream& bs) { return true; }
 };
-
-/// Class used for declaring netcode packets
-/// Provides an array of packet IDs
-/// @typeparam PacketIDs A list of packet IDs for each network in the ENetworkType enum
-template <int... PacketIDs>
-class NetworkPacketBase {
-    static constexpr const int ID[ENetworkType_End] = { PacketIDs... };
-
-public:
-    inline static int getID(ENetworkType type)
-    {
-        if (type < ENetworkType_End) {
-            return ID[type];
-        } else {
-            return INVALID_PACKET_ID;
-        }
-    }
-};
-
-std::false_type is_network_packet_impl(...);
-template <int... PacketIDs>
-std::true_type is_network_packet_impl(NetworkPacketBase<PacketIDs...> const volatile&);
-/// Get whether a class derives from NetworkPacketBase
-/// @typeparam T The class to check
-template <typename T>
-using is_network_packet = decltype(is_network_packet_impl(std::declval<T&>()));
 
 /// A peer address with support for IPv4 and IPv6
 struct PeerAddress {
@@ -498,23 +183,20 @@ struct INetwork : virtual IExtensible {
 
     /// Attempt to send a packet to a network peer
     /// @param peer The network peer to send the packet to
-    /// @param bs The bit stream with data to send
-    virtual bool sendPacket(const INetworkPeer& peer, const INetworkBitStream& bs) = 0;
+    /// @param data The data span with the length in BITS
+    virtual bool sendPacket(const INetworkPeer& peer, Span<uint8_t> data) = 0;
 
     /// Attempt to send an RPC to a network peer
     /// @param peer The network peer to send the RPC to
     /// @param id The RPC ID for the current network
-    /// @param bs The bit stream with data to send
-    virtual bool sendRPC(const INetworkPeer& peer, int id, const INetworkBitStream& bs) = 0;
+    /// @param data The data span with the length in BITS
+    virtual bool sendRPC(const INetworkPeer& peer, int id, Span<uint8_t> data) = 0;
 
     /// Attempt to broadcast an RPC to everyone on this network
     /// @param id The RPC ID for the current network
-    /// @param bs The bit stream with data to send
+    /// @param data The data span with the length in BITS
     /// @param exceptPeer send RPC to everyone except this peer
-    virtual bool broadcastRPC(int id, const INetworkBitStream& bs, const INetworkPeer* exceptPeer = nullptr) = 0;
-
-    /// Get a new bit stream for writing
-    virtual INetworkBitStream& writeBitStream() = 0;
+    virtual bool broadcastRPC(int id, Span<uint8_t> data, const INetworkPeer* exceptPeer = nullptr) = 0;
 
     /// Get netowrk statistics
     virtual NetworkStats getStatistics(int playerIndex = -1) = 0;
@@ -580,50 +262,16 @@ struct INetworkPeer : virtual IExtensible {
 
     /// Attempt to send a packet to the network peer
     /// @param bs The bit stream with data to send
-    bool sendPacket(INetworkBitStream& bs) const
+    bool sendPacket(Span<uint8_t> data) const
     {
-        return getNetworkData().network->sendPacket(*this, bs);
+        return getNetworkData().network->sendPacket(*this, data);
     }
 
     /// Attempt to send an RPC to the network peer
     /// @param id The RPC ID for the current network
     /// @param bs The bit stream with data to send
-    bool sendRPC(int id, INetworkBitStream& bs) const
+    bool sendRPC(int id, Span<uint8_t> data) const
     {
-        return getNetworkData().network->sendRPC(*this, id, bs);
-    }
-
-    /// Attempt to send a packet derived from NetworkPacketBase to the peer
-    /// @param packet The packet to send
-    template <class Packet>
-    inline bool sendRPC(const Packet& packet) const
-    {
-        static_assert(is_network_packet<Packet>(), "Packet must derive from NetworkPacketBase");
-        INetwork& network = *getNetworkData().network;
-        const ENetworkType type = network.getNetworkType();
-        if (type >= ENetworkType_End) {
-            return false;
-        }
-
-        INetworkBitStream& bs = network.writeBitStream();
-        packet.write(bs);
-        return sendRPC(Packet::getID(type), bs);
-    }
-
-    /// Attempt to send a packet derived from NetworkPacketBase to the peer
-    /// @param packet The packet to send
-    template <class Packet>
-    inline bool sendPacket(const Packet& packet) const
-    {
-        static_assert(is_network_packet<Packet>(), "Packet must derive from NetworkPacketBase");
-        INetwork& network = *getNetworkData().network;
-        const ENetworkType type = network.getNetworkType();
-        if (type >= ENetworkType_End) {
-            return false;
-        }
-
-        INetworkBitStream& bs = network.writeBitStream();
-        packet.write(bs);
-        return sendPacket(bs);
+        return getNetworkData().network->sendRPC(*this, id, data);
     }
 };

@@ -16,6 +16,7 @@
 #include <glm/vec4.hpp>
 #include <queue>
 #include <stack>
+#include <string.h>
 #include <string>
 #include <utility>
 #include <vector>
@@ -251,17 +252,115 @@ struct SemanticVersion {
     }
 };
 
+/// An ABI-stable, C-compatible string on the stack
+template <size_t Size>
+struct StaticString {
+    /// The actual usable size - this accounts for the trailing 0
+    constexpr static size_t UsableStaticSize = Size - 1;
+
+    /// Empty string constructor
+    StaticString()
+        : len(0)
+    {
+        storage[0] = 0;
+    }
+
+    /// StringView copy constructor
+    StaticString(StringView string)
+    {
+        len = std::min(string.size(), UsableStaticSize);
+        memcpy(storage.data(), string.data(), len);
+        storage[len] = 0;
+    }
+
+    /// StringView copy assignment
+    StaticString<Size>& operator=(StringView string)
+    {
+        len = std::min(string.size(), UsableStaticSize);
+        memcpy(storage.data(), string.data(), len);
+        storage[len] = 0;
+
+        return *this;
+    }
+
+    /// Get the data
+    constexpr StaticArray<char, Size>& data()
+    {
+        return storage;
+    }
+
+    /// Get the data
+    constexpr const StaticArray<char, Size>& data() const
+    {
+        return storage;
+    }
+
+    /// Get the string's length
+    constexpr size_t length() const
+    {
+        return len;
+    }
+
+    constexpr bool empty() const
+    {
+        return length() == 0;
+    }
+
+    /// Clear the string
+    void clear()
+    {
+        storage[0] = 0;
+        len = 0;
+    }
+
+    /// Compare the string to another string
+    int cmp(const StaticString<Size>& other) const
+    {
+        return strcmp(data(), other.data());
+    }
+
+    /// Return whether the string is equal to another string
+    bool operator==(const StaticString<Size>& other) const
+    {
+        if (length() != other.length()) {
+            return false;
+        }
+        return !strncmp(data(), other.data(), length());
+    }
+
+    constexpr char& operator[](size_t index)
+    {
+        assert(index < length());
+        return data()[index];
+    }
+
+    constexpr const char& operator[](size_t index) const
+    {
+        assert(index < length());
+        return data()[index];
+    }
+
+    /// Cast to StringView
+    operator StringView() const
+    {
+        return StringView(data().data(), length());
+    }
+
+private:
+    size_t len;
+    StaticArray<char, Size> storage;
+};
+
 /// An ABI-stable, C-compatible string that allows for specifying a static allocation of a size before falling back to dynamic allocation
 template <size_t Size>
 struct HybridString {
-    /// The actualy usable size - this accounts for the trailing 0
+    /// The actual usable size - this accounts for the trailing 0
     constexpr static size_t UsableStaticSize = Size - 1;
 
     /// Empty string constructor
     HybridString()
         : lenDynamic(0)
     {
-        static_assert(Size > 0);
         staticStorage[0] = 0;
     }
 

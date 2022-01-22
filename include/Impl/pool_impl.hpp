@@ -78,6 +78,11 @@ struct UniqueIDArray : public NoCopy {
         return valid_.test(index);
     }
 
+    const FlatPtrHashSet<T>& entries() const
+    {
+        return entries_;
+    }
+
     const FlatPtrHashSet<T>& entries()
     {
         return entries_;
@@ -107,6 +112,11 @@ struct UniqueEntryArray : public NoCopy {
     }
 
     const FlatPtrHashSet<T>& entries() const
+    {
+        return entries_;
+    }
+
+    const FlatPtrHashSet<T>& entries()
     {
         return entries_;
     }
