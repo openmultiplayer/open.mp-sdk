@@ -1,6 +1,5 @@
 #pragma once
 
-#include "exports.hpp"
 #include <absl/container/flat_hash_map.h>
 #include <absl/container/flat_hash_set.h>
 #include <absl/strings/string_view.h>
@@ -20,6 +19,12 @@
 #include <string>
 #include <utility>
 #include <vector>
+
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
+#define OMP_BUILD_PLATFORM WINDOWS
+#else
+#define OMP_BUILD_PLATFORM UNIX
+#endif
 
 /* Fix Ubuntu 18.04 build - possibly remove when EOL depending on which
  * other distributions we might want to support (18.04 uses glibc 2.27)
@@ -316,7 +321,7 @@ struct StaticString {
     /// Compare the string to another string
     int cmp(const StaticString<Size>& other) const
     {
-        return strcmp(data(), other.data());
+        return strcmp(data().data(), other.data().data());
     }
 
     /// Return whether the string is equal to another string
@@ -325,7 +330,7 @@ struct StaticString {
         if (length() != other.length()) {
             return false;
         }
-        return !strncmp(data(), other.data(), length());
+        return !strncmp(data().data(), other.data().data(), length());
     }
 
     constexpr char& operator[](size_t index)
