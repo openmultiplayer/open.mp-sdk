@@ -22,14 +22,14 @@ struct IPlayerDialogData : public IPlayerData {
     PROVIDE_UID(DialogData_UID);
 
     /// Show a dialog to player
-    virtual void show(IPlayer& player, uint16_t id, DialogStyle style, StringView caption, StringView info, StringView button1, StringView button2) = 0;
+    virtual void show(IPlayer& player, int id, DialogStyle style, StringView caption, StringView info, StringView button1, StringView button2) = 0;
 
     /// Get player's active dialog
-    virtual uint16_t getActiveID() const = 0;
+    virtual int getActiveID() const = 0;
 };
 
 struct PlayerDialogEventHandler {
-    virtual void onDialogResponse(IPlayer& player, uint16_t dialogId, DialogResponse response, uint16_t listItem, StringView inputText) { }
+    virtual void onDialogResponse(IPlayer& player, int dialogId, DialogResponse response, int listItem, StringView inputText) { }
 };
 
 static const UID DialogsComponent_UID = UID(0x44a111350d611dde);
