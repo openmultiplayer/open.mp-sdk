@@ -8,9 +8,9 @@ struct PawnEventHandler {
     virtual void onAmxUnload(void* amx) = 0;
 };
 
-static const UUID PawnComponent_UUID = UUID(0x78906cd9f19c36a6);
+static const UID PawnComponent_UID = UID(0x78906cd9f19c36a6);
 struct IPawnComponent : public IComponent {
-    PROVIDE_UUID(PawnComponent_UUID);
+    PROVIDE_UID(PawnComponent_UID);
 
     /// Get the ConsoleEventHandler event dispatcher
     virtual IEventDispatcher<PawnEventHandler>& getEventDispatcher() = 0;

@@ -37,7 +37,7 @@ namespace absl_omp = absl::lts_20210324;
 typedef glm::vec2 Vector2;
 typedef glm::vec3 Vector3;
 typedef glm::vec4 Vector4;
-typedef uint64_t UUID;
+typedef uint64_t UID;
 typedef std::chrono::steady_clock Time;
 typedef std::chrono::steady_clock::time_point TimePoint;
 typedef std::chrono::system_clock WorldTime;

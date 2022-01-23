@@ -359,9 +359,9 @@ struct VehicleEventHandler {
 };
 
 /// A vehicle pool
-static const UUID VehicleComponent_UUID = UUID(0x3f1f62ee9e22ab19);
+static const UID VehicleComponent_UID = UID(0x3f1f62ee9e22ab19);
 struct IVehiclesComponent : public IPoolComponent<IVehicle, VEHICLE_POOL_SIZE> {
-    PROVIDE_UUID(VehicleComponent_UUID)
+    PROVIDE_UID(VehicleComponent_UID)
 
     /// Get the number of model instances for each model
     virtual StaticArray<uint8_t, MAX_VEHICLE_MODELS>& models() = 0;
@@ -373,9 +373,9 @@ struct IVehiclesComponent : public IPoolComponent<IVehicle, VEHICLE_POOL_SIZE> {
 };
 
 /// Player vehicle data
-static const UUID SomePlayerData_UUID = UUID(0xa960485be6c70fb2);
+static const UID SomePlayerData_UID = UID(0xa960485be6c70fb2);
 struct IPlayerVehicleData : public IPlayerData {
-    PROVIDE_UUID(SomePlayerData_UUID)
+    PROVIDE_UID(SomePlayerData_UID)
 
     /// Get the player's vehicle
     /// Returns nullptr if they aren't in a vehicle

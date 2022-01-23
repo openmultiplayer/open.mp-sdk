@@ -33,9 +33,9 @@ struct TimerTimeOutHandler {
     virtual void free(ITimer& timer) = 0;
 };
 
-static const UUID TimersComponent_UUID = UUID(0x2ad8124c5ea257a3);
+static const UID TimersComponent_UID = UID(0x2ad8124c5ea257a3);
 struct ITimersComponent : public IComponent {
-    PROVIDE_UUID(TimersComponent_UUID);
+    PROVIDE_UID(TimersComponent_UID);
 
     /// Create a new timer handled by a handler which times out after a certain time
     /// @param handler The handler which handlers time out

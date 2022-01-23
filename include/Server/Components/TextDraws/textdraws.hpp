@@ -165,10 +165,10 @@ struct TextDrawEventHandler {
     virtual void onPlayerTextDrawClick(IPlayer& player, IPlayerTextDraw& td) { }
 };
 
-static const UUID TextDrawsComponent_UUID = UUID(0x9b5dc2b1d15c992a);
+static const UID TextDrawsComponent_UID = UID(0x9b5dc2b1d15c992a);
 /// The textdraw component which is a global textdraw pool
 struct ITextDrawsComponent : public IPoolComponent<ITextDraw, GLOBAL_TEXTDRAW_POOL_SIZE> {
-    PROVIDE_UUID(TextDrawsComponent_UUID);
+    PROVIDE_UID(TextDrawsComponent_UID);
 
     /// Get the textdraw event dispatcher
     virtual IEventDispatcher<TextDrawEventHandler>& getEventDispatcher() = 0;
@@ -180,10 +180,10 @@ struct ITextDrawsComponent : public IPoolComponent<ITextDraw, GLOBAL_TEXTDRAW_PO
     virtual ITextDraw* create(Vector2 position, int model) = 0;
 };
 
-static const UUID PlayerTextDrawData_UUID = UUID(0xbf08495682312400);
+static const UID PlayerTextDrawData_UID = UID(0xbf08495682312400);
 /// The textdraw player data which is a player textdraw pool
 struct IPlayerTextDrawData : public IPlayerData, public IPool<IPlayerTextDraw, PLAYER_TEXTDRAW_POOL_SIZE> {
-    PROVIDE_UUID(PlayerTextDrawData_UUID);
+    PROVIDE_UID(PlayerTextDrawData_UID);
 
     /// Begin selecting textdraws for the player
     virtual void beginSelection(Colour highlight) = 0;

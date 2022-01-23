@@ -17,9 +17,9 @@ enum DialogResponse {
     DialogResponse_Left
 };
 
-static const UUID DialogData_UUID = UUID(0xbc03376aa3591a11);
+static const UID DialogData_UID = UID(0xbc03376aa3591a11);
 struct IPlayerDialogData : public IPlayerData {
-    PROVIDE_UUID(DialogData_UUID);
+    PROVIDE_UID(DialogData_UID);
 
     /// Show a dialog to player
     virtual void show(IPlayer& player, uint16_t id, DialogStyle style, StringView caption, StringView info, StringView button1, StringView button2) = 0;
@@ -32,9 +32,9 @@ struct PlayerDialogEventHandler {
     virtual void onDialogResponse(IPlayer& player, uint16_t dialogId, DialogResponse response, uint16_t listItem, StringView inputText) { }
 };
 
-static const UUID DialogsComponent_UUID = UUID(0x44a111350d611dde);
+static const UID DialogsComponent_UID = UID(0x44a111350d611dde);
 struct IDialogsComponent : public IComponent {
-    PROVIDE_UUID(DialogsComponent_UUID);
+    PROVIDE_UID(DialogsComponent_UID);
 
     /// Access to event dispatchers for other components to add handlers to
     virtual IEventDispatcher<PlayerDialogEventHandler>& getEventDispatcher() = 0;
