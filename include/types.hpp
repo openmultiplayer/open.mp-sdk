@@ -566,6 +566,9 @@ private:
 
 using OptimisedString = HybridString<sizeof(char) * sizeof(Impl::HybridStringDynamicStorage)>;
 
+/// Macro for quick printing of a StringView or HybridString to %.s
+#define PRINT_VIEW(view) view.length(), view.data()
+
 template <typename T, typename U>
 inline constexpr auto CEILDIV(T n, U d) -> decltype(n / d)
 {
