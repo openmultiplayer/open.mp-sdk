@@ -201,10 +201,11 @@ struct SemanticVersion {
     uint8_t patch; ///< PATCH version when you make backwards compatible bug fixes
     uint16_t prerel; ///< PRE-RELEASE version
 
-    SemanticVersion(uint8_t major, uint8_t minor, uint8_t patch, uint8_t prerel = 0)
+    SemanticVersion(uint8_t major, uint8_t minor, uint8_t patch, uint16_t prerel = 0)
         : major(major)
         , minor(minor)
         , patch(patch)
+        , prerel(prerel)
     {
     }
 

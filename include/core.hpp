@@ -116,7 +116,7 @@ struct ILogger {
 /// The core interface
 struct ICore : public IExtensible, public ILogger {
     /// Get the SDK version
-    virtual SemanticVersion getSDKVersion() = 0;
+    virtual SemanticVersion getVersion() = 0;
 
     /// Get the player pool
     virtual IPlayerPool& getPlayers() = 0;
