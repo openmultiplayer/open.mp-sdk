@@ -366,7 +366,7 @@ struct IVehiclesComponent : public IPoolComponent<IVehicle, VEHICLE_POOL_SIZE> {
     /// Get the number of model instances for each model
     virtual StaticArray<uint8_t, MAX_VEHICLE_MODELS>& models() = 0;
 
-    virtual IVehicle* create(int modelID, Vector3 position, float Z = 0.0f, int colour1 = -1, int colour2 = -1, Seconds respawnDelay = Seconds(-1), bool addSiren = false) = 0;
+    virtual IVehicle* create(bool isStatic, int modelID, Vector3 position, float Z = 0.0f, int colour1 = -1, int colour2 = -1, Seconds respawnDelay = Seconds(-1), bool addSiren = false) = 0;
     virtual IVehicle* create(const VehicleSpawnData& data) = 0;
 
     virtual IEventDispatcher<VehicleEventHandler>& getEventDispatcher() = 0;
