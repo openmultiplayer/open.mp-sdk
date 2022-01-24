@@ -22,7 +22,6 @@
 constexpr int INVALID_PACKET_ID = -1;
 
 struct IPlayer;
-struct INetworkPeer;
 struct PeerNetworkData;
 
 enum PeerDisconnectReason {
@@ -97,15 +96,26 @@ struct NetworkEventHandler {
 // Needs NetCode
 class NetworkBitStream;
 
-/// An event handler for network I/O events
-struct NetworkInOutEventHandler {
+/// An event handler for incoming network I/O events
+struct NetworkInEventHandler {
     virtual bool receivedPacket(IPlayer& peer, int id, NetworkBitStream& bs) { return true; }
     virtual bool receivedRPC(IPlayer& peer, int id, NetworkBitStream& bs) { return true; }
 };
 
-/// An event handler for I/O events bound to a specific RPC/packet ID
-struct SingleNetworkInOutEventHandler {
+/// An event handler for incoming I/O events bound to a specific RPC/packet ID
+struct SingleNetworkInEventHandler {
     virtual bool received(IPlayer& peer, NetworkBitStream& bs) { return true; }
+};
+
+/// An event handler for outgoing network I/O events
+struct NetworkOutEventHandler {
+    virtual bool sentPacket(IPlayer* peer, int id, NetworkBitStream& bs) { return true; }
+    virtual bool sentRPC(IPlayer* peer, int id, NetworkBitStream& bs) { return true; }
+};
+
+/// An event handler for outgoing I/O events bound to a specific RPC/packet ID
+struct SingleNetworkOutEventHandler {
+    virtual bool sent(IPlayer* peer, NetworkBitStream& bs) { return true; }
 };
 
 /// A peer address with support for IPv4 and IPv6
@@ -222,40 +232,49 @@ struct INetwork : virtual IExtensible {
     /// Get the dispatcher which dispatches network events
     virtual IEventDispatcher<NetworkEventHandler>& getEventDispatcher() = 0;
 
-    /// Get the dispatcher which dispatches network I/O events
-    virtual IEventDispatcher<NetworkInOutEventHandler>& getInOutEventDispatcher() = 0;
+    /// Get the dispatcher which dispatches incoming network events
+    virtual IEventDispatcher<NetworkInEventHandler>& getInEventDispatcher() = 0;
 
-    /// Get the dispatcher which dispatches I/O events bound to a specific RPC ID
-    virtual IIndexedEventDispatcher<SingleNetworkInOutEventHandler>& getPerRPCInOutEventDispatcher() = 0;
+    /// Get the dispatcher which dispatches incoming network events bound to a specific RPC ID
+    virtual IIndexedEventDispatcher<SingleNetworkInEventHandler>& getPerRPCInEventDispatcher() = 0;
 
-    /// Get the dispatcher which dispatches I/O events bound to a specific packet ID
-    virtual IIndexedEventDispatcher<SingleNetworkInOutEventHandler>& getPerPacketInOutEventDispatcher() = 0;
+    /// Get the dispatcher which dispatches incoming network events bound to a specific packet ID
+    virtual IIndexedEventDispatcher<SingleNetworkInEventHandler>& getPerPacketInEventDispatcher() = 0;
+
+    /// Get the dispatcher which dispatches incoming network events
+    virtual IEventDispatcher<NetworkOutEventHandler>& getOutEventDispatcher() = 0;
+
+    /// Get the dispatcher which dispatches incoming network events bound to a specific RPC ID
+    virtual IIndexedEventDispatcher<SingleNetworkOutEventHandler>& getPerRPCOutEventDispatcher() = 0;
+
+    /// Get the dispatcher which dispatches incoming network events bound to a specific packet ID
+    virtual IIndexedEventDispatcher<SingleNetworkOutEventHandler>& getPerPacketOutEventDispatcher() = 0;
 
     /// Attempt to send a packet to a network peer
     /// @param peer The network peer to send the packet to
     /// @param data The data span with the length in BITS
-    virtual bool sendPacket(const INetworkPeer& peer, Span<uint8_t> data) = 0;
+    virtual bool sendPacket(IPlayer& peer, Span<uint8_t> data) = 0;
 
     /// Attempt to send an RPC to a network peer
     /// @param peer The network peer to send the RPC to
     /// @param id The RPC ID for the current network
     /// @param data The data span with the length in BITS
-    virtual bool sendRPC(const INetworkPeer& peer, int id, Span<uint8_t> data) = 0;
+    virtual bool sendRPC(IPlayer& peer, int id, Span<uint8_t> data) = 0;
 
     /// Attempt to broadcast an RPC to everyone on this network
     /// @param id The RPC ID for the current network
     /// @param data The data span with the length in BITS
     /// @param exceptPeer send RPC to everyone except this peer
-    virtual bool broadcastRPC(int id, Span<uint8_t> data, const INetworkPeer* exceptPeer = nullptr) = 0;
+    virtual bool broadcastRPC(int id, Span<uint8_t> data, const IPlayer* exceptPeer = nullptr) = 0;
 
     /// Get netowrk statistics
     virtual NetworkStats getStatistics(int playerIndex = -1) = 0;
 
     /// Get the last ping for a peer on this network or 0 if the peer isn't on this network
-    virtual unsigned getPing(const INetworkPeer& peer) = 0;
+    virtual unsigned getPing(const IPlayer& peer) = 0;
 
     /// Disconnect the peer from the network
-    virtual void disconnect(const INetworkPeer& peer) = 0;
+    virtual void disconnect(const IPlayer& peer) = 0;
 
     /// Ban a peer from the network
     virtual void ban(const BanEntry& entry, Milliseconds expire = Milliseconds(0)) = 0;
@@ -297,31 +316,4 @@ struct PeerNetworkData {
 
     INetwork* network; ///< The network associated with the peer
     NetworkID networkID; ///< The peer's network ID
-};
-
-/// A network peer interface
-struct INetworkPeer : virtual IExtensible {
-
-    virtual const PeerNetworkData& getNetworkData() const = 0;
-
-    /// Get the peer's ping from their network
-    unsigned getPing() const
-    {
-        return getNetworkData().network->getPing(*this);
-    }
-
-    /// Attempt to send a packet to the network peer
-    /// @param bs The bit stream with data to send
-    bool sendPacket(Span<uint8_t> data) const
-    {
-        return getNetworkData().network->sendPacket(*this, data);
-    }
-
-    /// Attempt to send an RPC to the network peer
-    /// @param id The RPC ID for the current network
-    /// @param bs The bit stream with data to send
-    bool sendRPC(int id, Span<uint8_t> data) const
-    {
-        return getNetworkData().network->sendRPC(*this, id, data);
-    }
 };

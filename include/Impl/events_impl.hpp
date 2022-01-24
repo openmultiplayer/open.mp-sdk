@@ -74,6 +74,11 @@ struct DefaultEventHandlerStorage {
         return false;
     }
 
+    size_t count() const
+    {
+        return entries.size();
+    }
+
     typename DynamicArray<Entry>::iterator begin()
     {
         return entries.begin();
@@ -134,6 +139,11 @@ struct DefaultEventDispatcher final : public IEventDispatcher<EventHandlerType>,
         return std::any_of(handlers.begin(), handlers.end(), typename Storage::template Func<bool, Fn>(fn));
     }
 
+    size_t count() const override
+    {
+        return handlers.count();
+    }
+
 private:
     Storage handlers;
 };
@@ -147,9 +157,17 @@ struct DefaultIndexedEventDispatcher final : public IIndexedEventDispatcher<Even
     {
     }
 
-    size_t count() override
+    size_t count() const override
     {
         return handlers.size();
+    }
+
+    size_t count(size_t index) const override
+    {
+        if (index >= handlers.size()) {
+            return 0;
+        }
+        return handlers[index].count();
     }
 
     bool addEventHandler(EventHandlerType* handler, size_t index, event_order_t priority = EventPriority_Default) override
@@ -195,7 +213,7 @@ struct DefaultIndexedEventDispatcher final : public IIndexedEventDispatcher<Even
     }
 
     template <typename Fn>
-    void stopAtFalse(size_t index, Fn fn)
+    bool stopAtFalse(size_t index, Fn fn)
     {
         return std::all_of(handlers[index].begin(), handlers[index].end(), typename Storage::template Func<bool, Fn>(fn));
     }

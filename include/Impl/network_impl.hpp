@@ -9,13 +9,18 @@ namespace Impl {
 
 struct Network : public INetwork, public NoCopy {
     DefaultEventDispatcher<NetworkEventHandler> networkEventDispatcher;
-    DefaultEventDispatcher<NetworkInOutEventHandler> inOutEventDispatcher;
-    DefaultIndexedEventDispatcher<SingleNetworkInOutEventHandler> rpcInOutEventDispatcher;
-    DefaultIndexedEventDispatcher<SingleNetworkInOutEventHandler> packetInOutEventDispatcher;
+    DefaultEventDispatcher<NetworkInEventHandler> inEventDispatcher;
+    DefaultIndexedEventDispatcher<SingleNetworkInEventHandler> rpcInEventDispatcher;
+    DefaultIndexedEventDispatcher<SingleNetworkInEventHandler> packetInEventDispatcher;
+    DefaultEventDispatcher<NetworkOutEventHandler> outEventDispatcher;
+    DefaultIndexedEventDispatcher<SingleNetworkOutEventHandler> rpcOutEventDispatcher;
+    DefaultIndexedEventDispatcher<SingleNetworkOutEventHandler> packetOutEventDispatcher;
 
     Network(size_t packetCount, size_t rpcCount)
-        : rpcInOutEventDispatcher(rpcCount)
-        , packetInOutEventDispatcher(packetCount)
+        : rpcInEventDispatcher(rpcCount)
+        , packetInEventDispatcher(packetCount)
+        , rpcOutEventDispatcher(rpcCount)
+        , packetOutEventDispatcher(packetCount)
     {
     }
 
@@ -24,19 +29,34 @@ struct Network : public INetwork, public NoCopy {
         return networkEventDispatcher;
     }
 
-    IEventDispatcher<NetworkInOutEventHandler>& getInOutEventDispatcher() override
+    IEventDispatcher<NetworkInEventHandler>& getInEventDispatcher() override
     {
-        return inOutEventDispatcher;
+        return inEventDispatcher;
     }
 
-    IIndexedEventDispatcher<SingleNetworkInOutEventHandler>& getPerRPCInOutEventDispatcher() override
+    IIndexedEventDispatcher<SingleNetworkInEventHandler>& getPerRPCInEventDispatcher() override
     {
-        return rpcInOutEventDispatcher;
+        return rpcInEventDispatcher;
     }
 
-    IIndexedEventDispatcher<SingleNetworkInOutEventHandler>& getPerPacketInOutEventDispatcher() override
+    IIndexedEventDispatcher<SingleNetworkInEventHandler>& getPerPacketInEventDispatcher() override
     {
-        return packetInOutEventDispatcher;
+        return packetInEventDispatcher;
+    }
+
+    IEventDispatcher<NetworkOutEventHandler>& getOutEventDispatcher() override
+    {
+        return outEventDispatcher;
+    }
+
+    IIndexedEventDispatcher<SingleNetworkOutEventHandler>& getPerRPCOutEventDispatcher() override
+    {
+        return rpcOutEventDispatcher;
+    }
+
+    IIndexedEventDispatcher<SingleNetworkOutEventHandler>& getPerPacketOutEventDispatcher() override
+    {
+        return packetOutEventDispatcher;
     }
 };
 

@@ -170,48 +170,48 @@ struct ICore : public IExtensible, public ILogger {
 
     /// Add a per-RPC event handler for each network for the packet's network ID
     template <int PktID>
-    inline void addPerRPCEventHandler(SingleNetworkInOutEventHandler* handler, event_order_t priority = EventPriority_Default)
+    inline void addPerRPCInEventHandler(SingleNetworkInEventHandler* handler, event_order_t priority = EventPriority_Default)
     {
         const FlatPtrHashSet<INetwork>& networks = getNetworks();
         for (INetwork* network : networks) {
             if (PktID != INVALID_PACKET_ID) {
-                network->getPerRPCInOutEventDispatcher().addEventHandler(handler, PktID, priority);
+                network->getPerRPCInEventDispatcher().addEventHandler(handler, PktID, priority);
             }
         }
     }
 
     /// Add a per-PACKET event handler for each network for the packet's network ID
     template <int PktID>
-    inline void addPerPacketEventHandler(SingleNetworkInOutEventHandler* handler, event_order_t priority = EventPriority_Default)
+    inline void addPerPacketInEventHandler(SingleNetworkInEventHandler* handler, event_order_t priority = EventPriority_Default)
     {
         const FlatPtrHashSet<INetwork>& networks = getNetworks();
         for (INetwork* network : networks) {
             if (PktID != INVALID_PACKET_ID) {
-                network->getPerPacketInOutEventDispatcher().addEventHandler(handler, PktID, priority);
+                network->getPerPacketInEventDispatcher().addEventHandler(handler, PktID, priority);
             }
         }
     }
 
     /// Remove a per-RPC event handler for each network for the packet's network ID
     template <int PktID>
-    inline void removePerRPCEventHandler(SingleNetworkInOutEventHandler* handler)
+    inline void removePerRPCInEventHandler(SingleNetworkInEventHandler* handler)
     {
         const FlatPtrHashSet<INetwork>& networks = getNetworks();
         for (INetwork* network : networks) {
             if (PktID != INVALID_PACKET_ID) {
-                network->getPerRPCInOutEventDispatcher().removeEventHandler(handler, PktID);
+                network->getPerRPCInEventDispatcher().removeEventHandler(handler, PktID);
             }
         }
     }
 
     /// Remove a per-PACKET event handler for each network for the packet's network ID
-    template <int PktID, class EventHandlerType>
-    inline void removePerPacketEventHandler(EventHandlerType* handler)
+    template <int PktID>
+    inline void removePerPacketInEventHandler(SingleNetworkInEventHandler* handler)
     {
         const FlatPtrHashSet<INetwork>& networks = getNetworks();
         for (INetwork* network : networks) {
             if (PktID != INVALID_PACKET_ID) {
-                network->getPerPacketInOutEventDispatcher().removeEventHandler(handler, PktID);
+                network->getPerPacketInEventDispatcher().removeEventHandler(handler, PktID);
             }
         }
     }

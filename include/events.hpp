@@ -24,12 +24,14 @@ struct IEventDispatcher {
     virtual bool addEventHandler(EventHandlerType* handler, event_order_t priority = EventPriority_Default) = 0;
     virtual bool removeEventHandler(EventHandlerType* handler) = 0;
     virtual bool hasEventHandler(EventHandlerType* handler, event_order_t& priority) = 0;
+    virtual size_t count() const = 0;
 };
 
 /// An indexed event dispatcher which executes events based on an index
 template <class EventHandlerType>
 struct IIndexedEventDispatcher {
-    virtual size_t count() = 0;
+    virtual size_t count() const = 0;
+    virtual size_t count(size_t index) const = 0;
     virtual bool addEventHandler(EventHandlerType* handler, size_t index, event_order_t priority = EventPriority_Default) = 0;
     virtual bool removeEventHandler(EventHandlerType* handler, size_t index) = 0;
     virtual bool hasEventHandler(EventHandlerType* handler, size_t index, event_order_t& priority) = 0;

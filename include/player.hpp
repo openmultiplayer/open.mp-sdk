@@ -366,7 +366,7 @@ enum EPlayerNameStatus {
 };
 
 /// A player interface
-struct IPlayer : public IEntity, public INetworkPeer {
+struct IPlayer : public IEntity {
     virtual ~IPlayer() { }
 
     /// Kick the player
@@ -640,16 +640,16 @@ struct IPlayer : public IEntity, public INetworkPeer {
     virtual void setChatBubble(StringView text, const Colour& colour, float drawDist, Milliseconds expire) = 0;
 
     /// Send a message to the player
-    virtual void sendClientMessage(const Colour& colour, StringView message) const = 0;
+    virtual void sendClientMessage(const Colour& colour, StringView message) = 0;
 
     /// Send a standardly formatted chat message from another player
-    virtual void sendChatMessage(IPlayer& sender, StringView message) const = 0;
+    virtual void sendChatMessage(IPlayer& sender, StringView message) = 0;
 
     /// Send a command to server (Player)
-    virtual void sendCommand(StringView message) const = 0;
+    virtual void sendCommand(StringView message) = 0;
 
     /// Send a game text message to the player
-    virtual void sendGameText(StringView message, Milliseconds time, int style) const = 0;
+    virtual void sendGameText(StringView message, Milliseconds time, int style) = 0;
 
     /// Set the player's weather
     virtual void setWeather(int weatherID) = 0;
@@ -757,6 +757,29 @@ struct IPlayer : public IEntity, public INetworkPeer {
 
     /// Get whether the player is a bot (NPC)
     virtual bool isBot() const = 0;
+
+    virtual const PeerNetworkData& getNetworkData() const = 0;
+
+    /// Get the peer's ping from their network
+    unsigned getPing() const
+    {
+        return getNetworkData().network->getPing(*this);
+    }
+
+    /// Attempt to send a packet to the network peer
+    /// @param bs The bit stream with data to send
+    bool sendPacket(Span<uint8_t> data)
+    {
+        return getNetworkData().network->sendPacket(*this, data);
+    }
+
+    /// Attempt to send an RPC to the network peer
+    /// @param id The RPC ID for the current network
+    /// @param bs The bit stream with data to send
+    bool sendRPC(int id, Span<uint8_t> data)
+    {
+        return getNetworkData().network->sendRPC(*this, id, data);
+    }
 
     /// Query player data by its type
     /// @typeparam PlayerDataT The data type, must derive from IPlayerData
