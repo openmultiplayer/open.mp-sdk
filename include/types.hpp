@@ -359,6 +359,13 @@ private:
     StaticArray<char, Size> storage;
 };
 
+namespace Impl {
+struct HybridStringDynamicStorage {
+    char* ptr; ///< The dynamic storage
+    void(__attribute__((__cdecl__)) * free)(void*); ///< The free function to use for deallocating the dynamic storage
+};
+};
+
 /// An ABI-stable, C-compatible string that allows for specifying a static allocation of a size before falling back to dynamic allocation
 template <size_t Size>
 struct HybridString {
@@ -405,7 +412,7 @@ struct HybridString {
     /// Move constructor
     HybridString(HybridString<Size>&& other)
     {
-        initMove(other.data(), other.length());
+        initMove(other.data(), other.length(), other.dynamicStorage.free);
         other.lenDynamic = 0;
     }
 
@@ -413,7 +420,7 @@ struct HybridString {
     HybridString<Size>& operator=(HybridString<Size>&& other)
     {
         clear();
-        initMove(other.data(), other.length());
+        initMove(other.data(), other.length(), other.dynamicStorage.free);
         other.lenDynamic = 0;
 
         return *this;
@@ -435,13 +442,13 @@ struct HybridString {
     /// Get the data
     constexpr char* data()
     {
-        return dynamic() ? dynamicStorage : staticStorage;
+        return dynamic() ? dynamicStorage.ptr : staticStorage;
     }
 
     /// Get the data
     constexpr const char* data() const
     {
-        return dynamic() ? dynamicStorage : staticStorage;
+        return dynamic() ? dynamicStorage.ptr : staticStorage;
     }
 
     /// Get whether the string is dynamically allocated
@@ -465,7 +472,7 @@ struct HybridString {
     void clear()
     {
         if (dynamic()) {
-            _free(dynamicStorage);
+            dynamicStorage.free(dynamicStorage.ptr);
         }
         staticStorage[0] = 0;
         lenDynamic = 0;
@@ -512,8 +519,9 @@ private:
         lenDynamic = (len << 1) | isDynamic;
         char* ptr;
         if (isDynamic) {
-            dynamicStorage = reinterpret_cast<char*>(_malloc(sizeof(char) * (len + 1)));
-            ptr = dynamicStorage;
+            dynamicStorage.ptr = reinterpret_cast<char*>(malloc(sizeof(char) * (len + 1)));
+            dynamicStorage.free = &free;
+            ptr = dynamicStorage.ptr;
         } else {
             ptr = staticStorage;
         }
@@ -522,12 +530,13 @@ private:
     }
 
     /// Move data
-    void initMove(char* data, size_t len)
+    void initMove(char* data, size_t len, void(__attribute__((__cdecl__)) * freeFn)(void*))
     {
         const bool isDynamic = len > UsableStaticSize;
         lenDynamic = (len << 1) | isDynamic;
         if (isDynamic) {
-            dynamicStorage = data;
+            dynamicStorage.ptr = data;
+            dynamicStorage.free = freeFn;
         } else {
             memcpy(staticStorage, data, len);
             staticStorage[len] = 0;
@@ -540,21 +549,21 @@ private:
         const bool isDynamic = len > UsableStaticSize;
         lenDynamic = (len << 1) | isDynamic;
         if (isDynamic) {
-            dynamicStorage = reinterpret_cast<char*>(_malloc(sizeof(char) * (len + 1)));
-            dynamicStorage[0] = 0;
+            dynamicStorage.ptr = reinterpret_cast<char*>(malloc(sizeof(char) * (len + 1)));
+            dynamicStorage.free = &free;
+            dynamicStorage.ptr[0] = 0;
         }
         data()[len] = 0;
     }
 
     size_t lenDynamic; ///< First bit is 1 if dynamic and 0 if static; the rest are the length
     union {
-        char* dynamicStorage; ///< Used when first bit of lenDynamic is 1
+        Impl::HybridStringDynamicStorage dynamicStorage; ///< Used when first bit of lenDynamic is 1
         char staticStorage[Size]; ///< Used when first bit of lenDynamic is 0
     };
-
-    void*(__attribute__((__cdecl__)) * _malloc)(size_t) = malloc;
-    void(__attribute__((__cdecl__)) * _free)(void*) = free;
 };
+
+using OptimisedString = HybridString<sizeof(char) * sizeof(Impl::HybridStringDynamicStorage)>;
 
 template <typename T, typename U>
 inline constexpr auto CEILDIV(T n, U d) -> decltype(n / d)
