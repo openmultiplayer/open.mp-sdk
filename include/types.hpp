@@ -540,6 +540,7 @@ private:
             dynamicStorage = reinterpret_cast<char*>(_malloc(sizeof(char) * (len + 1)));
             dynamicStorage[0] = 0;
         }
+        data()[len] = 0;
     }
 
     size_t lenDynamic; ///< First bit is 1 if dynamic and 0 if static; the rest are the length
