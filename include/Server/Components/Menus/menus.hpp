@@ -14,7 +14,7 @@ struct IMenu : public IIDProvider {
     virtual void setColumnHeader(StringView header, MenuColumn column) = 0;
 
     /// Adds an item to given column
-    virtual void addMenuItem(StringView itemText, MenuColumn column) = 0;
+    virtual int addMenuItem(StringView itemText, MenuColumn column) = 0;
 
     /// Disables a specific row in menu
     virtual void disableMenuRow(MenuRow row) = 0;
