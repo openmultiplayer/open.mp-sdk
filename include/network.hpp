@@ -10,12 +10,12 @@
 #include <string>
 #include <vector>
 
-#if OMP_BUILD_PLATFORM == WINDOWS
+#if OMP_BUILD_PLATFORM == OMP_WINDOWS
 #include <Winsock2.h>
 #include <unknwn.h>
 #include <ws2tcpip.h>
 #pragma comment(lib, "ws2_32.lib")
-#elif OMP_BUILD_PLATFORM == UNIX
+#elif OMP_BUILD_PLATFORM == OMP_UNIX
 #include <arpa/inet.h>
 #endif
 

@@ -20,10 +20,13 @@
 #include <utility>
 #include <vector>
 
+#define OMP_WINDOWS 0
+#define OMP_UNIX 1
+
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32__)
-#define OMP_BUILD_PLATFORM WINDOWS
+#define OMP_BUILD_PLATFORM OMP_WINDOWS
 #else
-#define OMP_BUILD_PLATFORM UNIX
+#define OMP_BUILD_PLATFORM OMP_UNIX
 #endif
 
 /* Fix Ubuntu 18.04 build - possibly remove when EOL depending on which
