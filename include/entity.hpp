@@ -27,29 +27,6 @@ struct IExtraDataProvider {
     virtual IExtraData* findData(UID id) const = 0;
 };
 
-namespace Impl {
-struct ExtraDataProvider {
-    IExtraData* findData(UID uuid) const
-    {
-        auto it = extraData_.find(uuid);
-        return it == extraData_.end() ? nullptr : it->second;
-    }
-
-    void addData(IExtraData* playerData)
-    {
-        extraData_.try_emplace(playerData->getUID(), playerData);
-    }
-
-    ~ExtraDataProvider() {
-        for (auto& v : extraData_) {
-            v.second->free();
-        }
-    }
-
-    FlatHashMap<UID, IExtraData*> extraData_;
-};
-}
-
 /// Query extra data by its type
 /// @typeparam ExtraDataT The data type, must derive from IExtraData
 template <class ExtraDataT>
