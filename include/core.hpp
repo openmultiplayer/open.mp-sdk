@@ -33,6 +33,14 @@ enum class SettableCoreDataType {
     AdminPassword,
 };
 
+enum ConfigOptionType {
+    ConfigOptionType_None = -1,
+    ConfigOptionType_Int = 0,
+    ConfigOptionType_String = 1,
+    ConfigOptionType_Float = 2,
+    ConfigOptionType_Strings = 3,
+};
+
 struct IConfig : public IExtensible {
     /// Get a variable as a string
     virtual const StringView getString(StringView key) const = 0;
@@ -49,6 +57,9 @@ struct IConfig : public IExtensible {
     /// Get the count of a list of strings
     /// Useful for pre-allocating the container that will store the getStrings() result
     virtual size_t getStringsCount(StringView key) const = 0;
+
+    /// Get the type of the option
+    virtual ConfigOptionType getType(StringView key) const = 0;
 
     /// Get the number of bans
     virtual size_t getBansCount() const = 0;

@@ -127,7 +127,8 @@ struct IComponent : virtual IExtensible, public IUIDProvider {
     virtual void onFree(IComponent* component) { }
 
     /// Fill a configuration object with custom configuration
-    virtual void provideConfiguration(ILogger& logger, IEarlyConfig& config) { }
+    /// @param defaults Whether to only provide default values. True when generating the config file
+    virtual void provideConfiguration(ILogger& logger, IEarlyConfig& config, bool defaults) { }
 
     /// Frees the component data
     virtual void free() = 0;
