@@ -207,7 +207,7 @@ struct ObjectEventHandler {
 };
 
 static const UID PlayerObjectData_UID = UID(0x93d4ed2344b07456);
-struct IPlayerObjectData : public IPlayerData, public IPool<IPlayerObject, OBJECT_POOL_SIZE> {
+struct IPlayerObjectData : public IExtraData, public IPool<IPlayerObject, OBJECT_POOL_SIZE> {
     PROVIDE_UID(PlayerObjectData_UID);
 
     /// Create a new player object

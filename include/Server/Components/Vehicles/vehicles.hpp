@@ -374,7 +374,7 @@ struct IVehiclesComponent : public IPoolComponent<IVehicle, VEHICLE_POOL_SIZE> {
 
 /// Player vehicle data
 static const UID SomePlayerData_UID = UID(0xa960485be6c70fb2);
-struct IPlayerVehicleData : public IPlayerData {
+struct IPlayerVehicleData : public IExtraData {
     PROVIDE_UID(SomePlayerData_UID)
 
     /// Get the player's vehicle

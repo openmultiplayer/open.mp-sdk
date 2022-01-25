@@ -27,7 +27,7 @@ struct IClass : public IExtensible, public IIDProvider {
 };
 
 static const UID PlayerClassData_UID = UID(0x185655ded843788b);
-struct IPlayerClassData : public IPlayerData {
+struct IPlayerClassData : public IExtraData {
     PROVIDE_UID(PlayerClassData_UID)
 
     virtual const PlayerClass& getClass() = 0;

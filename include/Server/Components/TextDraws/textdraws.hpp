@@ -182,7 +182,7 @@ struct ITextDrawsComponent : public IPoolComponent<ITextDraw, GLOBAL_TEXTDRAW_PO
 
 static const UID PlayerTextDrawData_UID = UID(0xbf08495682312400);
 /// The textdraw player data which is a player textdraw pool
-struct IPlayerTextDrawData : public IPlayerData, public IPool<IPlayerTextDraw, PLAYER_TEXTDRAW_POOL_SIZE> {
+struct IPlayerTextDrawData : public IExtraData, public IPool<IPlayerTextDraw, PLAYER_TEXTDRAW_POOL_SIZE> {
     PROVIDE_UID(PlayerTextDrawData_UID);
 
     /// Begin selecting textdraws for the player

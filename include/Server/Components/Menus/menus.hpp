@@ -38,7 +38,7 @@ struct MenuEventHandler {
 };
 
 static const UID PlayerMenuData_UID = UID(0x01d8e934e9791b99);
-struct IPlayerMenuData : public IPlayerData {
+struct IPlayerMenuData : public IExtraData {
     PROVIDE_UID(PlayerMenuData_UID)
 
     /// Get Player's current menu id

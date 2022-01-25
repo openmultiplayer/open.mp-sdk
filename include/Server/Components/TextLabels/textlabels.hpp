@@ -82,7 +82,7 @@ struct ITextLabelsComponent : public IPoolComponent<ITextLabel, TEXT_LABEL_POOL_
 
 static const UID PlayerTextLabelData_UID = UID(0xb9e2bd0dc5148c3c);
 /// The text label player data which is a player text label pool
-struct IPlayerTextLabelData : public IPlayerData, public IPool<IPlayerTextLabel, TEXT_LABEL_POOL_SIZE> {
+struct IPlayerTextLabelData : public IExtraData, public IPool<IPlayerTextLabel, TEXT_LABEL_POOL_SIZE> {
     PROVIDE_UID(PlayerTextLabelData_UID);
 
     /// Create a player text label

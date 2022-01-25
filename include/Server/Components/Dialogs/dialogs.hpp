@@ -18,7 +18,7 @@ enum DialogResponse {
 };
 
 static const UID DialogData_UID = UID(0xbc03376aa3591a11);
-struct IPlayerDialogData : public IPlayerData {
+struct IPlayerDialogData : public IExtraData {
     PROVIDE_UID(DialogData_UID);
 
     /// Show a dialog to player

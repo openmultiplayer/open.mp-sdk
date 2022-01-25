@@ -349,12 +349,6 @@ struct PlayerBulletData {
     uint16_t hitID;
 };
 
-/// A player data interface for per-player data
-struct IPlayerData : public IUIDProvider {
-    /// Frees the player data object, called on player disconnect, usually defaults to delete this
-    virtual void free() = 0;
-};
-
 struct IPlayerPool;
 struct IPlayer;
 
@@ -708,14 +702,6 @@ struct IPlayer : public IEntity {
     /// Get the player's bullet data
     virtual const PlayerBulletData& getBulletData() const = 0;
 
-    /// Add data associated with the player, preferrably used on player connect
-    virtual void addData(IPlayerData* playerData) = 0;
-
-    /// Query player data by its ID
-    /// @param id The UID of the data
-    /// @return A pointer to the data or nullptr if not available
-    virtual IPlayerData* queryData(UID id) const = 0;
-
     /// Toggle the camera targeting functions for the player
     virtual void toggleCameraTargeting(bool toggle) = 0;
 
@@ -781,15 +767,6 @@ struct IPlayer : public IEntity {
         return getNetworkData().network->sendRPC(*this, id, data);
     }
 
-    /// Query player data by its type
-    /// @typeparam PlayerDataT The data type, must derive from IPlayerData
-    template <class PlayerDataT>
-    PlayerDataT* queryData() const
-    {
-        static_assert(std::is_base_of<IPlayerData, PlayerDataT>::value, "queryData parameter must inherit from IPlayerData");
-        return static_cast<PlayerDataT*>(queryData(PlayerDataT::IID));
-    }
-
     /// Attempt to broadcast an RPC derived from NetworkPacketBase to the player's streamed peers
     /// @param packet The packet to send
     inline void broadcastRPCToStreamed(int id, Span<uint8_t> data, bool skipFrom = false) const
@@ -817,7 +794,6 @@ struct IPlayer : public IEntity {
 
 /// A player event handler
 struct PlayerEventHandler {
-    virtual IPlayerData* onPlayerDataRequest(IPlayer& player) { return nullptr; }
     virtual void onIncomingConnection(IPlayer& player, StringView ipAddress, unsigned short port) { }
     virtual void onConnect(IPlayer& player) { }
     virtual void onDisconnect(IPlayer& player, PeerDisconnectReason reason) { }
