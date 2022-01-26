@@ -507,6 +507,9 @@ struct IPlayer : public IEntity {
     // Send Death message
     virtual void sendDeathMessage(IPlayer& player, IPlayer* killer, int weapon) = 0;
 
+    /// Send empty death message
+    virtual void sendEmptyDeathMessage() = 0;
+
     /// Remove default map objects with a model in a radius at a specific position
     /// @param model The object model to remove
     /// @param pos The position to remove at
@@ -858,6 +861,9 @@ struct IPlayerPool : virtual IExtensible, public IReadOnlyPool<IPlayer, PLAYER_P
 
     /// sendDeathMessage for all players
     virtual void sendDeathMessageToAll(IPlayer* killer, IPlayer& killee, int weapon) = 0;
+
+    /// Send an empty death message to all players
+    virtual void sendEmptyDeathMessageToAll() = 0;
 
     /// createExplosion for all players
     virtual void createExplosionForAll(Vector3 vec, int type, float radius) = 0;
