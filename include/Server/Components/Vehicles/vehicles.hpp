@@ -232,6 +232,9 @@ struct IVehicle : public IEntity {
     /// Update the vehicle from a trailer sync packet
     virtual bool updateFromTrailerSync(const VehicleTrailerSyncPacket& unoccupiedSync, IPlayer& player) = 0;
 
+    /// Get the players which the vehicle is streamed for
+    virtual const FlatPtrHashSet<IPlayer>& streamedForPlayers() const = 0;
+
     /// Returns the current driver of the vehicle
     virtual IPlayer* getDriver() = 0;
 

@@ -777,6 +777,9 @@ struct IPlayer : public IEntity {
     /// Attempt to broadcast a packet derived from NetworkPacketBase to the player's streamed peers
     /// @param packet The packet to send
     virtual void broadcastPacketToStreamed(Span<uint8_t> data, int channel, bool skipFrom = true) const = 0;
+
+    /// Broadcast sync packet
+    virtual void broadcastSyncPacket(Span<uint8_t> data, int channel) const = 0;
 };
 
 /// A player event handler
