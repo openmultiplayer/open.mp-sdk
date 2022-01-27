@@ -30,6 +30,13 @@ enum PeerDisconnectReason {
     PeerDisconnectReason_Kicked
 };
 
+enum OrderingChannel {
+    OrderingChannel_Internal,
+    OrderingChannel_SyncPacket,
+    OrderingChannel_SyncRPC,
+    OrderingChannel_Unordered
+};
+
 /// The network types
 enum ENetworkType {
     ENetworkType_RakNetLegacy,
@@ -253,19 +260,19 @@ struct INetwork : virtual IExtensible {
     /// Attempt to send a packet to a network peer
     /// @param peer The network peer to send the packet to
     /// @param data The data span with the length in BITS
-    virtual bool sendPacket(IPlayer& peer, Span<uint8_t> data) = 0;
+    virtual bool sendPacket(IPlayer& peer, Span<uint8_t> data, int channel) = 0;
 
     /// Attempt to send an RPC to a network peer
     /// @param peer The network peer to send the RPC to
     /// @param id The RPC ID for the current network
     /// @param data The data span with the length in BITS
-    virtual bool sendRPC(IPlayer& peer, int id, Span<uint8_t> data) = 0;
+    virtual bool sendRPC(IPlayer& peer, int id, Span<uint8_t> data, int channel) = 0;
 
     /// Attempt to broadcast an RPC to everyone on this network
     /// @param id The RPC ID for the current network
     /// @param data The data span with the length in BITS
     /// @param exceptPeer send RPC to everyone except this peer
-    virtual bool broadcastRPC(int id, Span<uint8_t> data, const IPlayer* exceptPeer = nullptr) = 0;
+    virtual bool broadcastRPC(int id, Span<uint8_t> data, int channel, const IPlayer* exceptPeer = nullptr) = 0;
 
     /// Get netowrk statistics
     virtual NetworkStats getStatistics(int playerIndex = -1) = 0;

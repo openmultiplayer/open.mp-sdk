@@ -757,42 +757,26 @@ struct IPlayer : public IEntity {
 
     /// Attempt to send a packet to the network peer
     /// @param bs The bit stream with data to send
-    bool sendPacket(Span<uint8_t> data)
+    bool sendPacket(Span<uint8_t> data, int channel)
     {
-        return getNetworkData().network->sendPacket(*this, data);
+        return getNetworkData().network->sendPacket(*this, data, channel);
     }
 
     /// Attempt to send an RPC to the network peer
     /// @param id The RPC ID for the current network
     /// @param bs The bit stream with data to send
-    bool sendRPC(int id, Span<uint8_t> data)
+    bool sendRPC(int id, Span<uint8_t> data, int channel)
     {
-        return getNetworkData().network->sendRPC(*this, id, data);
+        return getNetworkData().network->sendRPC(*this, id, data, channel);
     }
 
     /// Attempt to broadcast an RPC derived from NetworkPacketBase to the player's streamed peers
     /// @param packet The packet to send
-    inline void broadcastRPCToStreamed(int id, Span<uint8_t> data, bool skipFrom = false) const
-    {
-        for (IPlayer* player : streamedForPlayers()) {
-            if (skipFrom && player == this) {
-                continue;
-            }
-            player->sendRPC(id, data);
-        }
-    }
+    virtual void broadcastRPCToStreamed(int id, Span<uint8_t> data, int channel, bool skipFrom = false) const = 0;
 
     /// Attempt to broadcast a packet derived from NetworkPacketBase to the player's streamed peers
     /// @param packet The packet to send
-    inline void broadcastPacketToStreamed(Span<uint8_t> data, bool skipFrom = true) const
-    {
-        for (IPlayer* player : streamedForPlayers()) {
-            if (skipFrom && player == this) {
-                continue;
-            }
-            player->sendPacket(data);
-        }
-    }
+    virtual void broadcastPacketToStreamed(Span<uint8_t> data, int channel, bool skipFrom = true) const = 0;
 };
 
 /// A player event handler
@@ -871,15 +855,7 @@ struct IPlayerPool : virtual IExtensible, public IReadOnlyPool<IPlayer, PLAYER_P
     /// Request a new player with the given network parameters
     virtual Pair<NewConnectionResult, IPlayer*> requestPlayer(const PeerNetworkData& netData, const PeerRequestParams& params) = 0;
 
-    /// Get set of available network instances
-    virtual const FlatPtrHashSet<INetwork>& getNetworks() = 0;
-
     /// Attempt to broadcast an RPC derived from NetworkPacketBase to all peers
     /// @param packet The packet to send
-    inline void broadcastRPC(int id, Span<uint8_t> data, const IPlayer* skipFrom = nullptr)
-    {
-        for (INetwork* network : getNetworks()) {
-            network->broadcastRPC(id, data, skipFrom);
-        }
-    }
+    virtual void broadcastRPC(int id, Span<uint8_t> data, int channel, const IPlayer* skipFrom = nullptr) = 0;
 };
