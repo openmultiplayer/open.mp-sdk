@@ -280,7 +280,7 @@ protected:
         return reinterpret_cast<Type*>(&pool_[index * CEILDIV(sizeof(Type), alignof(Type)) * alignof(Type)]);
     }
 
-    char pool_[Capacity * sizeof(Type)];
+    char pool_[Capacity * CEILDIV(sizeof(Type), alignof(Type)) * alignof(Type)];
     UniqueIDArray<Interface, Capacity> allocated_;
     /// Implementation of the pool event dispatcher
     DefaultEventDispatcher<PoolEventHandler<Interface>> eventDispatcher_;
