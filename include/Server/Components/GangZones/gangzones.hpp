@@ -41,7 +41,7 @@ struct GangZoneEventHandler {
 
 static const UID GangZoneComponent_UID = UID(0xb3351d11ee8d8056);
 
-struct IGangZonesComponent : public IPoolComponent<IGangZone, GANG_ZONE_POOL_SIZE> {
+struct IGangZonesComponent : public IPoolComponent<IGangZone /*, GANG_ZONE_POOL_SIZE*/> {
     PROVIDE_UID(GangZoneComponent_UID);
 
     /// Get the event dispatcher

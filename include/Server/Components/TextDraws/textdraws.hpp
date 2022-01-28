@@ -167,7 +167,7 @@ struct TextDrawEventHandler {
 
 static const UID TextDrawsComponent_UID = UID(0x9b5dc2b1d15c992a);
 /// The textdraw component which is a global textdraw pool
-struct ITextDrawsComponent : public IPoolComponent<ITextDraw, GLOBAL_TEXTDRAW_POOL_SIZE> {
+struct ITextDrawsComponent : public IPoolComponent<ITextDraw /*, GLOBAL_TEXTDRAW_POOL_SIZE*/> {
     PROVIDE_UID(TextDrawsComponent_UID);
 
     /// Get the textdraw event dispatcher
@@ -182,7 +182,7 @@ struct ITextDrawsComponent : public IPoolComponent<ITextDraw, GLOBAL_TEXTDRAW_PO
 
 static const UID PlayerTextDrawData_UID = UID(0xbf08495682312400);
 /// The textdraw player data which is a player textdraw pool
-struct IPlayerTextDrawData : public IExtraData, public IPool<IPlayerTextDraw, PLAYER_TEXTDRAW_POOL_SIZE> {
+struct IPlayerTextDrawData : public IExtraData, public IPool<IPlayerTextDraw /*, PLAYER_TEXTDRAW_POOL_SIZE*/> {
     PROVIDE_UID(PlayerTextDrawData_UID);
 
     /// Begin selecting textdraws for the player

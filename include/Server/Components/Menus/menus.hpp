@@ -49,7 +49,7 @@ struct IPlayerMenuData : public IExtraData {
 };
 
 static const UID MenusComponent_UID = UID(0x621e219eb97ee0b2);
-struct IMenusComponent : public IPoolComponent<IMenu, MENU_POOL_SIZE> {
+struct IMenusComponent : public IPoolComponent<IMenu /*, MENU_POOL_SIZE*/> {
     PROVIDE_UID(MenusComponent_UID);
 
     virtual IEventDispatcher<MenuEventHandler>& getEventDispatcher() = 0;

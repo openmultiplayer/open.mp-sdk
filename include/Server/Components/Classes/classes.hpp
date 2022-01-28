@@ -40,7 +40,7 @@ struct ClassEventHandler {
 };
 
 static const UID ClassesComponent_UID = UID(0x8cfb3183976da208);
-struct IClassesComponent : public IPoolComponent<IClass, CLASS_POOL_SIZE> {
+struct IClassesComponent : public IPoolComponent<IClass /*, CLASS_POOL_SIZE*/> {
     PROVIDE_UID(ClassesComponent_UID)
 
     virtual IEventDispatcher<ClassEventHandler>& getEventDispatcher() = 0;

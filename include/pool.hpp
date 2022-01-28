@@ -91,15 +91,13 @@ public:
 
 /* Interfaces, to be passed around */
 
-template <typename T, size_t Count>
+template <typename T>
 struct IReadOnlyPool : virtual IExtensible {
-    static const size_t Capacity = Count;
-
-    /// Check if an index is claimed
-    virtual bool valid(int index) const = 0;
-
     /// Get the object at an index
-    virtual T& get(int index) = 0;
+    virtual T* get(int index) = 0;
+
+    /// Get the bounds of the pool - a pair of (lowest idx, highest idx)
+    virtual Pair<size_t, size_t> bounds() const = 0;
 };
 
 template <typename T>
@@ -111,13 +109,10 @@ struct PoolEventHandler {
 };
 
 /// A statically sized pool interface
-template <typename T, size_t Count>
-struct IPool : IReadOnlyPool<T, Count> {
+template <typename T>
+struct IPool : IReadOnlyPool<T> {
     /// The iterator type
-    using Iterator = MarkedPoolIterator<T, IPool<T, Count>>;
-
-    /// Get the first free index or -1 if no index is available to use
-    virtual int findFreeIndex() = 0;
+    using Iterator = MarkedPoolIterator<T, IPool<T>>;
 
     /// Release the object at an index
     virtual void release(int index) = 0;
@@ -155,8 +150,8 @@ protected:
 };
 
 /// A component interface which allows for writing a pool component
-template <typename T, size_t Count>
-struct IPoolComponent : public IComponent, public IPool<T, Count> {
+template <typename T>
+struct IPoolComponent : public IComponent, public IPool<T> {
     /// Return Pool component type
     ComponentType componentType() const override { return ComponentType::Pool; }
 };

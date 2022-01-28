@@ -289,5 +289,5 @@ struct StreamConfigHelper {
 private:
     float* distance;
     int* rate;
-    StaticArray<TimePoint, IPlayerPool::Capacity> last;
+    StaticArray<TimePoint, PLAYER_POOL_SIZE> last;
 };

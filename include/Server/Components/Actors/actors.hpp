@@ -52,7 +52,7 @@ struct ActorEventHandler {
 };
 
 static const UID ActorsComponent_UID = UID(0xc81ca021eae2ad5c);
-struct IActorsComponent : public IPoolComponent<IActor, ACTOR_POOL_SIZE> {
+struct IActorsComponent : public IPoolComponent<IActor> {
     PROVIDE_UID(ActorsComponent_UID);
 
     /// Get the ActorEventHandler event dispatcher

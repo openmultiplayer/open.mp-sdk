@@ -7,28 +7,36 @@
 
 namespace Impl {
 
-template <class T, size_t Count>
+template <class T>
 struct ScopedPoolReleaseLock {
-    IPool<T, Count>& pool;
+    IPool<T>& pool;
     int index;
-    T& entry;
+    T* entry;
 
-    ScopedPoolReleaseLock(IPool<T, Count>& pool, int index)
+    ScopedPoolReleaseLock(IPool<T>& pool, int index)
         : pool(pool)
         , index(index)
         , entry(pool.get(index))
     {
-        pool.lock(index);
+        if (entry) {
+            pool.lock(index);
+        }
     }
 
-    ScopedPoolReleaseLock(IPool<T, Count>& pool, const IIDProvider& provider)
-        : ScopedPoolReleaseLock(pool, provider.getID())
+    template <typename U, typename E = std::enable_if_t<std::is_base_of_v<T, U>>>
+    ScopedPoolReleaseLock(IPool<T>& pool, U& provider)
+        : pool(pool)
+        , index(provider.getID())
+        , entry(&provider)
     {
+        pool.lock(index);
     }
 
     ~ScopedPoolReleaseLock()
     {
-        pool.unlock(index);
+        if (entry) {
+            pool.unlock(index);
+        }
     }
 };
 
@@ -72,6 +80,9 @@ struct UniqueIDArray : public NoCopy {
 
     bool valid(int index) const
     {
+        if (index < 0) {
+            return false;
+        }
         if (index >= Size) {
             return false;
         }
@@ -129,45 +140,58 @@ struct PoolIDProvider {
     int poolID;
 };
 
-template <typename Type, typename Iface, size_t Count>
+template <typename Type, typename Iface, size_t Min, size_t Max>
 struct StaticPoolStorageBase : public NoCopy {
-    static const size_t Capacity = Count;
+    constexpr static const size_t Lower = Min;
+    constexpr static const size_t Upper = Max;
+    constexpr static const size_t Capacity = Upper - Lower;
     using Interface = Iface;
+
+    constexpr static int toInternalIndex(int index)
+    {
+        return index - Min;
+    }
+
+    constexpr static int fromInternalIndex(int index)
+    {
+        return index + Min;
+    }
 
     template <class... Args>
     Type* emplace(Args&&... args)
     {
         int freeIdx = findFreeIndex();
-        if (freeIdx == -1) {
+        if (freeIdx < Min) {
             // No free index
             return nullptr;
         }
 
         int pid = claimHint(freeIdx, std::forward<Args>(args)...);
-        if (pid == -1) {
+        if (pid < Min) {
             // No free index
             return nullptr;
         }
 
-        return &get(pid);
+        return get(pid);
     }
 
-    int findFreeIndex(int from = 0)
+    int findFreeIndex(int from = Min)
     {
-        return allocated_.findFreeIndex(from);
+        return fromInternalIndex(allocated_.findFreeIndex(toInternalIndex(from)));
     }
 
     template <class... Args>
     int claim(Args&&... args)
     {
         const int freeIdx = findFreeIndex();
-        if (freeIdx >= 0) {
-            new (getPtr(freeIdx)) Type(std::forward<Args>(args)...);
-            allocated_.add(freeIdx, *getPtr(freeIdx));
+        const int internalIdx = toInternalIndex(freeIdx);
+        if (internalIdx >= 0) {
+            new (getPtr(internalIdx)) Type(std::forward<Args>(args)...);
+            allocated_.add(internalIdx, *getPtr(internalIdx));
             if constexpr (std::is_base_of<PoolIDProvider, Type>::value) {
-                getPtr(freeIdx)->poolID = freeIdx;
+                getPtr(internalIdx)->poolID = freeIdx;
             }
-            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *getPtr(freeIdx));
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *getPtr(internalIdx));
         }
         return freeIdx;
     }
@@ -175,42 +199,46 @@ struct StaticPoolStorageBase : public NoCopy {
     template <class... Args>
     int claimHint(int hint, Args&&... args)
     {
-        assert(hint < Count);
-        if (!valid(hint)) {
-            new (getPtr(hint)) Type(std::forward<Args>(args)...);
-            allocated_.add(hint, *getPtr(hint));
+        if (hint >= Min && hint < Max && !valid(hint)) {
+            const int idx = toInternalIndex(hint);
+            new (getPtr(idx)) Type(std::forward<Args>(args)...);
+            allocated_.add(idx, *getPtr(idx));
             if constexpr (std::is_base_of<PoolIDProvider, Type>::value) {
-                getPtr(hint)->poolID = hint;
+                getPtr(idx)->poolID = hint;
             }
-            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *getPtr(hint));
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *getPtr(idx));
             return hint;
         } else {
             return claim(std::forward<Args>(args)...);
         }
     }
 
-    void claimUnusable(int index)
+    Type* get(int index)
     {
-        allocated_.add(index);
+        if (!valid(index)) {
+            return nullptr;
+        }
+        return getPtr(toInternalIndex(index));
     }
 
-    bool valid(int index) const
+    const Type* get(int index) const
     {
-        return allocated_.valid(index);
+        if (!valid(index)) {
+            return nullptr;
+        }
+        return getPtr(toInternalIndex(index));
     }
 
-    Type& get(int index)
+    bool remove(int index)
     {
-        assert(index < Count);
-        return *getPtr(index);
-    }
-
-    void remove(int index)
-    {
-        assert(index < Count);
+        if (!valid(index)) {
+            return false;
+        }
+        index = toInternalIndex(index);
         allocated_.remove(index, *getPtr(index));
         eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *getPtr(index));
         getPtr(index)->~Type();
+        return true;
     }
 
     ~StaticPoolStorageBase()
@@ -242,38 +270,55 @@ struct StaticPoolStorageBase : public NoCopy {
     }
 
 protected:
+    bool valid(int index) const
+    {
+        return allocated_.valid(toInternalIndex(index));
+    }
+
     inline Type* getPtr(int index)
     {
         return reinterpret_cast<Type*>(&pool_[index * CEILDIV(sizeof(Type), alignof(Type)) * alignof(Type)]);
     }
 
-    char pool_[Count * sizeof(Type)];
-    UniqueIDArray<Interface, Count> allocated_;
+    char pool_[Capacity * sizeof(Type)];
+    UniqueIDArray<Interface, Capacity> allocated_;
     /// Implementation of the pool event dispatcher
     DefaultEventDispatcher<PoolEventHandler<Interface>> eventDispatcher_;
 };
 
-template <typename Type, typename Iface, size_t Count>
+template <typename Type, typename Iface, size_t Min, size_t Max>
 struct DynamicPoolStorageBase : public NoCopy {
-    static const size_t Capacity = Count;
+    constexpr static const size_t Lower = Min;
+    constexpr static const size_t Upper = Max;
+    constexpr static const size_t Capacity = Upper - Lower;
     using Interface = Iface;
+
+    constexpr static int toInternalIndex(int index)
+    {
+        return index - Min;
+    }
+
+    constexpr static int fromInternalIndex(int index)
+    {
+        return index + Min;
+    }
 
     template <class... Args>
     Type* emplace(Args&&... args)
     {
         int freeIdx = findFreeIndex();
-        if (freeIdx == -1) {
+        if (freeIdx < Min) {
             // No free index
             return nullptr;
         }
 
         int pid = claimHint(freeIdx, std::forward<Args>(args)...);
-        if (pid == -1) {
+        if (pid < Min) {
             // No free index
             return nullptr;
         }
 
-        return &get(pid);
+        return get(pid);
     }
 
     DynamicPoolStorageBase()
@@ -289,27 +334,28 @@ struct DynamicPoolStorageBase : public NoCopy {
         }
     }
 
-    int findFreeIndex(int from = 0)
+    int findFreeIndex(int from = Min)
     {
-        for (int i = from; i < Count; ++i) {
+        for (int i = toInternalIndex(from); i < Capacity; ++i) {
             if (pool_[i] == nullptr) {
-                return i;
+                return fromInternalIndex(i);
             }
         }
-        return -1;
+        return fromInternalIndex(-1);
     }
 
     template <class... Args>
     int claim(Args&&... args)
     {
         const int freeIdx = findFreeIndex();
-        if (freeIdx >= 0) {
-            pool_[freeIdx] = new Type(std::forward<Args>(args)...);
-            allocated_.add(*pool_[freeIdx]);
+        const int internalIdx = toInternalIndex(freeIdx);
+        if (internalIdx >= 0) {
+            pool_[internalIdx] = new Type(std::forward<Args>(args)...);
+            allocated_.add(*pool_[internalIdx]);
             if constexpr (std::is_base_of<PoolIDProvider, Type>::value) {
-                pool_[freeIdx]->poolID = freeIdx;
+                pool_[internalIdx]->poolID = freeIdx;
             }
-            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *pool_[freeIdx]);
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *pool_[internalIdx]);
         }
         return freeIdx;
     }
@@ -317,46 +363,47 @@ struct DynamicPoolStorageBase : public NoCopy {
     template <class... Args>
     int claimHint(int hint, Args&&... args)
     {
-        assert(hint < Count);
-        if (!valid(hint)) {
-            pool_[hint] = new Type(std::forward<Args>(args)...);
-            allocated_.add(*pool_[hint]);
+        if (hint >= Min && hint < Max && !valid(hint)) {
+            const int internalIdx = toInternalIndex(hint);
+            pool_[internalIdx] = new Type(std::forward<Args>(args)...);
+            allocated_.add(*pool_[internalIdx]);
             if constexpr (std::is_base_of<PoolIDProvider, Type>::value) {
-                pool_[hint]->poolID = hint;
+                pool_[internalIdx]->poolID = hint;
             }
-            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *pool_[hint]);
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryCreated, *pool_[internalIdx]);
             return hint;
         } else {
             return claim(std::forward<Args>(args)...);
         }
     }
 
-    void claimUnusable(int index)
+    Type* get(int index)
     {
-        pool_[index] = reinterpret_cast<Type*>(0x01);
+        if (!valid(index)) {
+            return nullptr;
+        }
+        return pool_[toInternalIndex(index)];
     }
 
-    bool valid(int index) const
+    const Type* get(int index) const
     {
-        if (index >= Count) {
+        if (!valid(index)) {
+            return nullptr;
+        }
+        return pool_[toInternalIndex(index)];
+    }
+
+    bool remove(int index)
+    {
+        if (!valid(index)) {
             return false;
         }
-        return pool_[index] != nullptr;
-    }
-
-    Type& get(int index)
-    {
-        assert(index < Count);
-        return *pool_[index];
-    }
-
-    void remove(int index)
-    {
-        assert(index < Count);
+        index = toInternalIndex(index);
         allocated_.remove(*pool_[index]);
         eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *pool_[index]);
         delete pool_[index];
         pool_[index] = nullptr;
+        return true;
     }
 
     /// Get the raw entries list
@@ -372,7 +419,16 @@ struct DynamicPoolStorageBase : public NoCopy {
     }
 
 protected:
-    StaticArray<Type*, Count> pool_;
+    bool valid(int index) const
+    {
+        index = toInternalIndex(index);
+        if (index < 0 || index >= Capacity) {
+            return false;
+        }
+        return pool_[index] != nullptr;
+    }
+
+    StaticArray<Type*, Capacity> pool_;
     UniqueEntryArray<Interface> allocated_;
     /// Implementation of the pool event dispatcher
     DefaultEventDispatcher<PoolEventHandler<Interface>> eventDispatcher_;
@@ -458,22 +514,22 @@ private:
 
 /// Pool storage which doesn't mark entries for release but immediately releases
 /// Allocates contents statically
-template <typename Type, typename Interface, size_t Count>
-using PoolStorage = ImmediatePoolStorageLifetimeBase<StaticPoolStorageBase<Type, Interface, Count>>;
+template <typename Type, typename Interface, size_t Min, size_t Max>
+using PoolStorage = ImmediatePoolStorageLifetimeBase<StaticPoolStorageBase<Type, Interface, Min, Max>>;
 
 /// Pool storage which doesn't mark entries for release but immediately releases
 /// Allocates contents dynamically
-template <typename Type, typename Interface, size_t Count>
-using DynamicPoolStorage = ImmediatePoolStorageLifetimeBase<DynamicPoolStorageBase<Type, Interface, Count>>;
+template <typename Type, typename Interface, size_t Min, size_t Max>
+using DynamicPoolStorage = ImmediatePoolStorageLifetimeBase<DynamicPoolStorageBase<Type, Interface, Min, Max>>;
 
 /// Pool storage which marks entries for release if locked
 /// Allocates contents statically
-template <typename Type, typename Interface, size_t Count, typename RefCountType = uint8_t>
-using MarkedPoolStorage = MarkedPoolStorageLifetimeBase<StaticPoolStorageBase<Type, Interface, Count>, RefCountType>;
+template <typename Type, typename Interface, size_t Min, size_t Max, typename RefCountType = uint8_t>
+using MarkedPoolStorage = MarkedPoolStorageLifetimeBase<StaticPoolStorageBase<Type, Interface, Min, Max>, RefCountType>;
 
 /// Pool storage which marks entries for release if locked
 /// Allocates contents dynamically
-template <typename Type, typename Interface, size_t Count, typename RefCountType = uint8_t>
-using MarkedDynamicPoolStorage = MarkedPoolStorageLifetimeBase<DynamicPoolStorageBase<Type, Interface, Count>, RefCountType>;
+template <typename Type, typename Interface, size_t Min, size_t Max, typename RefCountType = uint8_t>
+using MarkedDynamicPoolStorage = MarkedPoolStorageLifetimeBase<DynamicPoolStorageBase<Type, Interface, Min, Max>, RefCountType>;
 
 }
