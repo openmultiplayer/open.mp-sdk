@@ -216,9 +216,17 @@ static const StaticArray<VehicleModelInfo, MAX_VEHICLE_MODELS> allModelInfo = { 
     { { 2.480000f, 1.429999f, 1.629999f }, { 0.000000f, 0.000000f, 0.000000f }, { 0.000000f, 0.000000f, 0.000000f }, { 0.000000f, 0.000000f, 0.000000f }, { 1.139999f, -0.409999f, -0.140000f }, { 1.139999f, -0.720000f, -0.140000f }, { 0.000000f, 0.000000f, 0.000000f }, -50.000000f, -50.000000f },
     { { 2.130000f, 3.160000f, 1.830000f }, { 0.000000f, 0.000000f, 0.000000f }, { 0.000000f, 0.000000f, 0.000000f }, { 0.000000f, 0.000000f, 0.000000f }, { 0.930000f, 0.340000f, -0.250000f }, { 0.930000f, -0.379999f, -0.250000f }, { 0.000000f, 0.000000f, 0.000000f }, -50.000000f, -50.000000f } } };
 
-static bool getVehicleModelInfo(int model, VehicleModelInfoType type, Vector3& out)
+inline bool isValidVehicleModel(int model)
 {
     if (model < 400 || model > 612) {
+        return false;
+    }
+    return true;
+}
+
+inline bool getVehicleModelInfo(int model, VehicleModelInfoType type, Vector3& out)
+{
+    if (!isValidVehicleModel(model)) {
         return false;
     }
 
