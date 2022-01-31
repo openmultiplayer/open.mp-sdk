@@ -42,11 +42,15 @@ constexpr int MAX_MENU_TEXT_LENGTH = 32;
 constexpr int INVALID_MENU_ID = 0xFF;
 constexpr int INVALID_DIALOG_ID = -1;
 constexpr int INVALID_GANG_ZONE_ID = -1;
+constexpr int INVALID_PICKUP_ID = -1;
+constexpr int INVALID_OBJECT_MODEL_ID = -1;
+constexpr int INVALID_MENU_ITEM_ID = -1;
 constexpr int GANG_ZONE_POOL_SIZE = 1024;
 constexpr int MAX_STREAMED_PLAYERS = 200;
 constexpr int MAX_STREAMED_ACTORS = 50;
 constexpr int MAX_STREAMED_VEHICLES = 700;
-constexpr int NO_TEAM = 255;
+constexpr int TEAM_NONE = 255;
+constexpr int SEAT_NONE = -1;
 
 /// Animation names
 static const char* AnimationNames[] = {
