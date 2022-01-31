@@ -181,7 +181,7 @@ enum PlayerWeapon {
 };
 
 static const StringView PlayerWeaponNames[] = {
-    "Fist"
+    "Fist",
     "Brass Knuckles",
     "Golf Club",
     "Nite Stick",
