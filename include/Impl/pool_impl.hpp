@@ -477,6 +477,13 @@ struct MarkedPoolStorageLifetimeBase final : public PoolBase {
 
     void lock(int index)
     {
+        if (index < PoolBase::Lower) {
+            return;
+        }
+        if (index >= PoolBase::Upper) {
+            return;
+        }
+
         // Increase number of lock refs
         ++refs_[index];
         assert(refs_[index] < std::numeric_limits<RefCountType>::max());
@@ -484,6 +491,13 @@ struct MarkedPoolStorageLifetimeBase final : public PoolBase {
 
     bool unlock(int index)
     {
+        if (index < PoolBase::Lower) {
+            return false;
+        }
+        if (index >= PoolBase::Upper) {
+            return false;
+        }
+
         assert(refs_[index] > 0);
         // If marked for deletion on unlock, release
         if (--refs_[index] == 0 && deleted_.test(index)) {
@@ -495,7 +509,13 @@ struct MarkedPoolStorageLifetimeBase final : public PoolBase {
 
     void release(int index, bool force)
     {
-        assert(index < PoolBase::Capacity);
+        if (index < PoolBase::Lower) {
+            return;
+        }
+        if (index >= PoolBase::Upper) {
+            return;
+        }
+
         // If locked, mark for deletion on unlock
         if (refs_[index] > 0) {
             deleted_.set(index);
@@ -507,9 +527,9 @@ struct MarkedPoolStorageLifetimeBase final : public PoolBase {
 
 private:
     /// List signifying whether an entry is marked for deletion
-    StaticBitset<PoolBase::Capacity> deleted_;
+    StaticBitset<PoolBase::Upper> deleted_;
     /// List signifying the number of references held for the entry; if 0 and marked for deletion, it's deleted
-    StaticArray<RefCountType, PoolBase::Capacity> refs_;
+    StaticArray<RefCountType, PoolBase::Upper> refs_;
 };
 
 /// Pool storage which doesn't mark entries for release but immediately releases
