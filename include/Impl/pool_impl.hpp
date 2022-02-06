@@ -175,7 +175,12 @@ struct StaticPoolStorageBase : public NoCopy {
         return get(pid);
     }
 
-    int findFreeIndex(int from = Min)
+    int findFreeIndex()
+    {
+        return findFreeIndex(lowestFreeIndex_);
+    }
+
+    int findFreeIndex(int from)
     {
         return fromInternalIndex(allocated_.findFreeIndex(toInternalIndex(from)));
     }
@@ -186,6 +191,9 @@ struct StaticPoolStorageBase : public NoCopy {
         const int freeIdx = findFreeIndex();
         const int internalIdx = toInternalIndex(freeIdx);
         if (internalIdx >= 0) {
+            if (freeIdx == lowestFreeIndex_) {
+                ++lowestFreeIndex_;
+            }
             new (getPtr(internalIdx)) Type(std::forward<Args>(args)...);
             allocated_.add(internalIdx, *getPtr(internalIdx));
             if constexpr (std::is_base_of<PoolIDProvider, Type>::value) {
@@ -200,6 +208,9 @@ struct StaticPoolStorageBase : public NoCopy {
     int claimHint(int hint, Args&&... args)
     {
         if (hint >= Min && hint < Max && !valid(hint)) {
+            if (hint == lowestFreeIndex_) {
+                ++lowestFreeIndex_;
+            }
             const int idx = toInternalIndex(hint);
             new (getPtr(idx)) Type(std::forward<Args>(args)...);
             allocated_.add(idx, *getPtr(idx));
@@ -233,6 +244,9 @@ struct StaticPoolStorageBase : public NoCopy {
     {
         if (!valid(index)) {
             return false;
+        }
+        if (index < lowestFreeIndex_) {
+            lowestFreeIndex_ = index;
         }
         index = toInternalIndex(index);
         allocated_.remove(index, *getPtr(index));
@@ -282,6 +296,7 @@ protected:
 
     StaticArray<char, Capacity * CEILDIV(sizeof(Type), alignof(Type)) * alignof(Type)> pool_;
     UniqueIDArray<Interface, Capacity> allocated_;
+    int lowestFreeIndex_ = Lower;
     /// Implementation of the pool event dispatcher
     DefaultEventDispatcher<PoolEventHandler<Interface>> eventDispatcher_;
 };
@@ -334,7 +349,12 @@ struct DynamicPoolStorageBase : public NoCopy {
         }
     }
 
-    int findFreeIndex(int from = Min)
+    int findFreeIndex()
+    {
+        return findFreeIndex(lowestFreeIndex_);
+    }
+
+    int findFreeIndex(int from)
     {
         for (int i = toInternalIndex(from); i < Capacity; ++i) {
             if (pool_[i] == nullptr) {
@@ -350,6 +370,9 @@ struct DynamicPoolStorageBase : public NoCopy {
         const int freeIdx = findFreeIndex();
         const int internalIdx = toInternalIndex(freeIdx);
         if (internalIdx >= 0) {
+            if (freeIdx == lowestFreeIndex_) {
+                ++lowestFreeIndex_;
+            }
             pool_[internalIdx] = new Type(std::forward<Args>(args)...);
             allocated_.add(*pool_[internalIdx]);
             if constexpr (std::is_base_of<PoolIDProvider, Type>::value) {
@@ -364,6 +387,9 @@ struct DynamicPoolStorageBase : public NoCopy {
     int claimHint(int hint, Args&&... args)
     {
         if (hint >= Min && hint < Max && !valid(hint)) {
+            if (hint == lowestFreeIndex_) {
+                ++lowestFreeIndex_;
+            }
             const int internalIdx = toInternalIndex(hint);
             pool_[internalIdx] = new Type(std::forward<Args>(args)...);
             allocated_.add(*pool_[internalIdx]);
@@ -398,6 +424,9 @@ struct DynamicPoolStorageBase : public NoCopy {
         if (!valid(index)) {
             return false;
         }
+        if (index < lowestFreeIndex_) {
+            lowestFreeIndex_ = index;
+        }
         index = toInternalIndex(index);
         allocated_.remove(*pool_[index]);
         eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *pool_[index]);
@@ -430,6 +459,7 @@ protected:
 
     StaticArray<Type*, Capacity> pool_;
     UniqueEntryArray<Interface> allocated_;
+    int lowestFreeIndex_ = Lower;
     /// Implementation of the pool event dispatcher
     DefaultEventDispatcher<PoolEventHandler<Interface>> eventDispatcher_;
 };

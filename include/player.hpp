@@ -372,9 +372,6 @@ struct IPlayer : public IEntity {
     /// Immediately spawn the player
     virtual void spawn() = 0;
 
-    /// Get the player pool that the player is stored in
-    virtual IPlayerPool* getPool() const = 0;
-
     /// Get the player's client version
     virtual uint32_t getClientVersion() const = 0;
 
