@@ -16,11 +16,17 @@ struct ExtraDataProvider {
         extraData_.try_emplace(playerData->getUID(), playerData);
     }
 
-    ~ExtraDataProvider()
+    void free()
     {
         for (auto& v : extraData_) {
             v.second->free();
         }
+        extraData_.clear();
+    }
+
+    ~ExtraDataProvider()
+    {
+        free();
     }
 
 private:
