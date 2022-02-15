@@ -138,6 +138,15 @@ private:
 
 struct PoolIDProvider {
     int poolID;
+
+    PoolIDProvider()
+        : poolID(-1)
+    {
+    }
+
+    ~PoolIDProvider() {
+        poolID=-1;
+    }
 };
 
 template <typename Type, typename Iface, size_t Min, size_t Max>
