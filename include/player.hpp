@@ -460,6 +460,9 @@ struct IPlayer : public IEntity {
     /// Set another player's colour for this player
     virtual void setOtherColour(IPlayer& other, Colour colour) = 0;
 
+    /// Get another player's colour for this player
+    virtual bool getOtherColour(IPlayer& other, Colour& colour) const = 0;
+
     /// Set whether the player is controllable
     virtual void setControllable(bool controllable) = 0;
 
