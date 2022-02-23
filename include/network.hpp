@@ -35,7 +35,7 @@ enum OrderingChannel {
     OrderingChannel_SyncPacket,
     OrderingChannel_SyncRPC,
     OrderingChannel_Unordered,
-    OrderingChannel_ReliablePacket
+    OrderingChannel_Reliable
 };
 
 /// The network types
