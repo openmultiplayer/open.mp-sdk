@@ -76,9 +76,15 @@ struct IConfig : public IExtensible {
     /// Write bans to file
     virtual void writeBans() = 0;
 
+    /// Reload bans
+    virtual void reloadBans() = 0;
+
     /// Get an option name from an alias if available
     /// @return A pair of bool which is true if the alias is deprecated and a string with the real config name
     virtual Pair<bool, StringView> getNameFromAlias(StringView alias) const = 0;
+
+    // Get all options and their type
+    virtual DynamicArray<Pair<String, ConfigOptionType>> getOptions() const = 0;
 };
 
 /// Used for filling config parameters by Config components
