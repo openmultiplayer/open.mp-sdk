@@ -14,11 +14,11 @@
 template <class Type, class StoragePool>
 class MarkedPoolIterator {
 public:
-    using iterator_category = typename FlatPtrHashSet<Type>::iterator::iterator_category;
-    using difference_type = typename FlatPtrHashSet<Type>::iterator::difference_type;
-    using value_type = typename FlatPtrHashSet<Type>::iterator::value_type;
-    using pointer = typename FlatPtrHashSet<Type>::iterator::pointer;
-    using reference = typename FlatPtrHashSet<Type>::iterator::reference;
+    using iterator_category = typename FlatPtrHashSet<Type>::const_iterator::iterator_category;
+    using difference_type = typename FlatPtrHashSet<Type>::const_iterator::difference_type;
+    using value_type = typename FlatPtrHashSet<Type>::const_iterator::value_type;
+    using pointer = typename FlatPtrHashSet<Type>::const_iterator::pointer;
+    using reference = typename FlatPtrHashSet<Type>::const_iterator::reference;
 
 private:
     StoragePool& pool; ///< The pool to lock/unlock

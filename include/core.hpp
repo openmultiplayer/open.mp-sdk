@@ -41,6 +41,13 @@ enum ConfigOptionType {
     ConfigOptionType_Strings = 3,
 };
 
+/// A config option enumerator
+struct OptionEnumeratorCallback {
+    /// Called for each option that's available in the config
+    /// @return true to continue enumerating, false to stop
+    virtual bool proc(StringView name, ConfigOptionType type) = 0;
+};
+
 struct IConfig : public IExtensible {
     /// Get a variable as a string
     virtual const StringView getString(StringView key) const = 0;
@@ -83,8 +90,8 @@ struct IConfig : public IExtensible {
     /// @return A pair of bool which is true if the alias is deprecated and a string with the real config name
     virtual Pair<bool, StringView> getNameFromAlias(StringView alias) const = 0;
 
-    // Get all options and their type
-    virtual DynamicArray<Pair<String, ConfigOptionType>> getOptions() const = 0;
+    /// Enumerate the options in the config
+    virtual void enumOptions(OptionEnumeratorCallback& callback) const = 0;
 };
 
 /// Used for filling config parameters by Config components

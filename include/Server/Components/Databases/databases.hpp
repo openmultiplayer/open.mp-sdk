@@ -2,6 +2,8 @@
 
 #include <sdk.hpp>
 
+using namespace Impl;
+
 struct LegacyDBResult {
     int rows;
     int columns;

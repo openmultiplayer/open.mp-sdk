@@ -1,11 +1,5 @@
 #pragma once
 
-#include <absl/container/flat_hash_map.h>
-#include <absl/container/flat_hash_set.h>
-#include <absl/strings/string_view.h>
-#include <absl/types/optional.h>
-#include <absl/types/span.h>
-#include <absl/types/variant.h>
 #include <array>
 #include <bitset>
 #include <chrono>
@@ -13,8 +7,9 @@
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
-#include <queue>
-#include <stack>
+#include <nonstd/span.hpp>
+#include <nonstd/string_view.hpp>
+#include <robin_hood.h>
 #include <string.h>
 #include <string>
 #include <utility>
@@ -40,8 +35,6 @@
 #undef minor
 #endif
 
-namespace absl_omp = absl::lts_20210324;
-
 typedef glm::vec2 Vector2;
 typedef glm::vec3 Vector3;
 typedef glm::vec4 Vector4;
@@ -59,52 +52,37 @@ typedef std::chrono::hours Hours;
 typedef std::chrono::duration<float> RealSeconds;
 using std::chrono::duration_cast;
 
-template <typename... Args>
-using Variant = absl_omp::variant<Args...>;
+/// Don't pass these around the SDK
+namespace Impl {
 
-template <typename T>
-using Optional = absl_omp::optional<T>;
-
-template <typename T>
-using Span = absl_omp::Span<T>;
-
-/// Don't pass String around the SDK, only StringView
 using String = std::string;
-using StringView = absl_omp::string_view;
 
 template <typename T>
-using FlatHashSet = absl_omp::flat_hash_set<T>;
+using DynamicArray = std::vector<T>;
+
+template <size_t Size>
+using StaticBitset = std::bitset<Size>;
+
+}
+
+template <typename T>
+using Span = nonstd::span<T>;
+
+using StringView = nonstd::string_view;
+
+template <typename T>
+using FlatHashSet = robin_hood::unordered_flat_set<T>;
 template <typename K, typename V>
-using FlatHashMap = absl_omp::flat_hash_map<K, V>;
+using FlatHashMap = robin_hood::unordered_flat_map<K, V>;
 
-template <typename T>
-using FlatRefHashSet = FlatHashSet<std::reference_wrapper<T>>;
 template <typename T>
 using FlatPtrHashSet = FlatHashSet<T*>;
 
 template <typename T, size_t Size>
 using StaticArray = std::array<T, Size>;
 
-template <typename T>
-using DynamicArray = std::vector<T>;
-
-template <typename T>
-using Queue = std::queue<T>;
-
-template <typename T>
-using Stack = std::stack<T>;
-
-template <size_t Size>
-using StaticBitset = std::bitset<Size>;
-
 template <typename First, typename Second>
 using Pair = std::pair<First, Second>;
-
-template <typename T, typename... Args>
-inline auto variant_get(Args&&... args) -> decltype(absl_omp::get<T>(std::forward<Args>(args)...))
-{
-    return absl_omp::get<T>(std::forward<Args>(args)...);
-}
 
 struct NoCopy {
     NoCopy() = default;
