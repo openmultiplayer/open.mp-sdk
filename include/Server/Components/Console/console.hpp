@@ -1,8 +1,51 @@
 #pragma once
 #include <core.hpp>
+#include <types.hpp>
+
+/// Used for custom handling of messages received by the console
+struct ConsoleMessageHandler {
+    virtual void handleConsoleMessage(StringView message) = 0;
+};
+
+/// The command sender types
+enum class ConsoleCommandSender {
+    Console,
+    Player,
+    Custom
+};
+
+/// Data attached to the command sender types
+struct ConsoleCommandSenderData {
+    ConsoleCommandSender sender;
+    union {
+        IPlayer* player; ///< The player who sent the command, only available with ConsoleCommandSender::Player
+        ConsoleMessageHandler* handler; ///< The handler of the command sender, only available with ConsoleCommandSender::Custom
+    };
+
+    /// Console sender constructor
+    ConsoleCommandSenderData()
+        : sender(ConsoleCommandSender::Console)
+        , player(nullptr)
+    {
+    }
+
+    /// Player sender constructor
+    ConsoleCommandSenderData(IPlayer& player)
+        : sender(ConsoleCommandSender::Player)
+        , player(&player)
+    {
+    }
+
+    /// Custom sender constructor
+    ConsoleCommandSenderData(ConsoleMessageHandler& handler)
+        : sender(ConsoleCommandSender::Custom)
+        , handler(&handler)
+    {
+    }
+};
 
 struct ConsoleEventHandler {
-    virtual bool onConsoleText(StringView command, StringView parameters, IPlayer* sender) { return false; }
+    virtual bool onConsoleText(StringView command, StringView parameters, const ConsoleCommandSenderData& sender) { return false; }
     virtual void onRconLoginAttempt(IPlayer& player, const StringView& password, bool success) { }
 };
 
@@ -14,8 +57,8 @@ struct IConsoleComponent : public IComponent {
     virtual IEventDispatcher<ConsoleEventHandler>& getEventDispatcher() = 0;
 
     /// Send a console command
-    virtual void send(StringView command, IPlayer* sender = nullptr) = 0;
-    virtual void sendMessage(IPlayer* player, StringView message) = 0;
+    virtual void send(StringView command, const ConsoleCommandSenderData& sender = ConsoleCommandSenderData()) = 0;
+    virtual void sendMessage(const ConsoleCommandSenderData& recipient, StringView message) = 0;
 };
 
 static const UID PlayerConsoleData_UID = UID(0x9f8d20f2f471cbae);
