@@ -2,16 +2,11 @@
 
 #include <sdk.hpp>
 
-using namespace Impl;
-
+/// Result set, backwards-compatible with some memory hacking PAWN includes
 struct LegacyDBResult {
     int rows;
     int columns;
     char** results;
-
-    // extra members to be used in open.mp code
-    DynamicArray<char*> results_;
-    bool fieldsAreAdded = false;
 };
 
 struct IDatabaseResultSetRow {
