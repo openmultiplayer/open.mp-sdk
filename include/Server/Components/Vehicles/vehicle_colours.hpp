@@ -2,7 +2,7 @@
 
 namespace Impl {
 
-inline void getRandomVehicleColour(int modelid, int& colour1, int& colour2)
+inline void getRandomVehicleColour(int modelid, int& colour1, int& colour2, int& colour3, int& colour4)
 {
     static const uint16_t vehicleIndexes[212 + 1] = {
         0, // 400 - landstal
@@ -650,6 +650,13 @@ inline void getRandomVehicleColour(int modelid, int& colour1, int& colour2)
         // 611 - utiltr1
     };
 
+    static const uint8_t colour3Camper[8] = { 0x01, 0x01, 0x03, 0x00, 0x03, 0x03, 0x08, 0x78 };
+    static const uint8_t colour4Camper[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    static const uint8_t colour3Cement[8] = { 0x17, 0x7B, 0x1F, 0x1E, 0x17, 0x3E, 0x40, 0x40 };
+    static const uint8_t colour4Cement[8] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+    static const uint8_t colour3Squalo[8] = { 0x00, 0x01, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01 };
+    static const uint8_t colour4Squalo[8] = { 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01 };
+
     if (modelid > 611 || modelid < 400) {
         colour1 = 127;
         colour2 = 127;
@@ -660,7 +667,21 @@ inline void getRandomVehicleColour(int modelid, int& colour1, int& colour2)
         uint16_t index = rand() % ((end - start) + 1) + start;
         colour1 = vehiclePrimaryColours[index];
         colour2 = vehicleSecondaryColours[index];
-        index = 0;
+		switch (modelid)
+		{
+        case 83:
+            colour3 = colour3Camper[index],
+            colour4 = colour4Camper[index];
+            break;
+        case 124:
+            colour3 = colour3Cement[index],
+            colour4 = colour4Cement[index];
+            break;
+        case 46:
+            colour3 = colour3Squalo[index],
+            colour4 = colour4Squalo[index];
+            break;
+        }
     }
 }
 
