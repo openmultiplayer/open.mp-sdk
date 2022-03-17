@@ -685,6 +685,12 @@ inline void getRandomVehicleColour(int modelid, int& colour1, int& colour2, int&
     }
 }
 
+inline void getRandomVehicleColour(int modelid, int& colour1, int& colour2)
+{
+    int colour3, colour4;
+    return getRandomVehicleColour(modelid, colour1, colour2, colour3, colour4);
+}
+
 inline uint32_t carColourIndexToColour(int index, uint32_t alpha = 0xFF)
 {
     static const uint32_t vehicleColours[256] = {
