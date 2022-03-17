@@ -263,19 +263,9 @@ struct PlayerAnimationData {
     uint16_t ID;
     uint16_t flags;
 
-    Pair<Impl::String, Impl::String> name() const
+    inline Pair<StringView, StringView> name() const
     {
-        if (ID >= GLM_COUNTOF(AnimationNames)) {
-            return { "", "" };
-        }
-
-        const Impl::String full = AnimationNames[ID];
-        unsigned int idx = full.find(':');
-        if (idx == -1) {
-            return { "", "" };
-        }
-
-        return { full.substr(0, idx), full.substr(idx + 1) };
+        return splitAnimationNames(ID);
     }
 };
 
