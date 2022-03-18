@@ -1817,36 +1817,142 @@ static StringView AnimationNames[] = {
     "RUNNINGMAN:DANCE_B16",
     "RUNNINGMAN:DANCE_LOOP",
     "SAMP:FISHINGIDLE",
+    // TODO: Add The "SEX", "SNM", and "BLOWJOB" animations, optionally based on version.
 };
 
 static StringView AnimLibs[] = {
-    "AIRPORT", "ATTRACTORS", "BAR", "BASEBALL", "BD_FIRE",
-    "BEACH", "BENCHPRESS", "BF_INJECTION", "BIKE_DBZ", "BIKED",
-    "BIKEH", "BIKELEAP", "BIKES", "BIKEV", "BLOWJOBZ",
-    "BMX", "BOMBER", "BOX", "BSKTBALL", "BUDDY",
-    "BUS", "CAMERA", "CAR", "CAR_CHAT", "CARRY",
-    "CASINO", "CHAINSAW", "CHOPPA", "CLOTHES", "COACH",
-    "COLT45", "COP_AMBIENT", "COP_DVBYZ", "CRACK", "CRIB",
-    "DAM_JUMP", "DANCING", "DEALER", "DILDO", "DODGE",
-    "DOZER", "DRIVEBYS", "FAT", "FIGHT_B", "FIGHT_C",
-    "FIGHT_D", "FIGHT_E", "FINALE", "FINALE2", "FLAME",
-    "FLOWERS", "FOOD", "FREEWEIGHTS", "GANGS", "GFUNK",
-    "GHANDS", "GHETTO_DB", "GOGGLES", "GRAFFITI", "GRAVEYARD",
-    "GRENADE", "GYMNASIUM", "HAIRCUTS", "HEIST9", "INT_HOUSE",
-    "INT_OFFICE", "INT_SHOP", "JST_BUISNESS", "KART", "KISSING",
-    "KNIFE", "LAPDAN1", "LAPDAN2", "LAPDAN3", "LOWRIDER",
-    "MD_CHASE", "MD_END", "MEDIC", "MISC", "MTB",
-    "MUSCULAR", "NEVADA", "ON_LOOKERS", "OTB", "PARACHUTE",
-    "PARK", "PAULNMAC", "PED", "PLAYER_DVBYS", "PLAYIDLES",
-    "POLICE", "POOL", "POOR", "PYTHON", "QUAD",
-    "QUAD_DBZ", "RAPPING", "RIFLE", "RIOT", "ROB_BANK",
-    "ROCKET", "RUNNINGMAN", "RUSTLER", "RYDER", "SAMP",
-    "SCRATCHING", "SEX", "SHAMAL", "SHOP", "SHOTGUN",
-    "SILENCED", "SKATE", "SMOKING", "SNIPER", "SNM",
-    "SPRAYCAN", "STRIP", "SUNBATHE", "SWAT", "SWEET",
-    "SWIM", "SWORD", "TANK", "TATTOOS", "TEC",
-    "TRAIN", "TRUCK", "UZI", "VAN", "VENDING",
-    "VORTEX", "WAYFARER", "WEAPONS", "WOP", "WUZI"
+    "AIRPORT",
+    "ATTRACTORS",
+    "BAR",
+    "BASEBALL",
+    "BD_FIRE",
+    "BEACH",
+    "BENCHPRESS",
+    "BF_INJECTION",
+    "BIKE_DBZ",
+    "BIKED",
+    "BIKEH",
+    "BIKELEAP",
+    "BIKES",
+    "BIKEV",
+    "BMX",
+    "BOMBER",
+    "BOX",
+    "BSKTBALL",
+    "BUDDY",
+    "BUS",
+    "CAMERA",
+    "CAR",
+    "CAR_CHAT",
+    "CARRY",
+    "CASINO",
+    "CHAINSAW",
+    "CHOPPA",
+    "CLOTHES",
+    "COACH",
+    "COLT45",
+    "COP_AMBIENT",
+    "COP_DVBYZ",
+    "CRACK",
+    "CRIB",
+    "DAM_JUMP",
+    "DANCING",
+    "DEALER",
+    "DILDO",
+    "DODGE",
+    "DOZER",
+    "DRIVEBYS",
+    "FAT",
+    "FIGHT_B",
+    "FIGHT_C",
+    "FIGHT_D",
+    "FIGHT_E",
+    "FINALE",
+    "FINALE2",
+    "FLAME",
+    "FLOWERS",
+    "FOOD",
+    "FREEWEIGHTS",
+    "GANGS",
+    "GFUNK",
+    "GHANDS",
+    "GHETTO_DB",
+    "GOGGLES",
+    "GRAFFITI",
+    "GRAVEYARD",
+    "GRENADE",
+    "GYMNASIUM",
+    "HAIRCUTS",
+    "HEIST9",
+    "INT_HOUSE",
+    "INT_OFFICE",
+    "INT_SHOP",
+    "JST_BUISNESS",
+    "KART",
+    "KISSING",
+    "KNIFE",
+    "LAPDAN1",
+    "LAPDAN2",
+    "LAPDAN3",
+    "LOWRIDER",
+    "MD_CHASE",
+    "MD_END",
+    "MEDIC",
+    "MISC",
+    "MTB",
+    "MUSCULAR",
+    "NEVADA",
+    "ON_LOOKERS",
+    "OTB",
+    "PARACHUTE",
+    "PARK",
+    "PAULNMAC",
+    "PED",
+    "PLAYER_DVBYS",
+    "PLAYIDLES",
+    "POLICE",
+    "POOL",
+    "POOR",
+    "PYTHON",
+    "QUAD",
+    "QUAD_DBZ",
+    "RAPPING",
+    "RIFLE",
+    "RIOT",
+    "ROB_BANK",
+    "ROCKET",
+    "RUNNINGMAN",
+    "RUSTLER",
+    "RYDER",
+    "SAMP",
+    "SCRATCHING",
+    "SHAMAL",
+    "SHOP",
+    "SHOTGUN",
+    "SILENCED",
+    "SKATE",
+    "SMOKING",
+    "SNIPER",
+    "SPRAYCAN",
+    "STRIP",
+    "SUNBATHE",
+    "SWAT",
+    "SWEET",
+    "SWIM",
+    "SWORD",
+    "TANK",
+    "TATTOOS",
+    "TEC",
+    "TRAIN",
+    "TRUCK",
+    "UZI",
+    "VAN",
+    "VENDING",
+    "VORTEX",
+    "WAYFARER",
+    "WEAPONS",
+    "WUZI",
+    "WOP"
 };
 
 /// Quick animation validity lookup
@@ -1860,7 +1966,7 @@ static struct AnimationLookup {
     }
 } AnimationNamesLookup;
 
-
+/// Quick animation validity lookup
 static struct AnimationLibraryLookup {
     FlatHashSet<Impl::String> valid;
 
@@ -1894,11 +2000,19 @@ inline bool animationNameValid(StringView lib, StringView name) {
     return AnimationNamesLookup.valid.find(fullName) != AnimationNamesLookup.valid.end();
 }
 
-inline bool animationLibraryValid(StringView lib)
-{
-    Impl::String libString(lib);
-    std::transform(libString.begin(), libString.end(), libString.begin(), [](unsigned char c) { return std::toupper(c); });
-    return AnimationLibraryLookup.valid.find(libString) != AnimationLibraryLookup.valid.end();
+inline bool animationLibraryValid(StringView lib, bool v1_0 = false) {
+    Impl::String fullName(lib);
+    std::transform(fullName.begin(), fullName.end(), fullName.begin(), [](unsigned char c) { return std::toupper(c); });
+    if (AnimationLibraryLookup.valid.find(fullName) != AnimationLibraryLookup.valid.end())
+    {
+        return true;
+    }
+    if (v1_0)
+    {
+        // Check three more libraries, removed in version 1.1
+        return fullName == "BLOWJOBS" || fullName == "SEX" || fullName == "SNM";
+    }
+    return false;
 }
 
 /* Interfaces, to be passed around */
