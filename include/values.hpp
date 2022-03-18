@@ -51,3 +51,6 @@ constexpr int MAX_STREAMED_ACTORS = 50;
 constexpr int MAX_STREAMED_VEHICLES = 700;
 constexpr int TEAM_NONE = 255;
 constexpr int SEAT_NONE = -1;
+constexpr float MAX_WORLD_BOUNDS = 20000.0f;
+constexpr float MIN_WORLD_BOUNDS = -20000.0f;
+constexpr int MAX_TEXTDRAW_STR_LENGTH = 800;
