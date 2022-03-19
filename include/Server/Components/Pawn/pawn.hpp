@@ -4,8 +4,8 @@
 constexpr int NUM_AMX_FUNCS = 44;
 
 struct PawnEventHandler {
-    virtual void onAmxLoad(void* amx, bool primary) = 0;
-    virtual void onAmxUnload(void* amx, bool primary) = 0;
+    virtual void onAmxLoad(void* amx) = 0;
+    virtual void onAmxUnload(void* amx) = 0;
 };
 
 static const UID PawnComponent_UID = UID(0x78906cd9f19c36a6);
