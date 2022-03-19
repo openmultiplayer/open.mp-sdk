@@ -141,7 +141,7 @@ inline int getVehicleComponentSlot(int component)
         VehicleComponent_Wheels,              // 1097
         VehicleComponent_Wheels,              // 1098
         VehicleComponent_SideSkirt,           // 1099
-        VehicleComponent_FrontBumper,         // 1100
+        VehicleComponent_FrontBullbar,        // 1100
         VehicleComponent_SideSkirt,           // 1101
         VehicleComponent_SideSkirt,           // 1102
         VehicleComponent_Roof,                // 1103
@@ -150,23 +150,23 @@ inline int getVehicleComponentSlot(int component)
         VehicleComponent_SideSkirt,           // 1106
         VehicleComponent_SideSkirt,           // 1107
         VehicleComponent_SideSkirt,           // 1108
-        VehicleComponent_FrontBumper,         // 1109
-        VehicleComponent_FrontBumper,         // 1110
+        VehicleComponent_RearBullbar,         // 1109
+        VehicleComponent_RearBullbar,         // 1110
         VehicleComponent_FrontBumper,         // 1111
         VehicleComponent_FrontBumper,         // 1112
         VehicleComponent_Exhaust,             // 1113
         VehicleComponent_Exhaust,             // 1114
-        VehicleComponent_FrontBumper,         // 1115
-        VehicleComponent_FrontBumper,         // 1116
+        VehicleComponent_FrontBullbar,        // 1115
+        VehicleComponent_FrontBullbar,        // 1116
         VehicleComponent_FrontBumper,         // 1117
         VehicleComponent_SideSkirt,           // 1118
         VehicleComponent_SideSkirt,           // 1119
         VehicleComponent_SideSkirt,           // 1120
         VehicleComponent_SideSkirt,           // 1121
         VehicleComponent_SideSkirt,           // 1122
-        VehicleComponent_FrontBumper,         // 1123
+        VehicleComponent_FrontBullbar,        // 1123
         VehicleComponent_SideSkirt,           // 1124
-        VehicleComponent_FrontBumper,         // 1125
+        VehicleComponent_FrontBullbar,        // 1125
         VehicleComponent_Exhaust,             // 1126
         VehicleComponent_Exhaust,             // 1127
         VehicleComponent_Roof,                // 1128
