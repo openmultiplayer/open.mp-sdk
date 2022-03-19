@@ -20,6 +20,8 @@ struct HTTPResponseHandler {
 /// An event handler for core events
 struct CoreEventHandler {
     virtual void onTick(Microseconds elapsed, TimePoint now) = 0;
+    virtual void onEntryScriptInit() = 0;
+    virtual void onEntryScriptExit() = 0;
 };
 
 /// Types of data can be set in core during runtime
