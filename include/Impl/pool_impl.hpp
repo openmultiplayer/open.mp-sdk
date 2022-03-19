@@ -278,6 +278,11 @@ struct StaticPoolStorageBase : public NoCopy {
     void clear()
     {
         // Destroy everything in the array.
+        for (Interface* const ptr : allocated_.entries())
+		{
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *ptr);
+            static_cast<Type*>(ptr)->~Type();
+        }
         allocated_.clear();
         lowestFreeIndex_ = Lower;
     }
@@ -457,15 +462,11 @@ struct DynamicPoolStorageBase : public NoCopy {
     void clear()
     {
         // Destroy everything in the array.
-		for (size_t i = 0; i != Capacity; ++i)
+        for (Interface* const ptr : allocated_.entries())
 		{
-            Type* ptr = pool_[i];
-			if (ptr)
-			{
-                pool_[i] = nullptr;
-                delete ptr;
-			}
-		}
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *ptr);
+            delete static_cast<Type*>(ptr);
+        }
         allocated_.clear();
 		lowestFreeIndex_ = Lower;
     }
