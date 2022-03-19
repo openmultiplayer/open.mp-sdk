@@ -149,9 +149,9 @@ struct ICore : public IExtensible, public ILogger {
     /// Get the player pool
     virtual IPlayerPool& getPlayers() = 0;
 
-    /// Get the core event dispatcher
-    virtual IEventDispatcher<TickEventHandler>& getEventDispatcher() = 0;
-
+    /// Get the tick event dispatcher
+    virtual IEventDispatcher<TickEventHandler>& getTickEventDispatcher() = 0;
+	
     virtual IConfig& getConfig() = 0;
 
     /// Get a list of available networks
