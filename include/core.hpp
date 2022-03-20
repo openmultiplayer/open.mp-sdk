@@ -152,6 +152,9 @@ struct ICore : public IExtensible, public ILogger {
     /// Get the tick event dispatcher
     virtual IEventDispatcher<TickEventHandler>& getTickEventDispatcher() = 0;
 	
+    /// Get the reset event dispatcher
+    virtual IEventDispatcher<ModeResetEventHandler>& getModeResetEventDispatcher() = 0;
+
     virtual IConfig& getConfig() = 0;
 
     /// Get a list of available networks
@@ -174,6 +177,9 @@ struct ICore : public IExtensible, public ILogger {
 
     /// Set string data during runtime
     virtual void setData(SettableCoreDataType type, StringView data) = 0;
+
+	/// Clear all entites that vanish on GM restart.
+	virtual void resetAll() = 0;
 
     /// Get weapon's name as a string
     virtual StringView getWeaponName(PlayerWeapon weapon) = 0;
