@@ -17,9 +17,9 @@ struct ITimer {
 
     /// Get the timer's interval
     virtual Milliseconds interval() const = 0;
-	
+
     /// Mark the timer as being called now.  Returns `true` when there are more
-	/// calls to make after this one.
+    /// calls to make after this one.
     virtual bool trigger() = 0;
 
     /// Immediately kill the timer
@@ -54,4 +54,3 @@ struct ITimersComponent : public IComponent {
     /// @param count The number of times to call the timer, 0 = infinite.
     virtual ITimer* create(TimerTimeOutHandler* handler, Milliseconds initial, Milliseconds interval, unsigned int count) = 0;
 };
-
