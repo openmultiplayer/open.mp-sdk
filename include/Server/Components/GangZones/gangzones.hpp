@@ -33,6 +33,9 @@ struct IGangZone : public IExtensible, public IIDProvider {
 
     /// Set position of gangzone. Takes a structure of vec2 min and vec2 max coordinates
     virtual void setPosition(const GangZonePos& position) = 0;
+
+    /// get a list of players inside of gangzone
+    virtual FlatHashSet<IPlayer*>& getPlayersInside() = 0;
 };
 
 struct GangZoneEventHandler {
