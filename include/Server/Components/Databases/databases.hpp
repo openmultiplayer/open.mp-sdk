@@ -56,7 +56,7 @@ struct IDatabaseResultSetRow {
     virtual double getFieldFloatByName(StringView fieldName) const = 0;
 };
 
-struct IDatabaseResultSet : public IIDProvider {
+struct IDatabaseResultSet : public IExtensible, public IIDProvider {
 
     /// Gets the number of rows
     /// @returns Number of rows
@@ -113,7 +113,7 @@ struct IDatabaseResultSet : public IIDProvider {
     virtual LegacyDBResult& getLegacyDBResult() = 0;
 };
 
-struct IDatabaseConnection : public IIDProvider {
+struct IDatabaseConnection : public IExtensible, public IIDProvider {
 
     /// Closes this database connection
     /// @returns "true" if connection has been successfully closed, otherwise "false"

@@ -5,7 +5,7 @@
 
 struct TimerTimeOutHandler;
 
-struct ITimer {
+struct ITimer : public IExtensible {
     /// Get whether the timer is running or has been killed
     virtual bool running() const = 0;
 

@@ -9,7 +9,7 @@ typedef uint8_t MenuRow;
 typedef uint8_t MenuColumn;
 
 /// Pickup interace
-struct IMenu : public IIDProvider {
+struct IMenu : public IExtensible, public IIDProvider {
     /// Sets given column's header title
     virtual void setColumnHeader(StringView header, MenuColumn column) = 0;
 

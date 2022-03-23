@@ -12,7 +12,7 @@ struct GangZonePos {
 };
 
 /// Gangzone interace
-struct IGangZone : public IIDProvider {
+struct IGangZone : public IExtensible, public IIDProvider {
     /// Check if a gangzone is shown for player
     virtual bool isShownForPlayer(const IPlayer& player) const = 0;
 

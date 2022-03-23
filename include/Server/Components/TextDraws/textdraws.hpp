@@ -24,7 +24,7 @@ enum TextDrawStyle {
 };
 
 /// Text label base interface
-struct ITextDrawBase : public IIDProvider {
+struct ITextDrawBase : public IExtensible, public IIDProvider {
     /// Get the textdraw's position
     virtual Vector2 getPosition() const = 0;
 
