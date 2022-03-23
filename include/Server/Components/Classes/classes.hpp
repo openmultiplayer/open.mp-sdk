@@ -27,8 +27,8 @@ struct IClass : public IExtensible, public IIDProvider {
 };
 
 static const UID PlayerClassData_UID = UID(0x185655ded843788b);
-struct IPlayerClassData : public IExtraData {
-    PROVIDE_UID(PlayerClassData_UID)
+struct IPlayerClassData : public IExtension {
+    PROVIDE_EXT_UID(PlayerClassData_UID)
 
     virtual const PlayerClass& getClass() = 0;
     virtual void setSpawnInfo(const PlayerClass& info) = 0;
@@ -40,7 +40,7 @@ struct ClassEventHandler {
 };
 
 static const UID ClassesComponent_UID = UID(0x8cfb3183976da208);
-struct IClassesComponent : public IPoolComponent<IClass /*, CLASS_POOL_SIZE*/> {
+struct IClassesComponent : public IPoolComponent<IClass> {
     PROVIDE_UID(ClassesComponent_UID)
 
     virtual IEventDispatcher<ClassEventHandler>& getEventDispatcher() = 0;

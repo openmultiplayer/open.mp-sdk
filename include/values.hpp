@@ -54,3 +54,4 @@ constexpr int SEAT_NONE = -1;
 constexpr float MAX_WORLD_BOUNDS = 20000.0f;
 constexpr float MIN_WORLD_BOUNDS = -20000.0f;
 constexpr int MAX_TEXTDRAW_STR_LENGTH = 800;
+constexpr int MAX_VEHICLE_CARRIAGES = 3;

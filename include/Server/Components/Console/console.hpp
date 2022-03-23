@@ -62,8 +62,8 @@ struct IConsoleComponent : public IComponent {
 };
 
 static const UID PlayerConsoleData_UID = UID(0x9f8d20f2f471cbae);
-struct IPlayerConsoleData : public IExtraData {
-    PROVIDE_UID(PlayerConsoleData_UID);
+struct IPlayerConsoleData : public IExtension {
+    PROVIDE_EXT_UID(PlayerConsoleData_UID);
 
     /// Check if player has console access
     virtual bool hasConsoleAccess() const = 0;

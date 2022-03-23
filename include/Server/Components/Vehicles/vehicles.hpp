@@ -194,7 +194,7 @@ struct VehicleTrailerSyncPacket {
 };
 
 /// A vehicle interface
-struct IVehicle : public IEntity {
+struct IVehicle : public IExtensible, public IEntity {
 
     /// Set the inital spawn data of the vehicle
     virtual void setSpawnData(const VehicleSpawnData& data) = 0;
@@ -322,7 +322,7 @@ struct IVehicle : public IEntity {
     /// Adds a train carriage to the vehicle (ONLY FOR TRAINS).
     virtual void addCarriage(IVehicle* carriage, int pos) = 0;
     virtual void updateCarriage(Vector3 pos, Vector3 veloc) = 0;
-    virtual StaticArray<IVehicle*, 3> getCarriages() = 0;
+    virtual const StaticArray<IVehicle*, MAX_VEHICLE_CARRIAGES>& getCarriages() = 0;
 
     /// Sets the velocity of the vehicle.
     virtual void setVelocity(Vector3 velocity) = 0;
@@ -363,7 +363,7 @@ struct VehicleEventHandler {
 
 /// A vehicle pool
 static const UID VehicleComponent_UID = UID(0x3f1f62ee9e22ab19);
-struct IVehiclesComponent : public IPoolComponent<IVehicle /*, VEHICLE_POOL_SIZE*/> {
+struct IVehiclesComponent : public IPoolComponent<IVehicle> {
     PROVIDE_UID(VehicleComponent_UID)
 
     /// Get the number of model instances for each model
@@ -377,8 +377,8 @@ struct IVehiclesComponent : public IPoolComponent<IVehicle /*, VEHICLE_POOL_SIZE
 
 /// Player vehicle data
 static const UID SomePlayerData_UID = UID(0xa960485be6c70fb2);
-struct IPlayerVehicleData : public IExtraData {
-    PROVIDE_UID(SomePlayerData_UID)
+struct IPlayerVehicleData : public IExtension {
+    PROVIDE_EXT_UID(SomePlayerData_UID)
 
     /// Get the player's vehicle
     /// Returns nullptr if they aren't in a vehicle

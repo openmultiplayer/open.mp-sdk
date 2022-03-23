@@ -232,7 +232,7 @@ public:
 };
 
 /// A network interface for various network-related functions
-struct INetwork : virtual IExtensible {
+struct INetwork : public IExtensible {
     /// Get the network type of the network
     /// @return The network type of the network
     virtual ENetworkType getNetworkType() const = 0;

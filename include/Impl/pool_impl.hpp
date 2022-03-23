@@ -144,8 +144,9 @@ struct PoolIDProvider {
     {
     }
 
-    ~PoolIDProvider() {
-        poolID=-1;
+    ~PoolIDProvider()
+    {
+        poolID = -1;
     }
 };
 

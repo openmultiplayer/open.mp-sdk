@@ -7,7 +7,7 @@
 #include <values.hpp>
 
 /// Actor interace
-struct IActor : public IEntity {
+struct IActor : public IExtensible, public IEntity {
     /// Sets the actor's skin
     virtual void setSkin(int id) = 0;
 

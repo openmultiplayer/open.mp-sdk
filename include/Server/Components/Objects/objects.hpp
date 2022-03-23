@@ -114,7 +114,7 @@ struct ObjectMoveData {
 };
 
 /// Base object class
-struct IBaseObject : public IEntity {
+struct IBaseObject : public IExtensible, public IEntity {
     /// Set the draw distance of the object
     virtual void setDrawDistance(float drawDistance) = 0;
 
@@ -178,7 +178,7 @@ struct ObjectEventHandler;
 
 /// An object pool
 static const UID ObjectsComponent_UID = UID(0x59f8415f72da6160);
-struct IObjectsComponent : public IPoolComponent<IObject /*, OBJECT_POOL_SIZE*/> {
+struct IObjectsComponent : public IPoolComponent<IObject> {
     PROVIDE_UID(ObjectsComponent_UID)
 
     /// Get the object event dispatcher
@@ -207,8 +207,8 @@ struct ObjectEventHandler {
 };
 
 static const UID PlayerObjectData_UID = UID(0x93d4ed2344b07456);
-struct IPlayerObjectData : public IExtraData, public IPool<IPlayerObject /*, OBJECT_POOL_SIZE*/> {
-    PROVIDE_UID(PlayerObjectData_UID);
+struct IPlayerObjectData : public IExtension, public IPool<IPlayerObject> {
+    PROVIDE_EXT_UID(PlayerObjectData_UID);
 
     /// Create a new player object
     /// @return A pointer if succeeded or nullptr on failure

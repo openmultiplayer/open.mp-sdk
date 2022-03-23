@@ -38,8 +38,8 @@ struct MenuEventHandler {
 };
 
 static const UID PlayerMenuData_UID = UID(0x01d8e934e9791b99);
-struct IPlayerMenuData : public IExtraData {
-    PROVIDE_UID(PlayerMenuData_UID)
+struct IPlayerMenuData : public IExtension {
+    PROVIDE_EXT_UID(PlayerMenuData_UID)
 
     /// Get Player's current menu id
     virtual uint8_t getMenuID() const = 0;
@@ -49,7 +49,7 @@ struct IPlayerMenuData : public IExtraData {
 };
 
 static const UID MenusComponent_UID = UID(0x621e219eb97ee0b2);
-struct IMenusComponent : public IPoolComponent<IMenu /*, MENU_POOL_SIZE*/> {
+struct IMenusComponent : public IPoolComponent<IMenu> {
     PROVIDE_UID(MenusComponent_UID);
 
     virtual IEventDispatcher<MenuEventHandler>& getEventDispatcher() = 0;

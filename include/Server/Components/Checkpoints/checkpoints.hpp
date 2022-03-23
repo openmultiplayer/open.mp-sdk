@@ -41,8 +41,8 @@ struct IPlayerRaceCheckpointData : public ICheckpointDataBase {
 };
 
 static const UID PlayerCheckpointData_UID = UID(0xbc07576aa3591a66);
-struct IPlayerCheckpointData : public IExtraData {
-    PROVIDE_UID(PlayerCheckpointData_UID);
+struct IPlayerCheckpointData : public IExtension {
+    PROVIDE_EXT_UID(PlayerCheckpointData_UID);
 
     virtual IPlayerRaceCheckpointData& getRaceCheckpoint() = 0;
     virtual IPlayerStandardCheckpointData& getStandardCheckpoint() = 0;

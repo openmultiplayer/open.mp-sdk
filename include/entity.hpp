@@ -11,42 +11,8 @@ struct IIDProvider {
     virtual int getID() const = 0;
 };
 
-/// An extra data interface for per-entity data
-struct IExtraData : public IUIDProvider {
-    /// Frees the extra data object, called on provider destruction, usually defaults to delete this
-    virtual void free() = 0;
-};
-
-struct IExtraDataProvider {
-    /// Add data associated with the provider, preferrably used on provider creation
-    virtual void addData(IExtraData* extraData) = 0;
-
-    /// Query provider data by its ID
-    /// @param id The UID of the data
-    /// @return A pointer to the data or nullptr if not available
-    virtual IExtraData* findData(UID id) const = 0;
-};
-
-/// Query extra data by its type
-/// @typeparam ExtraDataT The data type, must derive from IExtraData
-template <class ExtraDataT>
-ExtraDataT* queryData(IExtraDataProvider* provider)
-{
-    static_assert(std::is_base_of<IExtraData, ExtraDataT>::value, "queryData parameter must inherit from IExtraData");
-    return static_cast<ExtraDataT*>(provider->findData(ExtraDataT::IID));
-}
-
-/// Query extra data by its type
-/// @typeparam ExtraDataT The data type, must derive from IExtraData
-template <class ExtraDataT>
-ExtraDataT* queryData(IExtraDataProvider& provider)
-{
-    static_assert(std::is_base_of<IExtraData, ExtraDataT>::value, "queryData parameter must inherit from IExtraData");
-    return static_cast<ExtraDataT*>(provider.findData(ExtraDataT::IID));
-}
-
 /// A base entity interface
-struct IEntity : virtual IExtensible, public IIDProvider, public IExtraDataProvider {
+struct IEntity : public IIDProvider {
     /// Get the entity's position
     virtual Vector3 getPosition() const = 0;
 

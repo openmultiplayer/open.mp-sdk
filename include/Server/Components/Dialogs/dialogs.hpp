@@ -18,8 +18,8 @@ enum DialogResponse {
 };
 
 static const UID DialogData_UID = UID(0xbc03376aa3591a11);
-struct IPlayerDialogData : public IExtraData {
-    PROVIDE_UID(DialogData_UID);
+struct IPlayerDialogData : public IExtension {
+    PROVIDE_EXT_UID(DialogData_UID);
 
     /// Show a dialog to player
     virtual void show(IPlayer& player, int id, DialogStyle style, StringView caption, StringView info, StringView button1, StringView button2) = 0;

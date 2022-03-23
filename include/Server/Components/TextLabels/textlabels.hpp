@@ -14,7 +14,7 @@ struct TextLabelAttachmentData {
 };
 
 /// Text label base interface
-struct ITextLabelBase : public IEntity {
+struct ITextLabelBase : public IExtensible, public IEntity {
     /// Set the text label's text
     virtual void setText(StringView text) = 0;
 
@@ -67,7 +67,7 @@ struct IPlayerTextLabel : public ITextLabelBase {
 
 static const UID TextLabelsComponent_UID = UID(0xa0c57ea80a009742);
 /// The text label component which is a global text label pool
-struct ITextLabelsComponent : public IPoolComponent<ITextLabel /*, TEXT_LABEL_POOL_SIZE*/> {
+struct ITextLabelsComponent : public IPoolComponent<ITextLabel> {
     PROVIDE_UID(TextLabelsComponent_UID);
 
     /// Create a text label
@@ -82,8 +82,8 @@ struct ITextLabelsComponent : public IPoolComponent<ITextLabel /*, TEXT_LABEL_PO
 
 static const UID PlayerTextLabelData_UID = UID(0xb9e2bd0dc5148c3c);
 /// The text label player data which is a player text label pool
-struct IPlayerTextLabelData : public IExtraData, public IPool<IPlayerTextLabel /*, TEXT_LABEL_POOL_SIZE*/> {
-    PROVIDE_UID(PlayerTextLabelData_UID);
+struct IPlayerTextLabelData : public IExtension, public IPool<IPlayerTextLabel> {
+    PROVIDE_EXT_UID(PlayerTextLabelData_UID);
 
     /// Create a player text label
     virtual IPlayerTextLabel* create(StringView text, Colour colour, Vector3 pos, float drawDist, bool los) = 0;

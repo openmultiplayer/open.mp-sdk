@@ -15,23 +15,18 @@
 struct IExtension {
     /// Get the extension's UID
     virtual UID getExtensionID() = 0;
+
+    /// Delete the extension.
+    /// If the extension is added dynamically with addExtension and the autoDeleteExt flag was set,
+    /// this will be called on destruction of the IExtensible interface or on removeExtension.
+    virtual void freeExtension() { }
 };
 
 /// A class which should be inherited by classes which want to be extensible without breaking the ABI
 struct IExtensible {
     /// Try to get an extension by its UID
     /// @return A pointer to the extension or nullptr if it's not supported
-    virtual IExtension const* getExtension(UID id) const { return nullptr; }
-
-    /// Query an extension by its type
-    /// Don't call directly, use global queryExtension() instead
-    /// @typeparam ExtensionT The extension type, must derive from IExtension
-    template <class ExtensionT>
-    ExtensionT* _queryExtension() const
-    {
-        static_assert(std::is_base_of<IExtension, ExtensionT>::value, "queryExtension parameter must inherit from IExtension");
-        return static_cast<ExtensionT*>(getExtension(ExtensionT::ExtensionIID));
-    }
+    virtual IExtension* getExtension(UID id) { return nullptr; }
 
     /// Query an extension by its type
     /// Don't call directly, use global queryExtension() instead
@@ -40,7 +35,77 @@ struct IExtensible {
     ExtensionT* _queryExtension()
     {
         static_assert(std::is_base_of<IExtension, ExtensionT>::value, "queryExtension parameter must inherit from IExtension");
-        return const_cast<ExtensionT*>(static_cast<ExtensionT const*>(getExtension(ExtensionT::ExtensionIID)));
+
+        auto it = miscExtensions.find(ExtensionT::ExtensionIID);
+        if (it != miscExtensions.end()) {
+            return static_cast<ExtensionT*>(it->second.first);
+        }
+
+        IExtension* ext = getExtension(ExtensionT::ExtensionIID);
+        if (ext) {
+            return static_cast<ExtensionT*>(ext);
+        }
+        return nullptr;
+    }
+
+    /// Add an extension dynamically
+    /// @param ext The extension to add
+    /// @param autoDeleteExt Whether the extension should be automatically deleted (its freeExtension method called) on the extensible's destruction
+    /// @return True if added successfully, false otherwise (the ID is already inserted)
+    virtual bool addExtension(IExtension* ext, bool autoDeleteExt)
+    {
+        return miscExtensions.emplace(robin_hood::pair<UID, Pair<IExtension*, bool>>(ext->getExtensionID(), std::make_pair(ext, autoDeleteExt))).second;
+    }
+
+    /// Remove a dynamically added extension
+    /// If the extension was added with the autoDeleteExt flag on this also calls its freeExtension method
+    /// @param ext The extension to remove
+    /// @return True if removed successfully, false otherwise (ID not found)
+    virtual bool removeExtension(IExtension* ext)
+    {
+        auto it = miscExtensions.find(ext->getExtensionID());
+        if (it == miscExtensions.end()) {
+            return false;
+        }
+        if (it->second.second) {
+            it->second.first->freeExtension();
+        }
+        miscExtensions.erase(it);
+        return true;
+    }
+
+    /// Remove a dynamically added extension
+    /// If the extension was added with the autoDeleteExt flag on this also calls its freeExtension method
+    /// @param ext The extension to remove
+    /// @return True if removed successfully, false otherwise (ID not found)
+    virtual bool removeExtension(UID id)
+    {
+        auto it = miscExtensions.find(id);
+        if (it == miscExtensions.end()) {
+            return false;
+        }
+        if (it->second.second) {
+            it->second.first->freeExtension();
+        }
+        miscExtensions.erase(it);
+        return true;
+    }
+
+    virtual ~IExtensible()
+    {
+        freeExtensions();
+    }
+
+protected:
+    FlatHashMap<UID, Pair<IExtension*, bool>> miscExtensions;
+
+    void freeExtensions()
+    {
+        for (auto it = miscExtensions.begin(); it != miscExtensions.end(); ++it) {
+            if (it->second.second) {
+                it->second.first->freeExtension();
+            }
+        }
     }
 };
 
@@ -98,7 +163,7 @@ struct ILogger;
 struct IEarlyConfig;
 
 /// A component interface
-struct IComponent : virtual IExtensible, public IUIDProvider {
+struct IComponent : public IExtensible, public IUIDProvider {
     /// Get the component's name
     virtual StringView componentName() const = 0;
 

@@ -350,9 +350,7 @@ enum EPlayerNameStatus {
 };
 
 /// A player interface
-struct IPlayer : public IEntity {
-    virtual ~IPlayer() { }
-
+struct IPlayer : public IExtensible, public IEntity {
     /// Kick the player
     virtual void kick() = 0;
 
@@ -807,7 +805,7 @@ struct PlayerUpdateEventHandler {
 };
 
 /// A player pool interface
-struct IPlayerPool : virtual IExtensible, public IReadOnlyPool<IPlayer /*, PLAYER_POOL_SIZE*/> {
+struct IPlayerPool : public IExtensible, public IReadOnlyPool<IPlayer> {
     /// Get a set of all the available players and bots (anything in the pool)
     virtual const FlatPtrHashSet<IPlayer>& entries() = 0;
 

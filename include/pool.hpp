@@ -92,7 +92,7 @@ public:
 /* Interfaces, to be passed around */
 
 template <typename T>
-struct IReadOnlyPool : virtual IExtensible {
+struct IReadOnlyPool {
     /// Get the object at an index
     virtual T* get(int index) = 0;
 
@@ -105,7 +105,7 @@ struct PoolEventHandler {
     /// Called right after a new entry was constructed
     virtual void onPoolEntryCreated(T& entry) = 0;
     /// Called just before an entry is destructed
-    virtual void onPoolEntryDestroyed(T& entry) = 0;
+    virtual void onPoolEntryDestroyed(T& entry) { }
 };
 
 /// A statically sized pool interface

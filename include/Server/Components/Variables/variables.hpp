@@ -50,6 +50,6 @@ struct IVariablesComponent : public IComponent, public IVariableStorageBase {
 };
 
 static const UID PlayerVariableData_UID = UID(0x12debbc8a3bd23ad);
-struct IPlayerVariableData : public IExtraData, public IVariableStorageBase {
-    PROVIDE_UID(PlayerVariableData_UID);
+struct IPlayerVariableData : public IExtension, public IVariableStorageBase {
+    PROVIDE_EXT_UID(PlayerVariableData_UID);
 };
