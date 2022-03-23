@@ -16,7 +16,7 @@ struct IPickup : public IEntity {
     virtual PickupType getType() const = 0;
 
     /// Sets pickup's position
-    virtual void setPosition(Vector3 position, bool update = true) = 0;
+    virtual void setPosition(Vector3 position, bool update) = 0;
 
     /// Sets pickup's model and restreams
     virtual void setModel(int id, bool update = true) = 0;
