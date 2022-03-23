@@ -19,8 +19,32 @@ struct IMenu : public IIDProvider {
     /// Disables a specific row in menu
     virtual void disableMenuRow(MenuRow row) = 0;
 
+    /// Check if menu is enabled
+    virtual bool isRowEnabled(MenuRow row) const = 0;
+
     /// Disables menu
     virtual void disableMenu() = 0;
+
+    /// Check if menu is enabled
+    virtual bool isEnabled() const = 0;
+
+    /// Get position
+    virtual const Vector2& getPosition() const = 0;
+
+    /// Get menu item count in a specific column
+    virtual int getItemCount(MenuColumn column) const = 0;
+
+    /// Get menu item count
+    virtual int getColumnCount() const = 0;
+
+    /// Get columns width
+    virtual Vector2 getColumnsWidth() const = 0;
+
+    /// Get column header
+    virtual const StringView getColumnHeader(MenuColumn column) const = 0;
+
+    /// Get column header
+    virtual const StringView getItem(MenuColumn column, MenuRow row) const = 0;
 
     /// Initialise menu for a player
     virtual void initForPlayer(IPlayer& player) = 0;
