@@ -35,8 +35,9 @@ struct IGangZone : public IIDProvider {
     virtual void setPosition(const GangZonePos& position) = 0;
 };
 
-// Leaving this here for future usage
 struct GangZoneEventHandler {
+    virtual void OnPlayerEnterGangZone(IPlayer& player, IGangZone& zone) { }
+    virtual void OnPlayerLeaveGangZone(IPlayer& player, IGangZone& zone) { }
 };
 
 static const UID GangZoneComponent_UID = UID(0xb3351d11ee8d8056);
