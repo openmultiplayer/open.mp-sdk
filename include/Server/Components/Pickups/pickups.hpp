@@ -15,8 +15,8 @@ struct IPickup : public IEntity {
     /// Gets pickup's type
     virtual PickupType getType() const = 0;
 
-    /// Sets pickup's position
-    virtual void setPosition(Vector3 position, bool update) = 0;
+    /// Sets pickup's position but don't restream
+    virtual void setPositionNoUpdate(Vector3 position) = 0;
 
     /// Sets pickup's model and restreams
     virtual void setModel(int id, bool update = true) = 0;
@@ -37,7 +37,7 @@ struct IPickup : public IEntity {
     virtual void setPickupHiddenForPlayer(IPlayer& player, bool hidden) = 0;
 
     /// Check if given pickup has hidden state for player (only process streaming if pickup is not hidden)
-    virtual bool isPickupHiddenForPlayer(IPlayer& player);
+    virtual bool isPickupHiddenForPlayer(IPlayer& player) const = 0;
 };
 
 struct PickupEventHandler {
