@@ -16,6 +16,9 @@ struct IGangZone : public IIDProvider {
     /// Check if a gangzone is shown for player
     virtual bool isShownForPlayer(const IPlayer& player) const = 0;
 
+    /// Check if a gangzone is flashing for player
+    virtual bool isFlashingForPlayer(const IPlayer& player) const = 0;
+
     /// Show a gangzone for player
     virtual void showForPlayer(IPlayer& player, const Colour& colour) = 0;
 
@@ -35,12 +38,21 @@ struct IGangZone : public IIDProvider {
     virtual void setPosition(const GangZonePos& position) = 0;
 
     /// get a list of players inside of gangzone
-    virtual FlatHashSet<IPlayer*>& getPlayersInside() = 0;
+    virtual const FlatHashSet<IPlayer*>& getPlayersInside() const = 0;
+
+    /// get a list of players gangzone is shown for
+    virtual const FlatHashSet<IPlayer*>& getShownFor() = 0;
+
+    /// get gangzone flashing color for a player
+    virtual const Colour getFlashingColorForPlayer(IPlayer& player) const = 0;
+
+    /// get gangzone color for a player
+    virtual const Colour getColorForPlayer(IPlayer& player) const = 0;
 };
 
 struct GangZoneEventHandler {
-    virtual void OnPlayerEnterGangZone(IPlayer& player, IGangZone& zone) { }
-    virtual void OnPlayerLeaveGangZone(IPlayer& player, IGangZone& zone) { }
+    virtual void onPlayerEnterGangZone(IPlayer& player, IGangZone& zone) { }
+    virtual void onPlayerLeaveGangZone(IPlayer& player, IGangZone& zone) { }
 };
 
 static const UID GangZoneComponent_UID = UID(0xb3351d11ee8d8056);
