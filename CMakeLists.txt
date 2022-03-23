@@ -9,13 +9,6 @@ if (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
 	)
 endif()
 
-set(CMAKE_CXX_STANDARD 17)
-
-# MSVC
-if(MSVC)
-	set(CMAKE_CXX_STANDARD_REQUIRED ON)
-endif()
-
 # Conan third-party libraries
 include(lib/cmake-conan/conan.cmake)
 include(lib/cmake-conan/conan-omp.cmake)
@@ -31,11 +24,17 @@ if(MSVC)
 	target_compile_options(SDK INTERFACE
 		"/fp:strict"
 		"/arch:SSE2"
-		"-Werror=format"
 	)
 elseif(UNIX)
-	target_compile_options(SDK INTERFACE -msse2 -mfpmath=sse)
+	target_compile_options(SDK INTERFACE
+		-msse2
+		-mfpmath=sse
+	)
 endif()
+
+target_compile_options(SDK INTERFACE
+	-Werror=format
+)
 
 target_link_libraries(SDK INTERFACE
 	CONAN_PKG::glm
