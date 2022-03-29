@@ -58,6 +58,7 @@ struct ObjectMaterialData {
         Text
     };
 
+    bool used;
     Type type; // Shared
 
     union {
@@ -152,13 +153,13 @@ struct IBaseObject : public IExtensible, public IEntity {
     virtual const ObjectAttachmentData& getAttachmentData() const = 0;
 
     /// Get the object's material data
-    virtual bool getMaterialData(int index, const ObjectMaterialData*& out) const = 0;
+    virtual bool getMaterialData(uint32_t index, const ObjectMaterialData*& out) const = 0;
 
     /// Set the object's material to a texture
-    virtual void setMaterial(int index, int model, StringView txd, StringView texture, Colour colour) = 0;
+    virtual void setMaterial(uint32_t index, int model, StringView txd, StringView texture, Colour colour) = 0;
 
     /// Set the object's material to some text
-    virtual void setMaterialText(int index, StringView text, int mtlSize, StringView fontFace, int fontSize, bool bold, Colour fontColour, Colour backColour, ObjectMaterialTextAlign align) = 0;
+    virtual void setMaterialText(uint32_t index, StringView text, int mtlSize, StringView fontFace, int fontSize, bool bold, Colour fontColour, Colour backColour, ObjectMaterialTextAlign align) = 0;
 };
 
 /// An object interface
