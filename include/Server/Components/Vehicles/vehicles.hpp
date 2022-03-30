@@ -14,6 +14,7 @@ struct VehicleSpawnData {
     int colour2;
     Seconds respawnDelay;
     bool siren;
+    int interior;
 };
 
 struct UnoccupiedVehicleUpdate {
@@ -199,6 +200,9 @@ struct IVehicle : public IExtensible, public IEntity {
     /// Set the inital spawn data of the vehicle
     virtual void setSpawnData(const VehicleSpawnData& data) = 0;
 
+    /// Get the initial spawn data of the vehicle
+    virtual const VehicleSpawnData& getSpawnData() = 0;
+
     /// Checks if player has the vehicle streamed in for themselves
     virtual bool isStreamedInForPlayer(const IPlayer& player) const = 0;
 
@@ -295,6 +299,9 @@ struct IVehicle : public IExtensible, public IEntity {
     /// Get the vehicle's respawn delay.
     virtual Seconds getRespawnDelay() = 0;
 
+    /// Set the vehicle respawn delay.
+    virtual void setRespawnDelay(Seconds delay) = 0;
+
     /// Checks if the vehicle is respawning.
     virtual bool isRespawning() = 0;
 
@@ -315,6 +322,9 @@ struct IVehicle : public IExtensible, public IEntity {
 
     /// Get the current vehicle's attached trailer.
     virtual IVehicle* getTrailer() const = 0;
+
+    /// Get the current vehicle's tower.
+    virtual IVehicle* getTower() const = 0;
 
     /// Fully repair the vehicle.
     virtual void repair() = 0;
@@ -341,6 +351,21 @@ struct IVehicle : public IExtensible, public IEntity {
 
     /// Gets the current landing gear state from a ID_VEHICLE_SYNC packet from the latest driver.
     virtual uint8_t getLandingGearState() = 0;
+
+    /// Get if the vehicle was occupied since last spawn.
+    virtual bool hasBeenOccupied() = 0;
+
+    /// Get the last time the vehicle was occupied.
+    virtual const TimePoint& getLastOccupiedTime() = 0;
+
+    /// Get the last time the vehicle was spawned.
+    virtual const TimePoint& getLastSpawnTime() = 0;
+
+    /// Get if vehicle is occupied.
+    virtual bool isOccupied() = 0;
+
+    // Set vehicle siren status.
+    virtual void setSiren(bool status) = 0;
 };
 
 /// A vehicle event handler
