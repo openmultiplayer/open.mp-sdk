@@ -65,4 +65,10 @@ struct IGangZonesComponent : public IPoolComponent<IGangZone> {
 
     /// Create a gang zone
     virtual IGangZone* create(GangZonePos pos) = 0;
+
+    /// Get list of gangzones that need to be checked for enter/leave events
+    virtual const FlatHashSet<IGangZone*>& getCheckingGangZones() const = 0;
+
+    /// add gangzone to checking list to loop through on player update, see if player enters or leaves
+    virtual void toggleGangZoneCheck(IGangZone& zone, bool toggle) = 0;
 };
