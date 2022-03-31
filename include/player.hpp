@@ -321,13 +321,13 @@ struct WeaponSlotData {
 typedef StaticArray<WeaponSlotData, MAX_WEAPON_SLOTS> WeaponSlots;
 
 struct PlayerAimData {
-    uint8_t CamMode;
     Vector3 CamFrontVector;
     Vector3 CamPos;
     float AimZ;
     uint8_t CamZoom;
     uint8_t WeaponState;
     uint8_t AspectRatio;
+    uint8_t CamMode;
 };
 
 struct PlayerBulletData {

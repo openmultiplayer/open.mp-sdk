@@ -52,14 +52,11 @@ enum PlayerBone {
 
 /// Trivial object material data
 struct ObjectMaterialData {
-    enum Type {
+    enum Type : uint8_t {
         None,
         Default,
         Text
     };
-
-    bool used;
-    Type type; // Shared
 
     union {
         int model; // Default
@@ -78,22 +75,25 @@ struct ObjectMaterialData {
 
     Colour backgroundColour; // Text
 
-    HybridString<64> textOrTXD; // Text or TXD
-    HybridString<64> fontOrTexture; // Font or texture
+    HybridString<32> textOrTXD; // Text or TXD
+    HybridString<32> fontOrTexture; // Font or texture
+
+    Type type; // Shared
+    bool used; // Shared
 };
 
 /// Object attachment data
 struct ObjectAttachmentData {
-    enum class Type {
+    enum class Type : uint8_t {
         None,
         Vehicle,
         Object,
         Player
     } type;
+    bool syncRotation;
     int ID;
     Vector3 offset;
     Vector3 rotation;
-    bool syncRotation;
 };
 
 /// Player slot object attachment data

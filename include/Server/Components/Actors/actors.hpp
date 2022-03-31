@@ -6,6 +6,12 @@
 #include <types.hpp>
 #include <values.hpp>
 
+struct ActorSpawnData {
+    Vector3 position;
+    float facingAngle;
+    int skin;
+};
+
 /// Actor interace
 struct IActor : public IExtensible, public IEntity {
     /// Sets the actor's skin
@@ -43,6 +49,9 @@ struct IActor : public IExtensible, public IEntity {
 
     /// Streams out actor for a player
     virtual void streamOutForPlayer(IPlayer& player) = 0;
+
+    /// Get actor spawn data
+    virtual const ActorSpawnData& getSpawnData() = 0;
 };
 
 struct ActorEventHandler {
