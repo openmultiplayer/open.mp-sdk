@@ -5,12 +5,12 @@
 #include <types.hpp>
 #include <values.hpp>
 
-typedef int PickupType;
+typedef uint8_t PickupType;
 
 /// Pickup interace
 struct IPickup : public IExtensible, public IEntity {
     /// Sets pickup's type and restreams
-    virtual void setType(PickupType t, bool update = true) = 0;
+    virtual void setType(PickupType type, bool update = true) = 0;
 
     /// Gets pickup's type
     virtual PickupType getType() const = 0;

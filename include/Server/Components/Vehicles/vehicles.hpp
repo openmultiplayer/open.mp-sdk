@@ -7,12 +7,12 @@
 struct IPlayer;
 
 struct VehicleSpawnData {
+    Seconds respawnDelay;
     int modelID;
     Vector3 position;
     float zRotation;
     int colour1;
     int colour2;
-    Seconds respawnDelay;
     bool siren;
 };
 
@@ -164,11 +164,11 @@ struct VehiclePassengerSyncPacket {
             uint8_t AdditionalKey : 2;
         };
     };
+    uint16_t Keys;
 
     Vector2 HealthArmour;
     uint16_t LeftRight;
     uint16_t UpDown;
-    uint16_t Keys;
     Vector3 Position;
 };
 
