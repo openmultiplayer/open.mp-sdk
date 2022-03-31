@@ -47,6 +47,12 @@ struct ITextLabelBase : public IExtensible, public IEntity {
 
     /// Detach the text label from the vehicle and set its position or offset
     virtual void detachFromVehicle(Vector3 position) = 0;
+
+    // Set the text label's los check.
+    virtual void setTestLOS(bool status) = 0;
+
+    // Get the text label's los check status.
+    virtual bool getTestLOS() const = 0;
 };
 
 /// A global text label
