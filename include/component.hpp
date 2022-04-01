@@ -197,6 +197,9 @@ struct IComponent : public IExtensible, public IUIDProvider {
 
     /// Frees the component data
     virtual void free() = 0;
+
+    /// Reset the component data (on GMX)
+    virtual void reset() = 0;
 };
 
 struct IComponentList : public IExtensible {

@@ -22,10 +22,6 @@ struct TickEventHandler {
     virtual void onTick(Microseconds elapsed, TimePoint now) = 0;
 };
 
-struct ModeResetEventHandler {
-    virtual void onModeReset() = 0;
-};
-
 /// Types of data can be set in core during runtime
 enum class SettableCoreDataType {
     ServerName,
@@ -152,9 +148,6 @@ struct ICore : public IExtensible, public ILogger {
     /// Get the tick event dispatcher
     virtual IEventDispatcher<TickEventHandler>& getTickEventDispatcher() = 0;
 	
-    /// Get the reset event dispatcher
-    virtual IEventDispatcher<ModeResetEventHandler>& getModeResetEventDispatcher() = 0;
-
     virtual IConfig& getConfig() = 0;
 
     /// Get a list of available networks
