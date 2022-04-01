@@ -196,7 +196,7 @@ struct IComponent : public IExtensible, public IUIDProvider {
     virtual void provideConfiguration(ILogger& logger, IEarlyConfig& config, bool defaults) { }
 
     /// Frees the component data
-    virtual void free() = 0;
+    virtual void free(bool informClients) = 0;
 };
 
 struct IComponentList : public IExtensible {
