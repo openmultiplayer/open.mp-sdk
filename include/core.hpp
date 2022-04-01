@@ -18,12 +18,8 @@ struct HTTPResponseHandler {
 };
 
 /// An event handler for core events
-struct TickEventHandler {
+struct CoreEventHandler {
     virtual void onTick(Microseconds elapsed, TimePoint now) = 0;
-};
-
-struct ModeResetEventHandler {
-    virtual void onModeReset() = 0;
 };
 
 /// Types of data can be set in core during runtime
@@ -150,7 +146,7 @@ struct ICore : public IExtensible, public ILogger {
     virtual IPlayerPool& getPlayers() = 0;
 
     /// Get the core event dispatcher
-    virtual IEventDispatcher<TickEventHandler>& getEventDispatcher() = 0;
+    virtual IEventDispatcher<CoreEventHandler>& getEventDispatcher() = 0;
 
     virtual IConfig& getConfig() = 0;
 
