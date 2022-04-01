@@ -273,7 +273,8 @@ struct PlayerSurfingData {
     enum class Type {
         None,
         Vehicle,
-        Object
+        Object,
+        PlayerObject
     } type;
     int ID;
     Vector3 offset;
