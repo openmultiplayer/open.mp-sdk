@@ -18,7 +18,7 @@ struct HTTPResponseHandler {
 };
 
 /// An event handler for core events
-struct TickEventHandler {
+struct CoreEventHandler {
     virtual void onTick(Microseconds elapsed, TimePoint now) = 0;
 };
 
@@ -145,8 +145,8 @@ struct ICore : public IExtensible, public ILogger {
     /// Get the player pool
     virtual IPlayerPool& getPlayers() = 0;
 
-    /// Get the tick event dispatcher
-    virtual IEventDispatcher<TickEventHandler>& getTickEventDispatcher() = 0;
+    /// Get the core event dispatcher
+    virtual IEventDispatcher<CoreEventHandler>& getEventDispatcher() = 0;
 
     virtual IConfig& getConfig() = 0;
 
