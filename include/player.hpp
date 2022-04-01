@@ -339,6 +339,17 @@ struct PlayerBulletData {
     uint16_t hitID;
 };
 
+struct PlayerSpectateData {
+    enum ESpectateType {
+        None,
+        Vehicle,
+        Player
+    };
+
+    int spectateID;
+    ESpectateType type;
+};
+
 struct IPlayerPool;
 struct IPlayer;
 
@@ -728,6 +739,9 @@ struct IPlayer : public IExtensible, public IEntity {
 
     /// Make player spectate a vehicle
     virtual void spectateVehicle(IVehicle& target, PlayerSpectateMode mode) = 0;
+
+    /// Get spectate data
+    virtual const PlayerSpectateData& getSpectateData() const = 0;
 
     /// Send client check (asks for certain data depending on type of action)
     virtual void sendClientCheck(int actionType, int address, int offset, int count) = 0;

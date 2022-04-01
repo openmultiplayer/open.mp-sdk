@@ -364,8 +364,17 @@ struct IVehicle : public IExtensible, public IEntity {
     /// Get if vehicle is occupied.
     virtual bool isOccupied() = 0;
 
-    // Set vehicle siren status.
+    /// Set vehicle siren status.
     virtual void setSiren(bool status) = 0;
+
+    /// Get vehicle siren status.
+    virtual uint8_t getSirenState() const = 0;
+
+    /// Get hydra thrust angle
+    virtual uint32_t getHydraThrustAngle() const = 0;
+
+    /// Get train speed
+    virtual float getTrainSpeed() const = 0;
 };
 
 /// A vehicle event handler
@@ -412,4 +421,7 @@ struct IPlayerVehicleData : public IExtension {
     /// Get the player's seat
     /// Returns -1 if they aren't in a vehicle.
     virtual int getSeat() const = 0;
+
+    /// Checks if player is in a mod shop
+    virtual bool isInModShop() const = 0;
 };
