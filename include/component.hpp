@@ -21,7 +21,7 @@ struct IExtension {
     /// this will be called on destruction of the IExtensible interface or on removeExtension.
     virtual void freeExtension() { }
 
-	virtual void reset() = 0;
+    virtual void reset() = 0;
 };
 
 /// A class which should be inherited by classes which want to be extensible without breaking the ABI
