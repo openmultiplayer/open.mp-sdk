@@ -143,6 +143,9 @@ struct IBaseObject : public IExtensible, public IEntity {
     /// Stop moving the object prematurely
     virtual void stopMoving() = 0;
 
+    /// Get object moving data
+    virtual const ObjectMoveData& getMovingData() const = 0;
+
     /// Attach the object to a vehicle
     virtual void attachToVehicle(IVehicle& vehicle, Vector3 offset, Vector3 rotation) = 0;
 
@@ -153,7 +156,7 @@ struct IBaseObject : public IExtensible, public IEntity {
     virtual const ObjectAttachmentData& getAttachmentData() const = 0;
 
     /// Get the object's material data
-    virtual bool getMaterialData(uint32_t index, const ObjectMaterialData*& out) const = 0;
+    virtual bool getMaterialData(uint32_t index, const ObjectMaterialData* out) const = 0;
 
     /// Set the object's material to a texture
     virtual void setMaterial(uint32_t index, int model, StringView txd, StringView texture, Colour colour) = 0;
