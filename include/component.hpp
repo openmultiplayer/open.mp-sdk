@@ -20,6 +20,8 @@ struct IExtension {
     /// If the extension is added dynamically with addExtension and the autoDeleteExt flag was set,
     /// this will be called on destruction of the IExtensible interface or on removeExtension.
     virtual void freeExtension() { }
+
+	virtual void reset() = 0;
 };
 
 /// A class which should be inherited by classes which want to be extensible without breaking the ABI
@@ -104,6 +106,15 @@ protected:
         for (auto it = miscExtensions.begin(); it != miscExtensions.end(); ++it) {
             if (it->second.second) {
                 it->second.first->freeExtension();
+            }
+        }
+    }
+
+    void resetExtensions()
+    {
+        for (auto it = miscExtensions.begin(); it != miscExtensions.end(); ++it) {
+            if (it->second.second) {
+                it->second.first->reset();
             }
         }
     }
