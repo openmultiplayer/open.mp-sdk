@@ -31,6 +31,7 @@ constexpr int PLAYER_TEXTDRAW_POOL_SIZE = 256;
 constexpr int MAX_VEHICLE_COMPONENTS = 194;
 constexpr int INVALID_COMPONENT_ID = 0;
 constexpr int MAX_VEHICLE_COMPONENT_SLOT = 16;
+constexpr int MAX_VEHICLE_COMPONENT_SLOT_IN_RPC = 14;
 constexpr int MAX_TEXT_LABELS = 1024;
 constexpr int MAX_GLOBAL_TEXTDRAWS = 2048;
 constexpr int MAX_PLAYER_TEXTDRAWS = 256;
