@@ -58,6 +58,8 @@ enum VehicleComponentSlot {
     VehicleComponent_RearBumper = 11,
     VehicleComponent_VentRight = 12,
     VehicleComponent_VentLeft = 13,
+    VehicleComponent_FrontBullbar = 14,
+    VehicleComponent_RearBullbar = 15,
 };
 
 enum VehicleVelocitySetType : uint8_t {
