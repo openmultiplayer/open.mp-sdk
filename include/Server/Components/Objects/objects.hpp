@@ -80,6 +80,11 @@ struct ObjectMaterialData {
 
     Type type; // Shared
     bool used; // Shared
+
+    ObjectMaterialData()
+        : used(false)
+    {
+    }
 };
 
 /// Object attachment data
