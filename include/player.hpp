@@ -321,14 +321,22 @@ struct WeaponSlotData {
 /// An array of weapon slots
 typedef StaticArray<WeaponSlotData, MAX_WEAPON_SLOTS> WeaponSlots;
 
+enum PlayerWeaponState : int8_t {
+    PlayerWeaponState_Unknown = -1,
+    PlayerWeaponState_NoBullets,
+    PlayerWeaponState_LastBullet,
+    PlayerWeaponState_MoreBullets,
+    PlayerWeaponState_Reloading
+};
+
 struct PlayerAimData {
-    Vector3 CamFrontVector;
-    Vector3 CamPos;
-    float AimZ;
-    uint8_t CamZoom;
-    uint8_t WeaponState;
-    uint8_t AspectRatio;
-    uint8_t CamMode;
+    Vector3 camFrontVector;
+    Vector3 camPos;
+    float aimZ;
+    float camZoom;
+    float aspectRatio;
+    PlayerWeaponState weaponState;
+    uint8_t camMode;
 };
 
 struct PlayerBulletData {
