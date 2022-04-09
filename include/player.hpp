@@ -872,4 +872,13 @@ struct IPlayerPool : public IExtensible, public IReadOnlyPool<IPlayer> {
     /// Attempt to broadcast an RPC derived from NetworkPacketBase to all peers
     /// @param packet The packet to send
     virtual void broadcastRPC(int id, Span<uint8_t> data, int channel, const IPlayer* skipFrom = nullptr) = 0;
+
+    /// Check if player name is valid.
+    virtual bool isNameValid(StringView name) const = 0;
+
+    /// Allow or disallow the use of specific character in player names.
+    virtual void allowNickNameCharacter(char character, bool allow) = 0;
+
+    /// Check if a specific character is allowed to be used in player names.
+    virtual bool isNickNameCharacterAllowed(char character) const = 0;
 };
