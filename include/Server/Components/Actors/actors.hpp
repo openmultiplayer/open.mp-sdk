@@ -55,7 +55,7 @@ struct IActor : public IExtensible, public IEntity {
 };
 
 struct ActorEventHandler {
-    virtual void onPlayerDamageActor(IPlayer& player, IActor& actor, float amount, unsigned weapon, BodyPart part) { }
+    virtual void onPlayerGiveDamageActor(IPlayer& player, IActor& actor, float amount, unsigned weapon, BodyPart part) { }
     virtual void onActorStreamOut(IActor& actor, IPlayer& forPlayer) { }
     virtual void onActorStreamIn(IActor& actor, IPlayer& forPlayer) { }
 };
