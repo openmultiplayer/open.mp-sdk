@@ -33,7 +33,7 @@ struct IDatabaseResultSetRow {
     /// Gets the integer of the field by the specified field index
     /// @param fieldIndex Field index
     /// @returns Integer
-    virtual long getFieldInteger(std::size_t fieldIndex) const = 0;
+    virtual long getFieldInt(std::size_t fieldIndex) const = 0;
 
     /// Gets the floating point number of the field by the specified field index
     /// @param fieldIndex Field index
@@ -48,7 +48,7 @@ struct IDatabaseResultSetRow {
     /// Gets the integer of the field by the specified field name
     /// @param fieldName Field name
     /// @returns Integer
-    virtual long getFieldIntegerByName(StringView fieldName) const = 0;
+    virtual long getFieldIntByName(StringView fieldName) const = 0;
 
     /// Gets the floating point number of the field by the specified field name
     /// @param fieldName Field name
@@ -88,7 +88,7 @@ struct IDatabaseResultSet : public IExtensible, public IIDProvider {
     /// Gets the integer of the field by the specified field index
     /// @param fieldIndex Field index
     /// @returns Integer
-    virtual long getFieldInteger(std::size_t fieldIndex) const = 0;
+    virtual long getFieldInt(std::size_t fieldIndex) const = 0;
 
     /// Gets the floating point number of the field by the specified field index
     /// @param fieldIndex Field index
@@ -103,7 +103,7 @@ struct IDatabaseResultSet : public IExtensible, public IIDProvider {
     /// Gets the integer of the field by the specified field name
     /// @param fieldName Field name
     /// @returns Integer
-    virtual long getFieldIntegerByName(StringView fieldName) const = 0;
+    virtual long getFieldIntByName(StringView fieldName) const = 0;
 
     /// Gets the floating point number of the field by the specified field name
     /// @param fieldName Field name
