@@ -25,7 +25,10 @@ struct IPlayerDialogData : public IExtension {
     virtual void hide(IPlayer& player) = 0;
 
     /// Show a dialog to player
-    virtual void show(IPlayer& player, int id, DialogStyle style, StringView caption, StringView info, StringView button1, StringView button2) = 0;
+    virtual void show(IPlayer& player, int id, DialogStyle style, StringView title, StringView body, StringView button1, StringView button2) = 0;
+
+	/// Get a player's current dialog data.
+	virtual void get(int & id, DialogStyle & style, StringView & title, StringView & body, StringView & button1, StringView & button2) = 0;
 
     /// Get player's active dialog
     virtual int getActiveID() const = 0;
