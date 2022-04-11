@@ -810,9 +810,9 @@ struct PlayerEventHandler {
     virtual void onIncomingConnection(IPlayer& player, StringView ipAddress, unsigned short port) { }
     virtual void onConnect(IPlayer& player) { }
     virtual void onDisconnect(IPlayer& player, PeerDisconnectReason reason) { }
-    virtual bool onRequestSpawn(IPlayer& player) { return true; }
+    virtual bool onPlayerRequestSpawn(IPlayer& player) { return true; }
     virtual void preSpawn(IPlayer& player) { }
-    virtual void onSpawn(IPlayer& player) { }
+    virtual void onPlayerSpawn(IPlayer& player) { }
     virtual void onStreamIn(IPlayer& player, IPlayer& forPlayer) { }
     virtual void onStreamOut(IPlayer& player, IPlayer& forPlayer) { }
     virtual bool onText(IPlayer& player, StringView message) { return true; }
