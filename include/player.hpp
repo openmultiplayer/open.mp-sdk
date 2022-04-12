@@ -726,7 +726,7 @@ struct IPlayer : public IExtensible, public IEntity {
     virtual bool hasCameraTargeting() const = 0;
 
     /// Remove the player from their vehicle
-    virtual void removeFromVehicle() = 0;
+    virtual void removeFromVehicle(bool force) = 0;
 
     /// Get the player the player is looking at or nullptr if none
     virtual IPlayer* getCameraTargetPlayer() = 0;
