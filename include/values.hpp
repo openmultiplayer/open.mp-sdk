@@ -42,6 +42,7 @@ constexpr int MAX_MENU_ITEMS = 12;
 constexpr int MAX_MENU_TEXT_LENGTH = 32;
 constexpr int INVALID_MENU_ID = 0xFF;
 constexpr int INVALID_DIALOG_ID = -1;
+constexpr int MAX_DIALOG = 32768;
 constexpr int INVALID_GANG_ZONE_ID = -1;
 constexpr int INVALID_PICKUP_ID = -1;
 constexpr int INVALID_OBJECT_MODEL_ID = -1;
