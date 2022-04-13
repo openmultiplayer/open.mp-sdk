@@ -30,10 +30,10 @@ struct ICheckpointDataBase {
     virtual bool isEnabled() const = 0;
 };
 
-struct IPlayerStandardCheckpointData : public ICheckpointDataBase {
+struct ICheckpointData : public ICheckpointDataBase {
 };
 
-struct IPlayerRaceCheckpointData : public ICheckpointDataBase {
+struct IRaceCheckpointData : public ICheckpointDataBase {
     virtual RaceCheckpointType getType() const = 0;
     virtual void setType(RaceCheckpointType type) = 0;
     virtual Vector3 getNextPosition() const = 0;
@@ -44,8 +44,8 @@ static const UID PlayerCheckpointData_UID = UID(0xbc07576aa3591a66);
 struct IPlayerCheckpointData : public IExtension {
     PROVIDE_EXT_UID(PlayerCheckpointData_UID);
 
-    virtual IPlayerRaceCheckpointData& getRaceCheckpoint() = 0;
-    virtual IPlayerStandardCheckpointData& getStandardCheckpoint() = 0;
+    virtual IRaceCheckpointData& getRaceCheckpoint() = 0;
+    virtual ICheckpointData& getCheckpoint() = 0;
 };
 
 struct PlayerCheckpointEventHandler {
