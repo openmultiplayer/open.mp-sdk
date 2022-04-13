@@ -24,6 +24,12 @@
 #define OMP_BUILD_PLATFORM OMP_UNIX
 #endif
 
+#ifdef _MSC_VER
+#define __ATTRIBUTE__(x)
+#else
+#define __ATTRIBUTE__(x) __attribute__(x)
+#endif
+
 /* Fix Ubuntu 18.04 build - possibly remove when EOL depending on which
  * other distributions we might want to support (18.04 uses glibc 2.27)
  * (see: https://sourceware.org/bugzilla/show_bug.cgi?id=19239%22)
@@ -341,7 +347,7 @@ private:
 namespace Impl {
 struct HybridStringDynamicStorage {
     char* ptr; ///< The dynamic storage
-    void(__attribute__((__cdecl__)) * free)(void*); ///< The free function to use for deallocating the dynamic storage
+    void(__ATTRIBUTE__((__cdecl__)) * free)(void*); ///< The free function to use for deallocating the dynamic storage
 };
 };
 
@@ -495,7 +501,7 @@ private:
     void initCopy(const char* data, size_t len)
     {
         const bool isDynamic = len > UsableStaticSize;
-        lenDynamic = (len << 1) | isDynamic;
+        lenDynamic = (len << 1) | int(isDynamic);
         char* ptr;
         if (isDynamic) {
             dynamicStorage.ptr = reinterpret_cast<char*>(malloc(sizeof(char) * (len + 1)));
@@ -509,10 +515,10 @@ private:
     }
 
     /// Move data
-    void initMove(char* data, size_t len, void(__attribute__((__cdecl__)) * freeFn)(void*))
+    void initMove(char* data, size_t len, void(__ATTRIBUTE__((__cdecl__)) * freeFn)(void*))
     {
         const bool isDynamic = len > UsableStaticSize;
-        lenDynamic = (len << 1) | isDynamic;
+        lenDynamic = (len << 1) | int(isDynamic);
         if (isDynamic) {
             dynamicStorage.ptr = data;
             dynamicStorage.free = freeFn;
@@ -526,7 +532,7 @@ private:
     void initReserve(size_t len)
     {
         const bool isDynamic = len > UsableStaticSize;
-        lenDynamic = (len << 1) | isDynamic;
+        lenDynamic = (len << 1) | int(isDynamic);
         if (isDynamic) {
             dynamicStorage.ptr = reinterpret_cast<char*>(malloc(sizeof(char) * (len + 1)));
             dynamicStorage.free = &free;

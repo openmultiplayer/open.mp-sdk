@@ -3,7 +3,7 @@ project(OMP-SDK LANGUAGES C CXX VERSION 0.0.1)
 
 if (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
 	message(
-		FATAL_ERROR
+		AUTHOR_WARNING
 		"Clang is the only compiler officially supported for building."
 		"Use clang on Unix or clang-cl on Windows to build."
 	)
@@ -32,9 +32,11 @@ elseif(UNIX)
 	)
 endif()
 
-target_compile_options(OMP-SDK INTERFACE
-	-Werror=format
-)
+if (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
+	target_compile_options(OMP-SDK INTERFACE
+		-Werror=format
+	)
+endif()
 
 target_link_libraries(OMP-SDK INTERFACE
 	CONAN_PKG::glm
