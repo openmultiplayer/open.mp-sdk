@@ -14,13 +14,17 @@ enum TextDrawAlignmentTypes {
 };
 
 /// Textdraw's drawing style
-enum TextDrawStyle {
-    TextDrawStyle_FontBeckettRegular, ///< Font type
-    TextDrawStyle_FontAharoniBold, ///< Font type
-    TextDrawStyle_FontBankGothic, ///< Font type
-    TextDrawStyle_FontPricedown, ///< Font type
-    TextDrawStyle_Sprite, ///< TXD sprite
-    TextDrawStyle_Preview ///< Model preview
+enum TextDrawFont {
+    TextDrawFont_0, ///< Font type
+    TextDrawFont_1, ///< Font type
+    TextDrawFont_2, ///< Font type
+    TextDrawFont_3, ///< Font type
+    TextDrawFont_BeckettRegular = 0, ///< Font type
+    TextDrawFont_AharoniBold, ///< Font type
+    TextDrawFont_BankGothic, ///< Font type
+    TextDrawFont_Pricedown, ///< Font type
+    TextDrawFont_Sprite, ///< TXD sprite
+    TextDrawFont_Preview ///< Model preview
 };
 
 /// Text label base interface
@@ -86,16 +90,16 @@ struct ITextDrawBase : public IExtensible, public IIDProvider {
     virtual int getOutline() const = 0;
 
     /// Set the textdraw's background colour
-    virtual ITextDrawBase& setBackColour(Colour colour) = 0;
+    virtual ITextDrawBase& setBackgroundColour(Colour colour) = 0;
 
     /// Get the textdraw's background colour
-    virtual Colour getBackColour() const = 0;
+    virtual Colour getBackgroundColour() const = 0;
 
     /// Set the textdraw's drawing style
-    virtual ITextDrawBase& setStyle(TextDrawStyle style) = 0;
+    virtual ITextDrawBase& setFont(TextDrawFont style) = 0;
 
     /// Get the textdraw's drawing style
-    virtual TextDrawStyle getStyle() const = 0;
+    virtual TextDrawFont getFont() const = 0;
 
     /// Set whether the textdraw is proportional
     virtual ITextDrawBase& setProportional(bool proportional) = 0;
@@ -146,6 +150,9 @@ struct ITextDraw : public ITextDrawBase {
 
     /// Get whether the textdraw is shown for a player
     virtual bool isShownForPlayer(const IPlayer& player) const = 0;
+
+	/// Set the textdraw's text for one player
+	virtual void setTextForPlayer(IPlayer& player, StringView text) = 0;
 };
 
 struct IPlayerTextDraw : public ITextDrawBase {
