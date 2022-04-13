@@ -5,6 +5,24 @@
 struct IVehicle;
 
 /// Object material text align values
+enum ObjectMaterialSize {
+	ObjectMaterialSize_32x32 = 10,
+	ObjectMaterialSize_64x32 = 20,
+	ObjectMaterialSize_64x64 = 30,
+	ObjectMaterialSize_128x32 = 40,
+	ObjectMaterialSize_128x64 = 50,
+	ObjectMaterialSize_128x128 = 60,
+	ObjectMaterialSize_256x32 = 70,
+	ObjectMaterialSize_256x64 = 80,
+	ObjectMaterialSize_256x128 = 90,
+	ObjectMaterialSize_256x256 = 100,
+	ObjectMaterialSize_512x64 = 110,
+	ObjectMaterialSize_512x128 = 120,
+	ObjectMaterialSize_512x256 = 130,
+	ObjectMaterialSize_512x512 = 140
+};
+
+/// Object material text align values
 enum ObjectMaterialTextAlign {
     ObjectMaterialTextAlign_Left,
     ObjectMaterialTextAlign_Center,
@@ -140,13 +158,13 @@ struct IBaseObject : public IExtensible, public IEntity {
     virtual bool getCameraCollision() const = 0;
 
     /// Start moving the object
-    virtual void startMoving(const ObjectMoveData& data) = 0;
+    virtual void move(const ObjectMoveData& data) = 0;
 
     /// Get whether the object is moving
     virtual bool isMoving() const = 0;
 
     /// Stop moving the object prematurely
-    virtual void stopMoving() = 0;
+    virtual void stop() = 0;
 
     /// Get object moving data
     virtual const ObjectMoveData& getMovingData() const = 0;
@@ -161,13 +179,13 @@ struct IBaseObject : public IExtensible, public IEntity {
     virtual const ObjectAttachmentData& getAttachmentData() const = 0;
 
     /// Get the object's material data
-    virtual bool getMaterialData(uint32_t index, const ObjectMaterialData*& out) const = 0;
+    virtual bool getMaterialData(uint32_t materialIndex, const ObjectMaterialData*& out) const = 0;
 
     /// Set the object's material to a texture
-    virtual void setMaterial(uint32_t index, int model, StringView txd, StringView texture, Colour colour) = 0;
+    virtual void setMaterial(uint32_t materialIndex, int model, StringView textureLibrary, StringView textureName, Colour colour) = 0;
 
     /// Set the object's material to some text
-    virtual void setMaterialText(uint32_t index, StringView text, int mtlSize, StringView fontFace, int fontSize, bool bold, Colour fontColour, Colour backColour, ObjectMaterialTextAlign align) = 0;
+    virtual void setMaterialText(uint32_t materialIndex, StringView text, ObjectMaterialSize materialSize, StringView fontFace, int fontSize, bool bold, Colour fontColour, Colour backgroundColour, ObjectMaterialTextAlign align) = 0;
 };
 
 /// An object interface
@@ -236,19 +254,19 @@ struct IPlayerObjectData : public IExtension, public IPool<IPlayerObject> {
     virtual const ObjectAttachmentSlotData& getAttachedObject(int index) const = 0;
 
     /// Initiate object selection for the player
-    virtual void beginObjectSelection() = 0;
+    virtual void beginSelecting() = 0;
 
     /// Get whether the player is selecting objects
     virtual bool selectingObject() const = 0;
 
     /// End selection and editing objects for the player
-    virtual void endObjectEdit() = 0;
+    virtual void endEditing() = 0;
 
     /// Edit the object for the player
-    virtual void editObject(IObject& object) = 0;
+    virtual void beginEditing(IObject& object) = 0;
 
     /// Edit the player object for the player
-    virtual void editObject(IPlayerObject& object) = 0;
+    virtual void beginEditing(IPlayerObject& object) = 0;
 
     /// Check if the player is editing an object
     virtual bool editingObject() const = 0;
