@@ -274,6 +274,19 @@ struct StaticPoolStorageBase : public NoCopy {
         }
     }
 
+    /// Empty the array.
+    void clear()
+    {
+        // Destroy everything in the array.
+        for (Interface* const ptr : allocated_.entries())
+        {
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *ptr);
+            static_cast<Type*>(ptr)->~Type();
+        }
+        allocated_.clear();
+        lowestFreeIndex_ = Lower;
+    }
+
     /// Get the raw entries list
     /// Don't use this for looping through entries. Use the custom iterators instead.
     const FlatPtrHashSet<Interface>& _entries()
@@ -443,6 +456,19 @@ struct DynamicPoolStorageBase : public NoCopy {
         delete pool_[index];
         pool_[index] = nullptr;
         return true;
+    }
+
+    /// Empty the array.
+    void clear()
+    {
+        // Destroy everything in the array.
+        for (Interface* const ptr : allocated_.entries())
+        {
+            eventDispatcher_.dispatch(&PoolEventHandler<Interface>::onPoolEntryDestroyed, *ptr);
+            delete static_cast<Type*>(ptr);
+        }
+        allocated_.clear();
+        lowestFreeIndex_ = Lower;
     }
 
     /// Get the raw entries list

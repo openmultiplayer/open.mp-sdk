@@ -171,6 +171,12 @@ struct ICore : public IExtensible, public ILogger {
     /// Set string data during runtime
     virtual void setData(SettableCoreDataType type, StringView data) = 0;
 
+    /// Clear all entites that vanish on GM exit.
+    virtual void resetAll() = 0;
+
+    /// Create all entites that appear on GM start.
+    virtual void reloadAll() = 0;
+
     /// Get weapon's name as a string
     virtual StringView getWeaponName(PlayerWeapon weapon) = 0;
 
