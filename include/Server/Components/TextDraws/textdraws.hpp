@@ -167,9 +167,9 @@ struct IPlayerTextDraw : public ITextDrawBase {
 };
 
 struct TextDrawEventHandler {
-    virtual void onTextDrawSelectionCancel(IPlayer& player) { }
-    virtual void onTextDrawClick(IPlayer& player, ITextDraw& td) { }
-    virtual void onPlayerTextDrawClick(IPlayer& player, IPlayerTextDraw& td) { }
+    virtual void onPlayerCancelTextDraw(IPlayer& player) { }
+    virtual void onPlayerClickTextDraw(IPlayer& player, ITextDraw& td) { }
+    virtual void onPlayerClickPlayerTextDraw(IPlayer& player, IPlayerTextDraw& td) { }
 };
 
 static const UID TextDrawsComponent_UID = UID(0x9b5dc2b1d15c992a);
