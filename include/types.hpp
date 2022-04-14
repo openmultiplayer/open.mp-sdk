@@ -24,7 +24,7 @@
 #define OMP_BUILD_PLATFORM OMP_UNIX
 #endif
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) && !defined(__clang__)
 #define __ATTRIBUTE__(x)
 #define __CDECL __cdecl
 #else
