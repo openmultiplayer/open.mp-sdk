@@ -60,7 +60,7 @@ struct ITextDrawBase : public IExtensible, public IIDProvider {
     virtual TextDrawAlignmentTypes getAlignment() const = 0;
 
     /// Set the letters' colour
-    virtual ITextDrawBase& setLetterColour(Colour colour) = 0;
+    virtual ITextDrawBase& setColour(Colour colour) = 0;
 
     /// Get the letters' colour
     virtual Colour getLetterColour() const = 0;
