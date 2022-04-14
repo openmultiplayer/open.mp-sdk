@@ -1,14 +1,6 @@
 cmake_minimum_required(VERSION 3.19)
 project(OMP-SDK LANGUAGES C CXX VERSION 0.0.1)
 
-if (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL Clang)
-	message(
-		AUTHOR_WARNING
-		"Clang is the only compiler officially supported for building."
-		"Use clang on Unix or clang-cl on Windows to build."
-	)
-endif()
-
 # Conan third-party libraries
 include(lib/cmake-conan/conan.cmake)
 include(lib/cmake-conan/conan-omp.cmake)
