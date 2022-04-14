@@ -26,8 +26,10 @@
 
 #ifdef _MSC_VER
 #define __ATTRIBUTE__(x)
+#define __CDECL __cdecl
 #else
 #define __ATTRIBUTE__(x) __attribute__(x)
+#define __CDECL __attribute__(__cdecl__)
 #endif
 
 /* Fix Ubuntu 18.04 build - possibly remove when EOL depending on which
@@ -347,7 +349,7 @@ private:
 namespace Impl {
 struct HybridStringDynamicStorage {
     char* ptr; ///< The dynamic storage
-    void(__ATTRIBUTE__((__cdecl__)) * free)(void*); ///< The free function to use for deallocating the dynamic storage
+    void(__CDECL * free)(void*); ///< The free function to use for deallocating the dynamic storage
 };
 };
 
@@ -515,7 +517,7 @@ private:
     }
 
     /// Move data
-    void initMove(char* data, size_t len, void(__ATTRIBUTE__((__cdecl__)) * freeFn)(void*))
+    void initMove(char* data, size_t len, void(__CDECL * freeFn)(void*))
     {
         const bool isDynamic = len > UsableStaticSize;
         lenDynamic = (len << 1) | int(isDynamic);
