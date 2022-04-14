@@ -66,10 +66,10 @@ struct ITextDrawBase : public IExtensible, public IIDProvider {
     virtual Colour getLetterColour() const = 0;
 
     /// Set whether the textdraw uses a box
-    virtual ITextDrawBase& setUsingBox(bool use) = 0;
+    virtual ITextDrawBase& useBox(bool use) = 0;
 
     /// Get whether the textdraw uses a box
-    virtual bool isUsingBox() const = 0;
+    virtual bool hasBox() const = 0;
 
     /// Set the textdraw box's colour
     virtual ITextDrawBase& setBoxColour(Colour colour) = 0;
