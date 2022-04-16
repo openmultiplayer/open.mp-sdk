@@ -29,7 +29,7 @@
 #define __CDECL __cdecl
 #else
 #define __ATTRIBUTE__(x) __attribute__(x)
-#define __CDECL __attribute__(__cdecl__)
+#define __CDECL __attribute__((__cdecl__))
 #endif
 
 /* Fix Ubuntu 18.04 build - possibly remove when EOL depending on which
