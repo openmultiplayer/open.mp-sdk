@@ -1959,7 +1959,8 @@ static StringView AnimLibs[] = {
 static struct AnimationLookup {
     FlatHashSet<Impl::String> valid;
 
-    AnimationLookup() {
+    AnimationLookup()
+    {
         for (int i = 1 /* skip animation 0 since it's invalid */; i < GLM_COUNTOF(AnimationNames); ++i) {
             valid.emplace(Impl::String(AnimationNames[i]));
         }
@@ -1993,22 +1994,22 @@ inline Pair<StringView, StringView> splitAnimationNames(int ID)
     return { full.substr(0, idx), full.substr(idx + 1) };
 }
 
-inline bool animationNameValid(StringView lib, StringView name) {
+inline bool animationNameValid(StringView lib, StringView name)
+{
     Impl::String fullName(lib);
     fullName += ':' + Impl::String(name);
     std::transform(fullName.begin(), fullName.end(), fullName.begin(), [](unsigned char c) { return std::toupper(c); });
     return AnimationNamesLookup.valid.find(fullName) != AnimationNamesLookup.valid.end();
 }
 
-inline bool animationLibraryValid(StringView lib, bool v1_0 = false) {
+inline bool animationLibraryValid(StringView lib, bool v1_0 = false)
+{
     Impl::String fullName(lib);
     std::transform(fullName.begin(), fullName.end(), fullName.begin(), [](unsigned char c) { return std::toupper(c); });
-    if (AnimationLibraryLookup.valid.find(fullName) != AnimationLibraryLookup.valid.end())
-    {
+    if (AnimationLibraryLookup.valid.find(fullName) != AnimationLibraryLookup.valid.end()) {
         return true;
     }
-    if (v1_0)
-    {
+    if (v1_0) {
         // Check three more libraries, removed in version 1.1
         return fullName == "BLOWJOBS" || fullName == "SEX" || fullName == "SNM";
     }

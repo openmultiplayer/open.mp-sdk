@@ -6,20 +6,20 @@ struct IVehicle;
 
 /// Object material text align values
 enum ObjectMaterialSize {
-	ObjectMaterialSize_32x32 = 10,
-	ObjectMaterialSize_64x32 = 20,
-	ObjectMaterialSize_64x64 = 30,
-	ObjectMaterialSize_128x32 = 40,
-	ObjectMaterialSize_128x64 = 50,
-	ObjectMaterialSize_128x128 = 60,
-	ObjectMaterialSize_256x32 = 70,
-	ObjectMaterialSize_256x64 = 80,
-	ObjectMaterialSize_256x128 = 90,
-	ObjectMaterialSize_256x256 = 100,
-	ObjectMaterialSize_512x64 = 110,
-	ObjectMaterialSize_512x128 = 120,
-	ObjectMaterialSize_512x256 = 130,
-	ObjectMaterialSize_512x512 = 140
+    ObjectMaterialSize_32x32 = 10,
+    ObjectMaterialSize_64x32 = 20,
+    ObjectMaterialSize_64x64 = 30,
+    ObjectMaterialSize_128x32 = 40,
+    ObjectMaterialSize_128x64 = 50,
+    ObjectMaterialSize_128x128 = 60,
+    ObjectMaterialSize_256x32 = 70,
+    ObjectMaterialSize_256x64 = 80,
+    ObjectMaterialSize_256x128 = 90,
+    ObjectMaterialSize_256x256 = 100,
+    ObjectMaterialSize_512x64 = 110,
+    ObjectMaterialSize_512x128 = 120,
+    ObjectMaterialSize_512x256 = 130,
+    ObjectMaterialSize_512x512 = 140
 };
 
 /// Object material text align values

@@ -21,8 +21,8 @@ static const UID DialogData_UID = UID(0xbc03376aa3591a11);
 struct IPlayerDialogData : public IExtension {
     PROVIDE_EXT_UID(DialogData_UID);
 
-	/// Hide a dialog for a player
-	virtual void hide(IPlayer & player) = 0;
+    /// Hide a dialog for a player
+    virtual void hide(IPlayer& player) = 0;
 
     /// Show a dialog to player
     virtual void show(IPlayer& player, int id, DialogStyle style, StringView caption, StringView info, StringView button1, StringView button2) = 0;

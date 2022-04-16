@@ -349,7 +349,7 @@ private:
 namespace Impl {
 struct HybridStringDynamicStorage {
     char* ptr; ///< The dynamic storage
-    void(__CDECL * free)(void*); ///< The free function to use for deallocating the dynamic storage
+    void(__CDECL* free)(void*); ///< The free function to use for deallocating the dynamic storage
 };
 };
 
@@ -517,7 +517,7 @@ private:
     }
 
     /// Move data
-    void initMove(char* data, size_t len, void(__CDECL * freeFn)(void*))
+    void initMove(char* data, size_t len, void(__CDECL* freeFn)(void*))
     {
         const bool isDynamic = len > UsableStaticSize;
         lenDynamic = (len << 1) | int(isDynamic);

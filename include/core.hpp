@@ -125,16 +125,20 @@ enum LogLevel {
 /// A basic logger interface
 struct ILogger {
     /// Print a new line to console
-    __ATTRIBUTE__((__format__(__printf__, 2, 3))) virtual void printLn(const char* fmt, ...) = 0;
+    __ATTRIBUTE__((__format__(__printf__, 2, 3)))
+    virtual void printLn(const char* fmt, ...) = 0;
 
     /// Print a new line to console (receives va_list instead)
-    __ATTRIBUTE__((__format__(__printf__, 2, 0))) virtual void vprintLn(const char* fmt, va_list args) = 0;
+    __ATTRIBUTE__((__format__(__printf__, 2, 0)))
+    virtual void vprintLn(const char* fmt, va_list args) = 0;
 
     /// Print a new line to console of a specified log type
-    __ATTRIBUTE__((__format__(__printf__, 3, 4))) virtual void logLn(LogLevel level, const char* fmt, ...) = 0;
+    __ATTRIBUTE__((__format__(__printf__, 3, 4)))
+    virtual void logLn(LogLevel level, const char* fmt, ...) = 0;
 
     /// Print a new line to console of a specified log type (receives va_list instead)
-    __ATTRIBUTE__((__format__(__printf__, 3, 0))) virtual void vlogLn(LogLevel level, const char* fmt, va_list args) = 0;
+    __ATTRIBUTE__((__format__(__printf__, 3, 0)))
+    virtual void vlogLn(LogLevel level, const char* fmt, va_list args) = 0;
 };
 
 /// The core interface
