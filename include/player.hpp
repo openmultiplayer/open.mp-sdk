@@ -595,6 +595,9 @@ struct IPlayer : public IExtensible, public IEntity {
     /// Set the player's gravity
     virtual void setGravity(float gravity) = 0;
 
+    /// Get player's gravity
+    virtual float getGravity() const = 0;
+
     /// Set the player's world time
     virtual void setWorldTime(Hours time) = 0;
 
