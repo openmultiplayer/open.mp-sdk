@@ -86,6 +86,9 @@ struct IConfig : public IExtensible {
     /// Reload bans
     virtual void reloadBans() = 0;
 
+    /// Clear bans
+    virtual void clearBans() = 0;
+
     /// Get an option name from an alias if available
     /// @return A pair of bool which is true if the alias is deprecated and a string with the real config name
     virtual Pair<bool, StringView> getNameFromAlias(StringView alias) const = 0;
