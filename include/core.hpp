@@ -144,7 +144,10 @@ struct ILogger {
 /// The core interface
 struct ICore : public IExtensible, public ILogger {
     /// Get the SDK version
-    virtual SemanticVersion getVersion() = 0;
+    virtual SemanticVersion getVersion() const = 0;
+
+    /// Get the version of the NetworkBitStream class the core was built with
+    virtual int getNetworkBitStreamVersion() const = 0;
 
     /// Get the player pool
     virtual IPlayerPool& getPlayers() = 0;
