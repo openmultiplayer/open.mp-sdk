@@ -800,6 +800,9 @@ struct IPlayer : public IExtensible, public IEntity {
 
     /// Get player's collision status (ghost mode)
     virtual bool isGhostModeEnabled() const = 0;
+
+    /// Get default objects removed (basically just how many times removeDefaultObject is called)
+    virtual int getDefaultObjectsRemoved() const = 0;
 };
 
 /// A player event handler
