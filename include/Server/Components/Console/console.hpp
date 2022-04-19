@@ -67,4 +67,7 @@ struct IPlayerConsoleData : public IExtension {
 
     /// Check if player has console access
     virtual bool hasConsoleAccess() const = 0;
+
+    /// Set player's console accessibility
+    virtual void setConsoleAccessibility(bool set) = 0;
 };
