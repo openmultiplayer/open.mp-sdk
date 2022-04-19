@@ -163,6 +163,9 @@ struct ICore : public IExtensible, public ILogger {
     /// Set server gravity
     virtual void setGravity(float gravity) = 0;
 
+    /// Get server gravity
+    virtual float getGravity() const = 0;
+
     /// Set server weather
     virtual void setWeather(int weather) = 0;
 
