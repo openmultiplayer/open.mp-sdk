@@ -794,6 +794,12 @@ struct IPlayer : public IExtensible, public IEntity {
 
     /// Send client check (asks for certain data depending on type of action)
     virtual void sendClientCheck(int actionType, int address, int offset, int count) = 0;
+
+    /// Toggle player's collision for other players
+    virtual void toggleGhostMode(bool toggle) = 0;
+
+    /// Get player's collision status (ghost mode)
+    virtual bool isGhostModeEnabled() const = 0;
 };
 
 /// A player event handler
