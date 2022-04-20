@@ -80,6 +80,9 @@ struct IConfig : public IExtensible {
     /// Remove a ban
     virtual void removeBan(size_t index) = 0;
 
+    /// Remove a ban
+    virtual void removeBan(const BanEntry& entry) = 0;
+
     /// Write bans to file
     virtual void writeBans() = 0;
 
