@@ -677,7 +677,7 @@ struct IPlayer : public IExtensible, public IEntity {
     virtual int getTeam() const = 0;
 
     /// Set the player's skin
-    virtual void setSkin(int skin) = 0;
+    virtual void setSkin(int skin, bool send = true) = 0;
 
     /// Get the player's skin
     virtual int getSkin() const = 0;
