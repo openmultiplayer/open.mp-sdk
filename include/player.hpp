@@ -377,6 +377,43 @@ struct IPlayer : public IExtensible, public IEntity {
     /// Ban the player
     virtual void ban(StringView reason = StringView()) = 0;
 
+    /// Get whether the player is a bot (NPC)
+    virtual bool isBot() const = 0;
+
+    virtual const PeerNetworkData& getNetworkData() const = 0;
+
+    /// Get the peer's ping from their network
+    unsigned getPing() const
+    {
+        return getNetworkData().network->getPing(*this);
+    }
+
+    /// Attempt to send a packet to the network peer
+    /// @param bs The bit stream with data to send
+    bool sendPacket(Span<uint8_t> data, int channel)
+    {
+        return getNetworkData().network->sendPacket(*this, data, channel);
+    }
+
+    /// Attempt to send an RPC to the network peer
+    /// @param id The RPC ID for the current network
+    /// @param bs The bit stream with data to send
+    bool sendRPC(int id, Span<uint8_t> data, int channel)
+    {
+        return getNetworkData().network->sendRPC(*this, id, data, channel);
+    }
+
+    /// Attempt to broadcast an RPC derived from NetworkPacketBase to the player's streamed peers
+    /// @param packet The packet to send
+    virtual void broadcastRPCToStreamed(int id, Span<uint8_t> data, int channel, bool skipFrom = false) const = 0;
+
+    /// Attempt to broadcast a packet derived from NetworkPacketBase to the player's streamed peers
+    /// @param packet The packet to send
+    virtual void broadcastPacketToStreamed(Span<uint8_t> data, int channel, bool skipFrom = true) const = 0;
+
+    /// Broadcast sync packet
+    virtual void broadcastSyncPacket(Span<uint8_t> data, int channel) const = 0;
+
     /// Immediately spawn the player
     virtual void spawn() = 0;
 
@@ -595,6 +632,9 @@ struct IPlayer : public IExtensible, public IEntity {
     /// Set the player's gravity
     virtual void setGravity(float gravity) = 0;
 
+    /// Get player's gravity
+    virtual float getGravity() const = 0;
+
     /// Set the player's world time
     virtual void setWorldTime(Hours time) = 0;
 
@@ -755,42 +795,14 @@ struct IPlayer : public IExtensible, public IEntity {
     /// Send client check (asks for certain data depending on type of action)
     virtual void sendClientCheck(int actionType, int address, int offset, int count) = 0;
 
-    /// Get whether the player is a bot (NPC)
-    virtual bool isBot() const = 0;
+    /// Toggle player's collision for other players
+    virtual void toggleGhostMode(bool toggle) = 0;
 
-    virtual const PeerNetworkData& getNetworkData() const = 0;
+    /// Get player's collision status (ghost mode)
+    virtual bool isGhostModeEnabled() const = 0;
 
-    /// Get the peer's ping from their network
-    unsigned getPing() const
-    {
-        return getNetworkData().network->getPing(*this);
-    }
-
-    /// Attempt to send a packet to the network peer
-    /// @param bs The bit stream with data to send
-    bool sendPacket(Span<uint8_t> data, int channel)
-    {
-        return getNetworkData().network->sendPacket(*this, data, channel);
-    }
-
-    /// Attempt to send an RPC to the network peer
-    /// @param id The RPC ID for the current network
-    /// @param bs The bit stream with data to send
-    bool sendRPC(int id, Span<uint8_t> data, int channel)
-    {
-        return getNetworkData().network->sendRPC(*this, id, data, channel);
-    }
-
-    /// Attempt to broadcast an RPC derived from NetworkPacketBase to the player's streamed peers
-    /// @param packet The packet to send
-    virtual void broadcastRPCToStreamed(int id, Span<uint8_t> data, int channel, bool skipFrom = false) const = 0;
-
-    /// Attempt to broadcast a packet derived from NetworkPacketBase to the player's streamed peers
-    /// @param packet The packet to send
-    virtual void broadcastPacketToStreamed(Span<uint8_t> data, int channel, bool skipFrom = true) const = 0;
-
-    /// Broadcast sync packet
-    virtual void broadcastSyncPacket(Span<uint8_t> data, int channel) const = 0;
+    /// Get default objects removed (basically just how many times removeDefaultObject is called)
+    virtual int getDefaultObjectsRemoved() const = 0;
 };
 
 /// A player event handler

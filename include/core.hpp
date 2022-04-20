@@ -80,11 +80,20 @@ struct IConfig : public IExtensible {
     /// Remove a ban
     virtual void removeBan(size_t index) = 0;
 
+    /// Remove a ban
+    virtual void removeBan(const BanEntry& entry) = 0;
+
     /// Write bans to file
     virtual void writeBans() = 0;
 
     /// Reload bans
     virtual void reloadBans() = 0;
+
+    /// Clear bans
+    virtual void clearBans() = 0;
+
+    /// Check if ban entry is banned
+    virtual bool isBanned(const BanEntry& entry) const = 0;
 
     /// Get an option name from an alias if available
     /// @return A pair of bool which is true if the alias is deprecated and a string with the real config name
@@ -165,6 +174,9 @@ struct ICore : public IExtensible, public ILogger {
 
     /// Set server gravity
     virtual void setGravity(float gravity) = 0;
+
+    /// Get server gravity
+    virtual float getGravity() const = 0;
 
     /// Set server weather
     virtual void setWeather(int weather) = 0;

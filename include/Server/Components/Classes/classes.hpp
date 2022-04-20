@@ -24,6 +24,9 @@ struct PlayerClass {
 struct IClass : public IExtensible, public IIDProvider {
     /// Get the player class associated with the class interface
     virtual const PlayerClass& getClass() = 0;
+
+    /// Set the player class data
+    virtual void setClass(const PlayerClass& data) = 0;
 };
 
 static const UID PlayerClassData_UID = UID(0x185655ded843788b);
