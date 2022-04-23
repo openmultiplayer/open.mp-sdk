@@ -310,8 +310,8 @@ struct StreamConfigHelper {
     }
 
     StreamConfigHelper(IConfig& config)
-        : distance(config.getFloat("stream_distance"))
-        , rate(config.getInt("stream_rate"))
+        : distance(config.getFloat("network.stream_radius"))
+        , rate(config.getInt("network.stream_rate"))
     {
     }
 
