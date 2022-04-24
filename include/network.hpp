@@ -265,13 +265,16 @@ struct INetwork : public IExtensible {
     /// Attempt to send a packet to a network peer
     /// @param peer The network peer to send the packet to
     /// @param data The data span with the length in BITS
-    virtual bool sendPacket(IPlayer& peer, Span<uint8_t> data, int channel) = 0;
+    /// @param data The data span with the length in BITS
+    /// @param dispatchEvents If calling sendPacket should dispatch send events or not
+    virtual bool sendPacket(IPlayer& peer, Span<uint8_t> data, int channel, bool dispatchEvents = true) = 0;
 
     /// Attempt to send an RPC to a network peer
     /// @param peer The network peer to send the RPC to
     /// @param id The RPC ID for the current network
     /// @param data The data span with the length in BITS
-    virtual bool sendRPC(IPlayer& peer, int id, Span<uint8_t> data, int channel) = 0;
+    /// @param dispatchEvents If calling sendRPC should dispatch send events or not
+    virtual bool sendRPC(IPlayer& peer, int id, Span<uint8_t> data, int channel, bool dispatchEvents = true) = 0;
 
     /// Attempt to broadcast an RPC to everyone on this network
     /// @param id The RPC ID for the current network
