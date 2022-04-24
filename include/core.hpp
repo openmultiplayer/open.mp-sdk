@@ -8,7 +8,7 @@
 #include "values.hpp"
 
 enum HTTPRequestType {
-    HTTPRequestType_Get,
+    HTTPRequestType_Get = 1,
     HTTPRequestType_Post,
     HTTPRequestType_Head
 };
