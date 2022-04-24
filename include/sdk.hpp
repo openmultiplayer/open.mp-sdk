@@ -10,5 +10,5 @@
 
 /// The component's entry point function
 /// To be used like so: COMPONENT_ENTRY_POINT(ICore* core) { ... }
-typedef IComponent*(__cdecl* ComponentEntryPoint_t)();
-#define COMPONENT_ENTRY_POINT extern "C" SDK_EXPORT IComponent* __cdecl ComponentEntryPoint
+typedef IComponent*(__CDECL* ComponentEntryPoint_t)();
+#define COMPONENT_ENTRY_POINT extern "C" SDK_EXPORT IComponent* __CDECL ComponentEntryPoint
