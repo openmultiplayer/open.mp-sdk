@@ -856,6 +856,9 @@ struct IPlayerPool : public IExtensible, public IReadOnlyPool<IPlayer> {
     /// Returns a dispatcher to the PlayerUpdateEvent.
     virtual IEventDispatcher<PlayerUpdateEventHandler>& getPlayerUpdateDispatcher() = 0;
 
+    // Returns a dispatcher to the player pool event dispatcher.
+    virtual IEventDispatcher<PoolEventHandler<IPlayer>>& getPoolEventDispatcher() = 0;
+
     /// Returns whether a name is taken by any player excluding one player
     /// @param skip The player to exclude from the check
     virtual bool isNameTaken(StringView name, const IPlayer* skip) = 0;
