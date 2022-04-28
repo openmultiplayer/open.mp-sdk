@@ -22,7 +22,7 @@ struct ITextLabelBase : public IExtensible, public IEntity {
     virtual StringView getText() const = 0;
 
     /// Set the text label's colour
-    virtual void setColour(Colour colour, bool restream = false) = 0;
+    virtual void setColour(Colour colour) = 0;
 
     /// Get the text label's colour
     virtual Colour getColour() const = 0;
@@ -53,6 +53,9 @@ struct ITextLabelBase : public IExtensible, public IEntity {
 
     // Get the text label's los check status.
     virtual bool getTestLOS() const = 0;
+
+    // Used to update both colour and text with one single network packet being sent.
+    virtual void setColourAndText(Colour colour, StringView text) = 0;
 };
 
 /// A global text label
