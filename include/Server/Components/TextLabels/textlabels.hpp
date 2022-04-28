@@ -22,7 +22,7 @@ struct ITextLabelBase : public IExtensible, public IEntity {
     virtual StringView getText() const = 0;
 
     /// Set the text label's colour
-    virtual void setColour(Colour colour) = 0;
+    virtual void setColour(Colour colour, bool restream = false) = 0;
 
     /// Get the text label's colour
     virtual Colour getColour() const = 0;
