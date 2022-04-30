@@ -53,6 +53,9 @@ struct ITextLabelBase : public IExtensible, public IEntity {
 
     // Get the text label's los check status.
     virtual bool getTestLOS() const = 0;
+
+    // Used to update both colour and text with one single network packet being sent.
+    virtual void setColourAndText(Colour colour, StringView text) = 0;
 };
 
 /// A global text label

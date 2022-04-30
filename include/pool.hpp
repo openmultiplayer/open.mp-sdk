@@ -103,7 +103,7 @@ struct IReadOnlyPool {
 template <typename T>
 struct PoolEventHandler {
     /// Called right after a new entry was constructed
-    virtual void onPoolEntryCreated(T& entry) = 0;
+    virtual void onPoolEntryCreated(T& entry) { }
     /// Called just before an entry is destructed
     virtual void onPoolEntryDestroyed(T& entry) { }
 };
