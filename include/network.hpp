@@ -314,14 +314,11 @@ static const UID NetworkQueryExtension_UID = UID(0xfd46e147ea474971);
 struct INetworkQueryExtension : public IExtension {
     PROVIDE_EXT_UID(NetworkQueryExtension_UID);
 
-    /// Add a rule to the network rules or change it's value
-    virtual bool addRule(StringView rule, StringView value) = 0;
+    /// Add a rule to the network rules
+    virtual void addRule(StringView rule, StringView value) = 0;
 
     /// Remove a rule from the network rules
-    virtual bool removeRule(StringView rule) = 0;
-
-    /// Check if a rule is valid
-    virtual bool isValidRule(StringView rule) = 0;
+    virtual void removeRule(StringView rule) = 0;
 };
 
 /// Peer network data
