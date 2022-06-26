@@ -39,7 +39,6 @@ enum ConfigOptionType {
     ConfigOptionType_String = 1,
     ConfigOptionType_Float = 2,
     ConfigOptionType_Strings = 3,
-    ConfigOptionType_Bool = 4,
 };
 
 /// A config option enumerator
@@ -102,9 +101,6 @@ struct IConfig : public IExtensible {
 
     /// Enumerate the options in the config
     virtual void enumOptions(OptionEnumeratorCallback& callback) const = 0;
-
-    /// Get a variable as a bool
-    virtual bool* getBool(StringView key) = 0;
 };
 
 /// Used for filling config parameters by Config components
@@ -126,9 +122,6 @@ struct IEarlyConfig : public IConfig {
     /// @param key The real name
     /// @param deprecated Whether the alias is deprecated
     virtual void addAlias(StringView alias, StringView key, bool deprecated = false) = 0;
-
-    /// Set or create a bool in the config
-    virtual void setBool(StringView key, bool value) = 0;
 };
 
 enum LogLevel {
@@ -196,9 +189,6 @@ struct ICore : public IExtensible, public ILogger {
 
     /// Set string data during runtime
     virtual void setData(SettableCoreDataType type, StringView data) = 0;
-
-    /// Set sleep value for each main thread update cycle
-    virtual void setThreadSleep(Milliseconds value) = 0;
 
     /// Clear all entites that vanish on GM exit.
     virtual void resetAll() = 0;
@@ -320,8 +310,8 @@ struct StreamConfigHelper {
     }
 
     StreamConfigHelper(IConfig& config)
-        : distance(config.getFloat("network.stream_radius"))
-        , rate(config.getInt("network.stream_rate"))
+        : distance(config.getFloat("stream_distance"))
+        , rate(config.getInt("stream_rate"))
     {
     }
 
