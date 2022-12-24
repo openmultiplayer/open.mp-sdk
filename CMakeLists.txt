@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
-project(OMP-SDK LANGUAGES C CXX VERSION 0.0.1)
+project(OMP-SDK LANGUAGES CXX DESCRIPTION "Stable classes to write open.mp components with" VERSION 1)
 
 # Conan third-party libraries
 include(lib/cmake-conan/conan.cmake)
@@ -18,10 +18,12 @@ if(MSVC)
 		"/arch:SSE2"
 	)
 elseif(UNIX)
-	target_compile_options(OMP-SDK INTERFACE
-		-msse2
-		-mfpmath=sse
-	)
+	if(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
+		target_compile_options(OMP-SDK INTERFACE
+			-msse2
+			-mfpmath=sse
+		)
+	endif()
 endif()
 
 if (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
@@ -38,12 +40,15 @@ target_link_libraries(OMP-SDK INTERFACE
 )
 
 target_compile_definitions(OMP-SDK INTERFACE
-	GLM_FORCE_SSE2
 	GLM_FORCE_QUAT_DATA_WXYZ
 	NOMINMAX
 	nssv_CONFIG_SELECT_STRING_VIEW=nssv_STRING_VIEW_NONSTD
 	span_CONFIG_SELECT_SPAN=span_SPAN_NONSTD
 )
+
+if(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
+	target_compile_definitions(OMP-SDK INTERFACE GLM_FORCE_SSE2)
+endif()
 
 target_include_directories(OMP-SDK INTERFACE include/)
 
