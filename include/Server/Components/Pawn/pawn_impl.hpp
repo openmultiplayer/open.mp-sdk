@@ -1,9 +1,6 @@
 #pragma once
 
 // This file should only be included in one place.
-
-#include <amx/amx.h>
-
 #include "pawn.hpp"
 
 #if defined PAWN_NATIVES_HAS_FUNC
@@ -28,6 +25,7 @@ void setAmxLookups()
 		lookups_.menus = components_->queryComponent<IMenusComponent>();
 		lookups_.objects = components_->queryComponent<IObjectsComponent>();
 		lookups_.pickups = components_->queryComponent<IPickupsComponent>();
+		lookups_.recordings = components_->queryComponent<IRecordingsComponent>();
 		lookups_.textdraws = components_->queryComponent<ITextDrawsComponent>();
 		lookups_.textlabels = components_->queryComponent<ITextLabelsComponent>();
 		lookups_.timers = components_->queryComponent<ITimersComponent>();
