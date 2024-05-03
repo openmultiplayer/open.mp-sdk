@@ -1,25 +1,31 @@
-cmake_minimum_required(VERSION 3.19)
-project(OMP-SDK LANGUAGES CXX DESCRIPTION "Stable classes to write open.mp components with" VERSION 1)
+cmake_minimum_required(VERSION 3.14)
 
-# Conan third-party libraries
-include(lib/cmake-conan/conan.cmake)
-include(lib/cmake-conan/conan-omp.cmake)
+include(cmake/prelude.cmake)
 
-conan_omp_add_lib(glm 0.9.9.8)
-conan_omp_add_lib(robin-hood-hashing 3.11.5)
-conan_omp_add_lib(span-lite 0.10.3)
-conan_omp_add_lib(string-view-lite 1.6.0)
+project(
+    OMP-SDK
+    VERSION 0.1.0
+    DESCRIPTION "Short description"
+    HOMEPAGE_URL "https://example.com/"
+    LANGUAGES NONE
+)
 
-add_library(OMP-SDK INTERFACE)
+include(cmake/project-is-top-level.cmake)
+include(cmake/variables.cmake)
+
+# ---- Declare library ----
+
+add_library(OMP-SDK_OMP-SDK INTERFACE)
+add_library(OMP-SDK::OMP-SDK ALIAS OMP-SDK_OMP-SDK)
 
 if(MSVC)
-	target_compile_options(OMP-SDK INTERFACE
+	target_compile_options(OMP-SDK_OMP-SDK INTERFACE
 		"/fp:strict"
 		"/arch:SSE2"
 	)
 elseif(UNIX)
 	if(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
-		target_compile_options(OMP-SDK INTERFACE
+		target_compile_options(OMP-SDK_OMP-SDK INTERFACE
 			-msse2
 			-mfpmath=sse
 		)
@@ -27,19 +33,26 @@ elseif(UNIX)
 endif()
 
 if (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
-	target_compile_options(OMP-SDK INTERFACE
+	target_compile_options(OMP-SDK_OMP-SDK INTERFACE
 		-Werror=format
 	)
 endif()
 
-target_link_libraries(OMP-SDK INTERFACE
-	CONAN_PKG::glm
-	CONAN_PKG::robin-hood-hashing
-	CONAN_PKG::span-lite
-	CONAN_PKG::string-view-lite
+find_package(glm REQUIRED CONFIG)
+find_package(string-view-lite REQUIRED CONFIG)
+find_package(robin_hood REQUIRED CONFIG)
+find_package(span-lite REQUIRED CONFIG)
+
+
+target_link_libraries(OMP-SDK_OMP-SDK INTERFACE
+	glm
+	robin_hood
+	span-lite
+	string-view-lite
 )
 
-target_compile_definitions(OMP-SDK INTERFACE
+
+target_compile_definitions(OMP-SDK_OMP-SDK INTERFACE
 	GLM_FORCE_QUAT_DATA_WXYZ
 	NOMINMAX
 	nssv_CONFIG_SELECT_STRING_VIEW=nssv_STRING_VIEW_NONSTD
@@ -47,11 +60,38 @@ target_compile_definitions(OMP-SDK INTERFACE
 )
 
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
-	target_compile_definitions(OMP-SDK INTERFACE GLM_FORCE_SSE2)
+	target_compile_definitions(OMP-SDK_OMP-SDK INTERFACE GLM_FORCE_SSE2)
 endif()
 
-target_include_directories(OMP-SDK INTERFACE include/)
+set_property(
+    TARGET OMP-SDK_OMP-SDK PROPERTY
+    EXPORT_NAME OMP-SDK
+)
 
-file(GLOB_RECURSE omp_sdk_source_list "*.hpp")
 
-set_property(TARGET OMP-SDK PROPERTY SOURCES ${omp_sdk_source_list})
+target_include_directories(
+    OMP-SDK_OMP-SDK ${warning_guard}
+    INTERFACE
+    "\$<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>"
+)
+
+target_compile_features(OMP-SDK_OMP-SDK INTERFACE cxx_std_17)
+
+# ---- Install rules ----
+
+if(NOT CMAKE_SKIP_INSTALL_RULES)
+  include(cmake/install-rules.cmake)
+endif()
+
+# ---- Developer mode ----
+
+if(NOT OMP-SDK_DEVELOPER_MODE)
+  return()
+elseif(NOT PROJECT_IS_TOP_LEVEL)
+  message(
+      AUTHOR_WARNING
+      "Developer mode is intended for developers of OMP-SDK"
+  )
+endif()
+
+include(cmake/dev-mode.cmake)
