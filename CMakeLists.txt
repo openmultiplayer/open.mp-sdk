@@ -1,28 +1,37 @@
 cmake_minimum_required(VERSION 3.19)
 project(OMP-SDK LANGUAGES CXX DESCRIPTION "Stable classes to write open.mp components with" VERSION 1)
 
-# Conan third-party libraries
-include(lib/cmake-conan/conan.cmake)
-include(lib/cmake-conan/conan-omp.cmake)
-
-conan_omp_add_lib(glm 0.9.9.8)
-conan_omp_add_lib(robin-hood-hashing 3.11.5)
-conan_omp_add_lib(span-lite 0.10.3)
-conan_omp_add_lib(string-view-lite 1.6.0)
+add_subdirectory(lib/glm)
+add_subdirectory(lib/robin-hood-hashing)
+add_subdirectory(lib/span-lite)
+add_subdirectory(lib/string-view-lite)
 
 add_library(OMP-SDK INTERFACE)
 
 if(MSVC)
-	target_compile_options(OMP-SDK INTERFACE
-		"/fp:strict"
-		"/arch:SSE2"
-	)
+	if(CMAKE_SIZEOF_VOID_P EQUAL 4)
+		target_compile_options(OMP-SDK INTERFACE
+			"/fp:strict"
+			"/arch:SSE2"
+		)
+	else()
+		target_compile_options(OMP-SDK INTERFACE
+			"/fp:strict"
+		)
+	endif()
 elseif(UNIX)
 	if(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
 		target_compile_options(OMP-SDK INTERFACE
 			-msse2
 			-mfpmath=sse
 		)
+	else()
+		if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
+			target_compile_options(OMP-SDK INTERFACE "-mfpu=neon")
+		endif()
+		if(TARGET_BUILD_ARCH)
+			target_compile_options(OMP-SDK INTERFACE "-march=${TARGET_BUILD_ARCH}")
+		endif()
 	endif()
 endif()
 
@@ -33,10 +42,10 @@ if (NOT ${CMAKE_CXX_COMPILER_ID} STREQUAL MSVC)
 endif()
 
 target_link_libraries(OMP-SDK INTERFACE
-	CONAN_PKG::glm
-	CONAN_PKG::robin-hood-hashing
-	CONAN_PKG::span-lite
-	CONAN_PKG::string-view-lite
+	glm::glm
+	robin_hood
+	span-lite
+	string-view-lite
 )
 
 target_compile_definitions(OMP-SDK INTERFACE
@@ -48,6 +57,8 @@ target_compile_definitions(OMP-SDK INTERFACE
 
 if(CMAKE_SYSTEM_PROCESSOR MATCHES "(x86)|(X86)|(amd64)|(AMD64)")
 	target_compile_definitions(OMP-SDK INTERFACE GLM_FORCE_SSE2)
+else()
+	target_compile_definitions(OMP-SDK INTERFACE GLM_FORCE_NEON)
 endif()
 
 target_include_directories(OMP-SDK INTERFACE include/)
