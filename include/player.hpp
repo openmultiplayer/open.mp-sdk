@@ -272,11 +272,20 @@ static const StringView BodyPartString[] = {
 
 struct PlayerKeyData
 {
-	// todo fill with union
-	uint32_t keys;
-	int16_t upDown;
-	int16_t leftRight;
+    union
+    {
+        uint32_t keys;
+        struct
+        {
+            uint16_t verticalKeys;
+            uint16_t horizontalKeys;
+        };
+    };
+
+    int16_t upDown; 
+    int16_t leftRight; 
 };
+
 
 struct PlayerAnimationData
 {
