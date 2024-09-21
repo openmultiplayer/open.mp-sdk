@@ -22,7 +22,7 @@ Note the use of the `--recursive` argument, because this repository contains sub
 ## Usage with cmake
 
 ```cmake
-add_subdirectory(oath_to_omp_sdk)
+add_subdirectory(path_to_omp_sdk)
 
 # Later in your cmake file
 target_link_libraries(Server PUBLIC OMP-SDK)
