@@ -34,10 +34,10 @@ struct INPC : public IExtensible, public IEntity
 	virtual const FlatPtrHashSet<IPlayer>& streamedForPlayers() const = 0;
 
 	/// Set NPC interior, it doesn't do much but keeps a record internally to use getter functions later
-	virtual void setInterior(unsigned int interior);
+	virtual void setInterior(unsigned int interior) = 0;
 
 	/// Get NPC interior, just the value that is stored internally
-	virtual unsigned int getInterior() const;
+	virtual unsigned int getInterior() const = 0;
 
 	/// Get NPC velocity
 	virtual Vector3 getVelocity() const = 0;
