@@ -44,6 +44,18 @@ struct INPC : public IExtensible, public IEntity
 
 	/// Set NPC velocity
 	virtual void setVelocity(Vector3 position, bool update = false) = 0;
+
+	/// Set health
+	virtual void setHealth(float health) = 0;
+
+	/// Get health
+	virtual float getHealth() const = 0;
+
+	/// Set armour
+	virtual void setArmour(float armour) = 0;
+
+	/// Get armour
+	virtual float getArmour() const = 0;
 };
 
 struct NPCEventHandler
