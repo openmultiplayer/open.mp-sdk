@@ -41,6 +41,7 @@ enum PlayerState
 
 enum PlayerWeaponSkill
 {
+	PlayerWeaponSkill_Invalid = -1,
 	PlayerWeaponSkill_Pistol,
 	PlayerWeaponSkill_SilencedPistol,
 	PlayerWeaponSkill_DesertEagle,
@@ -199,6 +200,17 @@ enum PlayerWeapon
 	PlayerWeapon_End
 };
 
+enum PlayerWeaponType
+{
+	PlayerWeaponType_None,
+	PlayerWeaponType_Melee,
+	PlayerWeaponType_Throwable,
+	PlayerWeaponType_Bullet,
+	PlayerWeaponType_Rocket,
+	PlayerWeaponType_Sprayable,
+	PlayerWeaponType_Special,
+};
+
 static const StringView PlayerWeaponNames[] = {
 	"Fist",
 	"Brass Knuckles",
@@ -302,6 +314,67 @@ struct PlayerSurfingData
 	Vector3 offset;
 };
 
+/// Holds information for each weapon
+struct WeaponInfo
+{
+	PlayerWeaponType type;
+	int slot;
+	float range;
+	int clipSize;
+	int shootTime;
+	int reloadTime;
+};
+
+static const WeaponInfo WeaponInfoList[MAX_WEAPON_ID] = {
+	{ PlayerWeaponType_Melee, 0, 1.6f, 0, 250, 0 }, // 0
+	{ PlayerWeaponType_Melee, 0, 1.6f, 0, 250, 0 }, // 1
+	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 2
+	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 3
+	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 4
+	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 5
+	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 6
+	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 7
+	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 8
+	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 30, 0 }, // 9
+	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 10
+	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 11
+	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 12
+	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 13
+	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 14
+	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 15
+	{ PlayerWeaponType_Throwable, 8, 40.0f, 1, 500, 0 }, // 16
+	{ PlayerWeaponType_Throwable, 8, 40.0f, 1, 500, 0 }, // 17
+	{ PlayerWeaponType_Throwable, 8, 40.0f, 1, 500, 0 }, // 18
+	{ PlayerWeaponType_None, INVALID_WEAPON_SLOT, 0.0f, 0, 0, 0 }, // 19
+	{ PlayerWeaponType_None, INVALID_WEAPON_SLOT, 0.0f, 0, 0, 0 }, // 20
+	{ PlayerWeaponType_None, INVALID_WEAPON_SLOT, 0.0f, 0, 0, 0 }, // 21
+	{ PlayerWeaponType_Bullet, 2, 35.0f, 17, 350, 1300 }, // 22
+	{ PlayerWeaponType_Bullet, 2, 35.0f, 17, 450, 1300 }, // 23
+	{ PlayerWeaponType_Bullet, 2, 35.0f, 7, 950, 1300 }, // 24
+	{ PlayerWeaponType_Bullet, 3, 40.0f, 1, 1100, 0 }, // 25
+	{ PlayerWeaponType_Bullet, 3, 35.0f, 2, 300, 1300 }, // 26
+	{ PlayerWeaponType_Bullet, 3, 40.0f, 7, 400, 1500 }, // 27
+	{ PlayerWeaponType_Bullet, 4, 35.0f, 50, 110, 1500 }, // 28
+	{ PlayerWeaponType_Bullet, 4, 45.0f, 30, 95, 1650 }, // 29
+	{ PlayerWeaponType_Bullet, 5, 70.0f, 30, 120, 1900 }, // 30
+	{ PlayerWeaponType_Bullet, 5, 90.0f, 50, 120, 1900 }, // 31
+	{ PlayerWeaponType_Bullet, 4, 35.0f, 50, 110, 1500 }, // 32
+	{ PlayerWeaponType_Bullet, 6, 100.0f, 1, 1050, 0 }, // 33
+	{ PlayerWeaponType_Bullet, 6, 100.0f, 1, 1050, 0 }, // 34
+	{ PlayerWeaponType_Rocket, 7, 55.0f, 1, 1050, 0 }, // 35
+	{ PlayerWeaponType_Rocket, 7, 55.0f, 1, 1050, 0 }, // 36
+	{ PlayerWeaponType_Sprayable, 7, 5.1f, 500, 500, 500 }, // 37
+	{ PlayerWeaponType_Bullet, 7, 75.0f, 500, 20, 200 }, // 38
+	{ PlayerWeaponType_Special, 8, 40.0f, 1, 500, 0 }, // 39
+	{ PlayerWeaponType_Special, 12, 25.0f, 1, 500, 0 }, // 40
+	{ PlayerWeaponType_Sprayable, 9, 6.1f, 500, 10, 200 }, // 41
+	{ PlayerWeaponType_Sprayable, 9, 10.1f, 500, 10, 200 }, // 42
+	{ PlayerWeaponType_Special, 9, 100.0f, 1, 1200, 0 }, // 43
+	{ PlayerWeaponType_Special, 11, 200.0f, 0, 1500, 0 }, // 44
+	{ PlayerWeaponType_Special, 11, 200.0f, 0, 1500, 0 }, // 45
+	{ PlayerWeaponType_Special, 11, 1.6f, 1, 1500, 0 } // 46
+};
+
 /// Holds weapon slot data
 struct WeaponSlotData
 {
@@ -328,65 +401,20 @@ struct WeaponSlotData
 
 	int8_t slot()
 	{
-		static const int8_t slots[] = {
-			0, // 0 - Fist
-			0, // 1 - Brass Knuckles
-			1, // 2 - Golf Club
-			1, // 3 - Nite Stick
-			1, // 4 - Knife
-			1, // 5 - Baseball Bat
-			1, // 6 - Shovel
-			1, // 7 - Pool Cue
-			1, // 8 - Katana
-			1, // 9 - Chainsaw
-			10, // 10 - Dildo
-			10, // 11 - Dildo
-			10, // 12 - Vibrator
-			10, // 13 - Vibrator
-			10, // 14 - Flowers
-			10, // 15 - Cane
-			8, // 16 - Grenade
-			8, // 17 - Teargas
-			8, // 18 - Molotov Cocktail
-			INVALID_WEAPON_SLOT, //
-			INVALID_WEAPON_SLOT, //
-			INVALID_WEAPON_SLOT, //
-			2, // 22 - Colt 45
-			2, // 23 - Silenced Pistol
-			2, // 24 - Desert Eagle
-			3, // 25 - Shotgun
-			3, // 26 - Sawn-off Shotgun
-			3, // 27 - Combat Shotgun
-			4, // 28 - UZI
-			4, // 29 - MP5
-			5, // 30 - AK47
-			5, // 31 - M4
-			4, // 32 - TEC9
-			6, // 33 - Rifle
-			6, // 34 - Sniper Rifle
-			7, // 35 - Rocket Launcher
-			7, // 36 - Heat Seaker
-			7, // 37 - Flamethrower
-			7, // 38 - Minigun
-			8, // 39 - Satchel Explosives
-			12, // 40 - Bomb
-			9, // 41 - Spray Can
-			9, // 42 - Fire Extinguisher
-			9, // 43 - Camera
-			11, // 44 - Night Vision Goggles
-			11, // 45 - Thermal Goggles
-			11 // 46 - Parachute
-		};
-		if (id >= GLM_COUNTOF(slots))
+		if (id >= GLM_COUNTOF(WeaponInfoList))
 		{
 			return INVALID_WEAPON_SLOT;
 		}
-		return slots[id];
+		return WeaponInfoList[id].slot;
 	}
 
 	bool shootable()
 	{
-		return (id >= 22 && id <= 34) || id == 38;
+		if (id >= GLM_COUNTOF(WeaponInfoList))
+		{
+			return false;
+		}
+		return WeaponInfoList[id].type == PlayerWeaponType_Bullet;
 	}
 };
 
