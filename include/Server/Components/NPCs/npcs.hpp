@@ -68,6 +68,12 @@ struct INPC : public IExtensible, public IEntity
 
 	/// Get ammo
 	virtual int getAmmo() const = 0;
+	
+	/// Set weapon skill level 
+	virtual void setWepaonSkillLevel(PlayerWeaponSkill weaponSkill, int level) = 0;
+
+	/// Get weapon skill level
+	virtual int getWepaonSkillLevel(PlayerWeaponSkill weaponSkill) const = 0;
 };
 
 struct NPCEventHandler
