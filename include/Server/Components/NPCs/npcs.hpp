@@ -62,6 +62,12 @@ struct INPC : public IExtensible, public IEntity
 
 	/// Get weapon
 	virtual uint8_t getWeapon() const = 0;
+
+	/// Set ammo
+	virtual void setAmmo(int ammo) = 0;
+
+	/// Get ammo
+	virtual int getAmmo() const = 0;
 };
 
 struct NPCEventHandler
