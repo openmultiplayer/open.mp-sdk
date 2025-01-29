@@ -70,10 +70,10 @@ struct INPC : public IExtensible, public IEntity
 	virtual int getAmmo() const = 0;
 	
 	/// Set weapon skill level 
-	virtual void setWepaonSkillLevel(PlayerWeaponSkill weaponSkill, int level) = 0;
+	virtual void setWeaponSkillLevel(PlayerWeaponSkill weaponSkill, int level) = 0;
 
 	/// Get weapon skill level
-	virtual int getWepaonSkillLevel(PlayerWeaponSkill weaponSkill) const = 0;
+	virtual int getWeaponSkillLevel(PlayerWeaponSkill weaponSkill) const = 0;
 };
 
 struct NPCEventHandler
