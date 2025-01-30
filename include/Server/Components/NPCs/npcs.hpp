@@ -81,6 +81,8 @@ struct INPC : public IExtensible, public IEntity
 	/// Get keys
 	virtual void getKeys(uint16_t& upAndDown, uint16_t& leftAndRight, uint16_t& keys) const = 0;
 
+	/// Get weapon state
+	virtual PlayerWeaponState getWeaponState() const = 0;
 };
 
 struct NPCEventHandler
@@ -88,6 +90,10 @@ struct NPCEventHandler
 	virtual void onNPCFinishMove(INPC& npc) {};
 	virtual void onNPCCreate(INPC& npc) {};
 	virtual void onNPCDestroy(INPC& npc) {};
+	virtual void onNPCSpawn(INPC& npc) {};
+	virtual void onNPCWeaponStateChange(INPC& npc, PlayerWeaponState newState, PlayerWeaponState oldState) {};
+	virtual bool onNPCTakeDamage(INPC& npc, IPlayer& damagerId, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
+	virtual void onNPCDeath(INPC& npc, IPlayer* killer, int reason) {};
 };
 
 static const UID NPCComponent_UID = UID(0x3D0E59E87F4E90BC);
