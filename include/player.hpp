@@ -423,7 +423,7 @@ struct WeaponSlotData
 		{
 			return 0;
 		}
-		return WeaponInfoList[id].clipSize; 
+		return WeaponInfoList[id].clipSize;
 	}
 };
 
