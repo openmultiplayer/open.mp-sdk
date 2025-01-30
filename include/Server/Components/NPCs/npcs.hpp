@@ -92,7 +92,7 @@ struct NPCEventHandler
 	virtual void onNPCDestroy(INPC& npc) {};
 	virtual void onNPCSpawn(INPC& npc) {};
 	virtual void onNPCWeaponStateChange(INPC& npc, PlayerWeaponState newState, PlayerWeaponState oldState) {};
-	virtual bool onNPCTakeDamage(INPC& npc, IPlayer& damagerId, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
+	virtual bool onNPCTakeDamage(INPC& npc, IPlayer& damager, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
 	virtual void onNPCDeath(INPC& npc, IPlayer* killer, int reason) {};
 };
 
