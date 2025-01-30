@@ -416,6 +416,15 @@ struct WeaponSlotData
 		}
 		return WeaponInfoList[id].type == PlayerWeaponType_Bullet;
 	}
+
+	int clipSize() const
+	{
+		if (id >= GLM_COUNTOF(WeaponInfoList))
+		{
+			return 0;
+		}
+		return WeaponInfoList[id].clipSize; 
+	}
 };
 
 /// An array of weapon slots
