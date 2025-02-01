@@ -83,6 +83,21 @@ struct INPC : public IExtensible, public IEntity
 
 	/// Get weapon state
 	virtual PlayerWeaponState getWeaponState() const = 0;
+
+	/// Set ammo in current clip
+	virtual void setAmmoInClip(int ammo) = 0;
+
+	/// Get ammo in current clip
+	virtual int getAmmoInClip() const = 0;
+
+	/// Melee attack
+	virtual void meleeAttack(int time, bool secondaryMeleeAttack = false) = 0;
+
+	/// Stop melee attack
+	virtual void stopMeleeAttack() = 0;
+
+	/// Check if npc is doing melee attack
+	virtual bool isMeleeAttacking() const = 0;
 };
 
 struct NPCEventHandler
