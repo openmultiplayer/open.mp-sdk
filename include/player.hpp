@@ -323,6 +323,9 @@ struct WeaponInfo
 	int clipSize;
 	int shootTime;
 	int reloadTime;
+
+	// Get information of a specific weapon
+	static const WeaponInfo& get(uint8_t weapon);
 };
 
 static const WeaponInfo WeaponInfoList[MAX_WEAPON_ID] = {
@@ -375,6 +378,16 @@ static const WeaponInfo WeaponInfoList[MAX_WEAPON_ID] = {
 	{ PlayerWeaponType_Special, 11, 1.6f, 1, 1500, 0 } // 46
 };
 
+inline const WeaponInfo& WeaponInfo::get(uint8_t weapon)
+{
+	if (weapon >= GLM_COUNTOF(WeaponInfoList))
+	{
+		static const WeaponInfo invalidData = { PlayerWeaponType_None, INVALID_WEAPON_SLOT, 0.0f, 0, 0, 0 };
+		return invalidData;
+	}
+	return WeaponInfoList[weapon];
+}
+
 /// Holds weapon slot data
 struct WeaponSlotData
 {
@@ -408,22 +421,13 @@ struct WeaponSlotData
 		return WeaponInfoList[id].slot;
 	}
 
-	bool shootable()
+	bool shootable() const
 	{
 		if (id >= GLM_COUNTOF(WeaponInfoList))
 		{
 			return false;
 		}
 		return WeaponInfoList[id].type == PlayerWeaponType_Bullet;
-	}
-
-	int clipSize() const
-	{
-		if (id >= GLM_COUNTOF(WeaponInfoList))
-		{
-			return 0;
-		}
-		return WeaponInfoList[id].clipSize;
 	}
 };
 
