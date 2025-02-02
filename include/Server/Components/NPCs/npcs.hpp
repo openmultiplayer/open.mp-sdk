@@ -98,6 +98,12 @@ struct INPC : public IExtensible, public IEntity
 
 	/// Check if npc is doing melee attack
 	virtual bool isMeleeAttacking() const = 0;
+
+	/// Set fighting style
+	virtual void setFightingStyle(PlayerFightingStyle style) = 0;
+
+	/// Get fighting style
+	virtual PlayerFightingStyle getFightingStyle() const = 0;
 };
 
 struct NPCEventHandler
