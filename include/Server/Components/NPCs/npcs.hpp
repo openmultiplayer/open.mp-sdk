@@ -81,15 +81,6 @@ struct INPC : public IExtensible, public IEntity
 	/// Get keys
 	virtual void getKeys(uint16_t& upAndDown, uint16_t& leftAndRight, uint16_t& keys) const = 0;
 
-	/// Get weapon state
-	virtual PlayerWeaponState getWeaponState() const = 0;
-
-	/// Set ammo in current clip
-	virtual void setAmmoInClip(int ammo) = 0;
-
-	/// Get ammo in current clip
-	virtual int getAmmoInClip() const = 0;
-
 	/// Melee attack
 	virtual void meleeAttack(int time, bool secondaryMeleeAttack = false) = 0;
 
@@ -104,6 +95,30 @@ struct INPC : public IExtensible, public IEntity
 
 	/// Get fighting style
 	virtual PlayerFightingStyle getFightingStyle() const = 0;
+
+	/// Set state to reloading
+	virtual void enableReloading(bool toggle) = 0;
+
+	/// Check if NPC is reloading
+	virtual bool isReloadEnabled() const = 0;
+
+	/// Enable or disable infinite ammo
+	virtual void enableInfiniteAmmo(bool enable) = 0;
+
+	/// Check if NPC is reloading
+	virtual bool isInfiniteAmmoEnabled() const = 0;
+
+	/// Get weapon state
+	virtual PlayerWeaponState getWeaponState() const = 0;
+
+	/// Set ammo in current clip
+	virtual void setAmmoInClip(int ammo) = 0;
+
+	/// Get ammo in current clip
+	virtual int getAmmoInClip() const = 0;
+
+	/// Trigger a weapon shot
+	virtual void shoot(int hitId, PlayerBulletHitType hitType, uint8_t weapon, const Vector3& endPoint, const Vector3& offset, bool isHit, uint8_t betweenCheckFlags) = 0;
 };
 
 struct NPCEventHandler
@@ -114,7 +129,14 @@ struct NPCEventHandler
 	virtual void onNPCSpawn(INPC& npc) {};
 	virtual void onNPCWeaponStateChange(INPC& npc, PlayerWeaponState newState, PlayerWeaponState oldState) {};
 	virtual bool onNPCTakeDamage(INPC& npc, IPlayer& damager, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
+	virtual bool onNPCGiveDamage(INPC& npc, IPlayer& damaged, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
 	virtual void onNPCDeath(INPC& npc, IPlayer* killer, int reason) {};
+	virtual bool onNPCShotMissed(INPC& npc, const PlayerBulletData& bulletData) { return true; }
+	virtual bool onNPCShotPlayer(INPC& npc, IPlayer& target, const PlayerBulletData& bulletData) { return true; }
+	virtual bool onNPCShotNPC(INPC& npc, INPC& target, const PlayerBulletData& bulletData) { return true; }
+	virtual bool onNPCShotVehicle(INPC& npc, IVehicle& target, const PlayerBulletData& bulletData) { return true; }
+	virtual bool onNPCShotObject(INPC& npc, IObject& target, const PlayerBulletData& bulletData) { return true; }
+	virtual bool onNPCShotPlayerObject(INPC& npc, IPlayerObject& target, const PlayerBulletData& bulletData) { return true; }
 };
 
 static const UID NPCComponent_UID = UID(0x3D0E59E87F4E90BC);
