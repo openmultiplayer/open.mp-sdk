@@ -57,6 +57,9 @@ struct INPC : public IExtensible, public IEntity
 	/// Get armour
 	virtual float getArmour() const = 0;
 
+	/// Check if NPC is dead
+	virtual bool isDead() const = 0;
+
 	/// Set weapon
 	virtual void setWeapon(uint8_t weapon) = 0;
 
