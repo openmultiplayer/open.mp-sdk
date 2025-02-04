@@ -105,6 +105,9 @@ struct INPC : public IExtensible, public IEntity
 	/// Check if NPC is reloading
 	virtual bool isReloadEnabled() const = 0;
 
+	/// Check if reloading
+	virtual bool isReloading() const = 0;
+
 	/// Enable or disable infinite ammo
 	virtual void enableInfiniteAmmo(bool enable) = 0;
 
@@ -122,6 +125,10 @@ struct INPC : public IExtensible, public IEntity
 
 	/// Trigger a weapon shot
 	virtual void shoot(int hitId, PlayerBulletHitType hitType, uint8_t weapon, const Vector3& endPoint, const Vector3& offset, bool isHit, uint8_t betweenCheckFlags) = 0;
+
+	/// Check if shooting
+	virtual bool isShooting() const = 0;
+
 };
 
 struct NPCEventHandler
