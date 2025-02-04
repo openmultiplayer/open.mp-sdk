@@ -129,6 +129,20 @@ struct INPC : public IExtensible, public IEntity
 	/// Check if shooting
 	virtual bool isShooting() const = 0;
 
+	/// Aim at a position
+	virtual void aimAt(const Vector3& point, bool shoot, int shootDelay, bool setAngle, const Vector3& offsetFrom, uint8_t betweenCheckFlags) = 0;
+
+	/// Aim at a specific player
+	virtual void aimAtPlayer(IPlayer& atPlayer, bool shoot, int shootDelay, bool setAngle, const Vector3& offset, const Vector3& offsetFrom, uint8_t betweenCheckFlags) = 0;
+
+	/// Stop aiming
+	virtual void stopAim() = 0;
+
+	/// Check if aiming
+	virtual bool isAiming() const = 0;
+
+	/// Check if it's aiming at a specific player
+	virtual bool isAimingAtPlayer(IPlayer& player) const = 0;
 };
 
 struct NPCEventHandler
