@@ -143,6 +143,12 @@ struct INPC : public IExtensible, public IEntity
 
 	/// Check if it's aiming at a specific player
 	virtual bool isAimingAtPlayer(IPlayer& player) const = 0;
+
+	/// Set weapon accuracy for the NPC. Default is 1.0f
+	virtual void setWeaponAccuracy(uint8_t weapon, float accuracy) = 0;
+
+	/// Get weapon accuracy
+	virtual float getWeaponAccuracy(uint8_t weapon) const = 0;
 };
 
 struct NPCEventHandler
