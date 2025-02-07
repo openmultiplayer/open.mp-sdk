@@ -149,6 +149,12 @@ struct INPC : public IExtensible, public IEntity
 
 	/// Get weapon accuracy
 	virtual float getWeaponAccuracy(uint8_t weapon) const = 0;
+
+	/// Attempt to enter a vehicle
+	virtual void enterVehicle(IVehicle& vehicle, uint8_t seatId, NPCMoveType moveType) = 0;
+
+	/// Exit a vehicle
+	virtual void exitVehicle() = 0;
 };
 
 struct NPCEventHandler
