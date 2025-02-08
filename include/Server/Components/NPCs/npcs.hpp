@@ -24,6 +24,9 @@ struct INPC : public IExtensible, public IEntity
 	/// Stop NPC from moving.
 	virtual void stopMove() = 0;
 
+	/// Check if NPC is moving
+	virtual bool isMoving() const = 0;
+
 	/// Set NPC skin
 	virtual void setSkin(int model) = 0;
 
