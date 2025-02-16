@@ -75,6 +75,9 @@ using StaticBitset = std::bitset<Size>;
 
 template <typename T>
 using DynamicArray = std::vector<T>;
+
+template <typename T>
+class WeakRefGenerator;
 }
 
 template <typename T>
@@ -592,3 +595,162 @@ inline constexpr auto CEILDIV(T n, U d) -> decltype(n / d)
 {
 	return (n) ? ((n - (T)1) / d + (decltype(n / d))1) : (decltype(n / d))0;
 }
+
+/// Weak reference class used for checking if pointers expired
+template <typename T>
+class WeakRef
+{
+	friend class Impl::WeakRefGenerator<T>;
+	friend struct std::hash<WeakRef<T>>;
+
+	/// The control block that shares data between weak references to the same object
+	struct ControlBlock
+	{
+		void(__CDECL* free)(void*); ///< The free function to use for deallocating the control block
+		T* ptr = nullptr; ///< The pointer to the data the weak reference points to
+		size_t count = 1; ///< The reference counter
+	}* controlBlock_;
+
+public:
+	/// Invalid reference constructor
+	WeakRef()
+		: controlBlock_(nullptr)
+	{
+	}
+
+	/// Copy constructor
+	WeakRef(const WeakRef<T>& other)
+		: controlBlock_(other.controlBlock_)
+	{
+		if (controlBlock_)
+		{
+			controlBlock_->count++;
+		}
+	}
+
+	/// Move constructor
+	WeakRef(WeakRef<T>&& other)
+		: controlBlock_(other.controlBlock_)
+	{
+		other.controlBlock_ = nullptr;
+	}
+
+	/// Copy assignment
+	WeakRef<T>& operator=(const WeakRef<T>& other)
+	{
+		controlBlock_ = other.controlBlock_;
+		if (controlBlock_)
+		{
+			controlBlock_->count++;
+		}
+		return *this;
+	}
+
+	/// Move assignment
+	WeakRef<T>& operator=(WeakRef<T>&& other)
+	{
+		controlBlock_ = other.controlBlock_;
+		other.controlBlock_ = nullptr;
+		return *this;
+	}
+
+	/// Equals operator
+	bool operator==(const WeakRef<T>& other) const
+	{
+		return controlBlock_ == other.controlBlock_;
+	}
+
+	/// Returns whether the weak reference points to a valid object
+	bool isValid() const
+	{
+		return controlBlock_ && controlBlock_->ptr;
+	}
+
+	/// Returns whether the weak reference points to an invalid object
+	bool isExpired() const
+	{
+		return !isValid();
+	}
+
+	/// Returns the object the weak reference points to
+	T* ptr() const
+	{
+		if (!controlBlock_)
+		{
+			return nullptr;
+		}
+		return controlBlock_->ptr;
+	}
+
+	/// Returns the weak reference counter of the object
+	size_t count() const
+	{
+		if (!controlBlock_)
+		{
+			return 0;
+		}
+		return controlBlock_->count;
+	}
+
+	/// Destructor which takes care of destroying the shared control block if needed
+	~WeakRef()
+	{
+		if (controlBlock_ && --controlBlock_->count == 0)
+		{
+			controlBlock_->free(controlBlock_);
+		}
+	}
+};
+
+namespace Impl
+{
+
+/// A weak reference generator that returns a weak reference and takes strong ownership of it
+template <typename T>
+class WeakRefGenerator
+{
+	/// The original weak reference, held strongly
+	WeakRef<T> ref_;
+
+protected:
+	/// Returns a weak reference for self, constructing it if needed
+	WeakRef<T> weakRefFromThis(T& self)
+	{
+		if (ref_.controlBlock_ == nullptr)
+		{
+			ref_.controlBlock_ = new (malloc(sizeof(typename WeakRef<T>::ControlBlock))) typename WeakRef<T>::ControlBlock { &free, &self };
+		}
+		return WeakRef<T>(ref_);
+	}
+
+public:
+	/// Default constructor
+	WeakRefGenerator() = default;
+
+	/// Disable copy/move
+	WeakRefGenerator(const WeakRefGenerator& other) = delete;
+	WeakRefGenerator(WeakRefGenerator&& other) = delete;
+	WeakRefGenerator& operator=(const WeakRefGenerator& other) = delete;
+	WeakRefGenerator& operator=(WeakRefGenerator&& other) = delete;
+
+	/// Destructor which invalidates the weak references data pointer, making them invalid
+	~WeakRefGenerator()
+	{
+		if (ref_.controlBlock_)
+		{
+			ref_.controlBlock_->ptr = nullptr;
+		}
+	}
+};
+
+}
+
+/// Hash the internal pointer
+template <typename T>
+struct std::hash<WeakRef<T>>
+{
+	std::size_t operator()(const WeakRef<T>& s) const noexcept
+	{
+		return std::hash<void const*>()(s.controlBlock_);
+	}
+};

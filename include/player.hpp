@@ -922,6 +922,9 @@ struct IPlayer : public IExtensible, public IEntity
 
 	/// Check if player is using omp or not
 	virtual bool isUsingOmp() const = 0;
+
+	/// Get a weak reference to the player
+	virtual WeakRef<IPlayer> weakRef() = 0;
 };
 
 /// Player spawn event handlers
