@@ -26,7 +26,7 @@ elseif(UNIX)
 			-mfpmath=sse
 		)
 	else()
-		if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm")
+		if(CMAKE_SYSTEM_PROCESSOR MATCHES "arm" AND NOT CMAKE_HOST_SYSTEM_NAME MATCHES "Darwin")
 			target_compile_options(OMP-SDK INTERFACE "-mfpu=neon")
 		endif()
 		if(TARGET_BUILD_ARCH)
