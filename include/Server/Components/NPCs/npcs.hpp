@@ -10,6 +10,20 @@ enum NPCMoveType
 	NPCMoveType_Sprint
 };
 
+enum class EntityCheckType : uint8_t
+{
+	None = 0,
+	Player = 1,
+	NPC = 2,
+	Actor = 4,
+	Vehicle = 8,
+	Object = 16,
+	ProjectOrig = 32,
+	ProjectTarg = 64,
+	Map = 128,
+	All = 255
+};
+
 struct INPC : public IExtensible, public IEntity
 {
 	/// Get player instance of NPC.
@@ -127,16 +141,16 @@ struct INPC : public IExtensible, public IEntity
 	virtual int getAmmoInClip() const = 0;
 
 	/// Trigger a weapon shot
-	virtual void shoot(int hitId, PlayerBulletHitType hitType, uint8_t weapon, const Vector3& endPoint, const Vector3& offset, bool isHit, uint8_t betweenCheckFlags) = 0;
+	virtual void shoot(int hitId, PlayerBulletHitType hitType, uint8_t weapon, const Vector3& endPoint, const Vector3& offset, bool isHit, EntityCheckType betweenCheckFlags) = 0;
 
 	/// Check if shooting
 	virtual bool isShooting() const = 0;
 
 	/// Aim at a position
-	virtual void aimAt(const Vector3& point, bool shoot, int shootDelay, bool setAngle, const Vector3& offsetFrom, uint8_t betweenCheckFlags) = 0;
+	virtual void aimAt(const Vector3& point, bool shoot, int shootDelay, bool setAngle, const Vector3& offsetFrom, EntityCheckType betweenCheckFlags) = 0;
 
 	/// Aim at a specific player
-	virtual void aimAtPlayer(IPlayer& atPlayer, bool shoot, int shootDelay, bool setAngle, const Vector3& offset, const Vector3& offsetFrom, uint8_t betweenCheckFlags) = 0;
+	virtual void aimAtPlayer(IPlayer& atPlayer, bool shoot, int shootDelay, bool setAngle, const Vector3& offset, const Vector3& offsetFrom, EntityCheckType betweenCheckFlags) = 0;
 
 	/// Stop aiming
 	virtual void stopAim() = 0;
