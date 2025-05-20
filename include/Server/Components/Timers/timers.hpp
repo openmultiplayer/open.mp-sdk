@@ -12,9 +12,6 @@ struct ITimer : public IExtensible
 	/// Get whether the timer is running or has been killed
 	virtual bool running() const = 0;
 
-	/// Get the timer paused state
-	virtual bool paused() const = 0;
-
 	/// Get the remaining time until time out
 	virtual Milliseconds remaining() const = 0;
 
@@ -24,21 +21,24 @@ struct ITimer : public IExtensible
 	/// Get the timer's interval
 	virtual Milliseconds interval() const = 0;
 
-	/// Set the timer's interval
-	virtual void setInterval(Milliseconds interval) = 0;
-
 	/// Mark the timer as being called now.  Returns `true` when there are more
 	/// calls to make after this one.
 	virtual bool trigger() = 0;
-
-	/// Toggle the timer paused state
-	virtual void togglePause(bool paused) = 0;
 
 	/// Immediately kill the timer
 	virtual void kill() = 0;
 
 	/// Get the handler associated with the timer
 	virtual TimerTimeOutHandler* handler() const = 0;
+
+	/// Get the timer paused state
+	virtual bool paused() const = 0;
+
+	/// Set the timer's interval
+	virtual void setInterval(Milliseconds interval) = 0;
+
+	/// Toggle the timer paused state
+	virtual void togglePause(bool paused) = 0;
 };
 
 struct TimerTimeOutHandler
