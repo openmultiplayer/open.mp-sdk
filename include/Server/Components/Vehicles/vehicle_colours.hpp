@@ -216,8 +216,8 @@ inline void getRandomVehicleColour(int modelid, int& colour1, int& colour2, int&
 		1156, // 607 - bagboxb
 		1156, // 608 - tugstair
 		1157, // 609 - boxburg
-		1158, // 610 - farmtr1
-		1158, // 611 - utiltr1
+		1157, // 610 - farmtr1
+		1157, // 611 - utiltr1
 		1158
 	};
 
