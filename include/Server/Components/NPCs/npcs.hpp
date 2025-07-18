@@ -24,10 +24,28 @@ enum class EntityCheckType : uint8_t
 	All = 255
 };
 
-struct INPC : public IExtensible, public IEntity
+struct INPC : public IExtensible, public IIDProvider
 {
 	/// Get player instance of NPC.
 	virtual IPlayer* getPlayer() = 0;
+
+	/// Get the entity's position
+	virtual Vector3 getPosition() const = 0;
+
+	/// Set NPC position with ability to decide whether it needs immediate update or not
+	virtual void setPosition(const Vector3& position, bool immediateUpdate) = 0;
+
+	/// Get the entity's rotation
+	virtual GTAQuat getRotation() const = 0;
+
+	/// Set NPC rotation with ability to decide whether it needs immediate update or not
+	virtual void setRotation(const GTAQuat& rotation, bool immediateUpdate) = 0;
+
+	/// Get the entity's virtual world
+	virtual int getVirtualWorld() const = 0;
+
+	/// Set the entity's virtual world
+	virtual void setVirtualWorld(int vw) = 0;
 
 	/// Spawn NPC.
 	virtual void spawn() = 0;
