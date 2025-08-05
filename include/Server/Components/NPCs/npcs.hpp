@@ -7,7 +7,9 @@ enum NPCMoveType
 	NPCMoveType_None,
 	NPCMoveType_Walk,
 	NPCMoveType_Jog,
-	NPCMoveType_Sprint
+	NPCMoveType_Sprint,
+	NPCMoveType_Drive,
+	NPCMoveType_Auto
 };
 
 enum class EntityCheckType : uint8_t
@@ -190,6 +192,12 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Exit a vehicle
 	virtual void exitVehicle() = 0;
+
+	/// Put NPC in vehicle
+	virtual bool putInVehicle(IVehicle& vehicle, uint8_t seat) = 0;
+
+	/// Remove NPC from vehicle
+	virtual bool removeFromVehicle() = 0;
 };
 
 struct NPCEventHandler
