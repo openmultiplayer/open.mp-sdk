@@ -974,7 +974,7 @@ struct PlayerChangeEventHandler
 	virtual void onPlayerKeyStateChange(IPlayer& player, uint32_t newKeys, uint32_t oldKeys) { }
 };
 
-/// APlayer death and damage event handlers
+/// Player death and damage event handlers
 struct PlayerDamageEventHandler
 {
 	virtual void onPlayerDeath(IPlayer& player, IPlayer* killer, int reason) { }
