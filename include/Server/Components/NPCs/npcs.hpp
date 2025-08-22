@@ -53,7 +53,7 @@ struct INPC : public IExtensible, public IIDProvider
 	virtual void spawn() = 0;
 
 	/// Move NPC to a specified location.
-	virtual bool move(Vector3 position, NPCMoveType moveType, float moveSpeed = NPC_MOVE_SPEED_AUTO) = 0;
+	virtual bool move(Vector3 position, NPCMoveType moveType, float moveSpeed = NPC_MOVE_SPEED_AUTO, float stopRange = 1.0f) = 0;
 
 	/// Stop NPC from moving.
 	virtual void stopMove() = 0;
