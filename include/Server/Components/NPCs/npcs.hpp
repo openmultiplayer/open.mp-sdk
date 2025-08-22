@@ -58,6 +58,9 @@ struct INPC : public IExtensible, public IIDProvider
 	/// Move NPC to a specified location.
 	virtual bool move(Vector3 position, NPCMoveType moveType, float moveSpeed = NPC_MOVE_SPEED_AUTO, float stopRange = 1.0f) = 0;
 
+	/// Move NPC to follow a player, continuously updating position as player moves.
+	virtual bool moveToPlayer(IPlayer& targetPlayer, NPCMoveType moveType, float moveSpeed = NPC_MOVE_SPEED_AUTO, float stopRange = 0.2f, Milliseconds posCheckUpdateDelay = Milliseconds(500), bool autoRestart = false) = 0;
+
 	/// Stop NPC from moving.
 	virtual void stopMove() = 0;
 
