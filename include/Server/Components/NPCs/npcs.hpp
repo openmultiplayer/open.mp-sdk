@@ -52,6 +52,9 @@ struct INPC : public IExtensible, public IIDProvider
 	/// Spawn NPC.
 	virtual void spawn() = 0;
 
+	/// Respawn the NPC with the same stats and state it is already in
+	virtual void respawn() = 0;
+
 	/// Move NPC to a specified location.
 	virtual bool move(Vector3 position, NPCMoveType moveType, float moveSpeed = NPC_MOVE_SPEED_AUTO, float stopRange = 1.0f) = 0;
 
@@ -209,6 +212,7 @@ struct NPCEventHandler
 	virtual void onNPCCreate(INPC& npc) {};
 	virtual void onNPCDestroy(INPC& npc) {};
 	virtual void onNPCSpawn(INPC& npc) {};
+	virtual void onNPCRespawn(INPC& npc) {};
 	virtual void onNPCWeaponStateChange(INPC& npc, PlayerWeaponState newState, PlayerWeaponState oldState) {};
 	virtual bool onNPCTakeDamage(INPC& npc, IPlayer& damager, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
 	virtual bool onNPCGiveDamage(INPC& npc, IPlayer& damaged, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
