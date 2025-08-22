@@ -198,6 +198,9 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Remove NPC from vehicle
 	virtual bool removeFromVehicle() = 0;
+
+	/// Move NPC through a path created previously
+	virtual bool moveByPath(int pathId, NPCMoveType moveType = NPCMoveType_Auto, float moveSpeed = NPC_MOVE_SPEED_AUTO) = 0;
 };
 
 struct NPCEventHandler
@@ -231,4 +234,49 @@ struct INPCComponent : public IPool<INPC>, public INetworkComponent
 
 	/// Destroy an NPC. We need this because it's more than just an entity removal from a pool
 	virtual void destroy(INPC& npc) = 0;
+
+	/// Create path for NPC to use
+	virtual int createPath() = 0;
+
+	/// Destroy path
+	virtual bool destroyPath(int pathId) = 0;
+
+	/// Destroy all paths
+	virtual void destroyAllPaths() = 0;
+
+	/// Get number of paths
+	virtual size_t getPathCount() const = 0;
+
+	/// Adds a point with stop range to a path container
+	virtual bool addPointToPath(int pathId, const Vector3& position, float stopRange = 1.0f) = 0;
+
+	/// Removes a point added previously from a path
+	virtual bool removePointFromPath(int pathId, size_t pointIndex) = 0;
+
+	/// Removes all points from a path and makes it empty
+	virtual bool clearPath(int pathId) = 0;
+
+	/// Get number of points in a path
+	virtual size_t getPathPointCount(int pathId) = 0;
+
+	/// Gets point information by the given point index in a path
+	virtual bool getPathPoint(int pathId, size_t pointIndex, Vector3& position, float& stopRange) = 0;
+
+	/// Manually sets current point index in a path movement
+	virtual bool setPathCurrentIndex(int pathId, size_t index) = 0;
+
+	/// Get current point index in path
+	virtual size_t getPathCurrentIndex(int pathId) = 0;
+
+	/// Resets a path data, starts over
+	virtual bool resetPath(int pathId) = 0;
+
+	/// Check if a path id is valid
+	virtual bool isValidPath(int pathId) = 0;
+
+	/// Check if this path has a remaining point
+	virtual bool hasNextPoint(int pathId) = 0;
+
+	/// Get next point in the path
+	virtual bool getNextPoint(int pathId, Vector3& position, float& stopRange) = 0;
 };
