@@ -204,6 +204,18 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Move NPC through a path created previously
 	virtual bool moveByPath(int pathId, NPCMoveType moveType = NPCMoveType_Auto, float moveSpeed = NPC_MOVE_SPEED_AUTO) = 0;
+
+	virtual void pausePath() = 0;
+
+	virtual void resumePath() = 0;
+
+	virtual void stopPath() = 0;
+
+	virtual bool isMovingByPath() const = 0;
+
+	virtual bool isPathPaused() const = 0;
+
+	virtual int getCurrentPathId() const = 0;
 };
 
 struct NPCEventHandler
