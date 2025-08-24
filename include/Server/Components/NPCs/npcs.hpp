@@ -219,6 +219,8 @@ struct INPC : public IExtensible, public IIDProvider
 	virtual bool isPathPaused() const = 0;
 
 	virtual int getCurrentPathId() const = 0;
+
+	virtual int getCurrentPathPointIndex() const = 0;
 };
 
 struct NPCEventHandler
@@ -281,21 +283,6 @@ struct INPCComponent : public IPool<INPC>, public INetworkComponent
 	/// Gets point information by the given point index in a path
 	virtual bool getPathPoint(int pathId, size_t pointIndex, Vector3& position, float& stopRange) = 0;
 
-	/// Manually sets current point index in a path movement
-	virtual bool setPathCurrentIndex(int pathId, size_t index) = 0;
-
-	/// Get current point index in path
-	virtual size_t getPathCurrentIndex(int pathId) = 0;
-
-	/// Resets a path data, starts over
-	virtual bool resetPath(int pathId) = 0;
-
 	/// Check if a path id is valid
 	virtual bool isValidPath(int pathId) = 0;
-
-	/// Check if this path has a remaining point
-	virtual bool hasNextPoint(int pathId) = 0;
-
-	/// Get next point in the path
-	virtual bool getNextPoint(int pathId, Vector3& position, float& stopRange) = 0;
 };
