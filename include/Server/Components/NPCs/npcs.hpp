@@ -206,20 +206,27 @@ struct INPC : public IExtensible, public IIDProvider
 	virtual bool removeFromVehicle() = 0;
 
 	/// Move NPC through a path created previously
-	virtual bool moveByPath(int pathId, NPCMoveType moveType = NPCMoveType_Auto, float moveSpeed = NPC_MOVE_SPEED_AUTO) = 0;
+	virtual bool moveByPath(int pathId, NPCMoveType moveType = NPCMoveType_Auto, float moveSpeed = NPC_MOVE_SPEED_AUTO, bool reverse = false) = 0;
 
+	/// Pause NPC path movement temporarily to resume later
 	virtual void pausePath() = 0;
 
+	/// Resume NPC path movement that was paused before
 	virtual void resumePath() = 0;
 
+	/// Stop path movement (or just use stopMove)
 	virtual void stopPath() = 0;
 
+	/// Check if NPC is moving according to a path
 	virtual bool isMovingByPath() const = 0;
 
+	/// Check if path movement is paused
 	virtual bool isPathPaused() const = 0;
 
+	/// Get current path id NPC is moving by
 	virtual int getCurrentPathId() const = 0;
 
+	/// Get current point index in current path movement
 	virtual int getCurrentPathPointIndex() const = 0;
 };
 
