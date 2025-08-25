@@ -193,6 +193,30 @@ struct INPC : public IExtensible, public IIDProvider
 	/// Get weapon accuracy
 	virtual float getWeaponAccuracy(uint8_t weapon) const = 0;
 
+	/// Set weapon reload time
+	virtual void setWeaponReloadTime(uint8_t weapon, int time) = 0;
+
+	/// Get weapon reload time
+	virtual int getWeaponReloadTime(uint8_t weapon) = 0;
+
+	/// Get weapon actual reload time based on skill and weapon being double handed or not
+	virtual int getWeaponActualReloadTime(uint8_t weapon) = 0;
+
+	/// Set weapon shoot time
+	virtual void setWeaponShootTime(uint8_t weapon, int time) = 0;
+
+	/// Get weapon shoot time
+	virtual int getWeaponShootTime(uint8_t weapon) = 0;
+
+	/// Set weapon clip size
+	virtual void setWeaponClipSize(uint8_t weapon, int size) = 0;
+
+	/// Get weapon clip size
+	virtual int getWeaponClipSize(uint8_t weapon) = 0;
+
+	/// Get weapon actual reload time based on skill and weapon being double handed or not; infinite ammo or not.
+	virtual int getWeaponActualClipSize(uint8_t weapon) = 0;
+
 	/// Attempt to enter a vehicle
 	virtual void enterVehicle(IVehicle& vehicle, uint8_t seatId, NPCMoveType moveType) = 0;
 
