@@ -328,7 +328,7 @@ struct WeaponInfo
 	static const WeaponInfo& get(uint8_t weapon);
 };
 
-static const WeaponInfo WeaponInfoList[MAX_WEAPON_ID] = {
+static const StaticArray<WeaponInfo, MAX_WEAPON_ID> WeaponInfoList = { {
 	{ PlayerWeaponType_Melee, 0, 1.6f, 0, 250, 0 }, // 0
 	{ PlayerWeaponType_Melee, 0, 1.6f, 0, 250, 0 }, // 1
 	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 2
@@ -376,11 +376,11 @@ static const WeaponInfo WeaponInfoList[MAX_WEAPON_ID] = {
 	{ PlayerWeaponType_Special, 11, 200.0f, 0, 1500, 0 }, // 44
 	{ PlayerWeaponType_Special, 11, 200.0f, 0, 1500, 0 }, // 45
 	{ PlayerWeaponType_Special, 11, 1.6f, 1, 1500, 0 } // 46
-};
+} };
 
 inline const WeaponInfo& WeaponInfo::get(uint8_t weapon)
 {
-	if (weapon >= GLM_COUNTOF(WeaponInfoList))
+	if (weapon >= WeaponInfoList.size())
 	{
 		static const WeaponInfo invalidData = { PlayerWeaponType_None, INVALID_WEAPON_SLOT, 0.0f, 0, 0, 0 };
 		return invalidData;
@@ -414,7 +414,7 @@ struct WeaponSlotData
 
 	int8_t slot()
 	{
-		if (id >= GLM_COUNTOF(WeaponInfoList))
+		if (id >= WeaponInfoList.size())
 		{
 			return INVALID_WEAPON_SLOT;
 		}
@@ -423,7 +423,7 @@ struct WeaponSlotData
 
 	bool shootable() const
 	{
-		if (id >= GLM_COUNTOF(WeaponInfoList))
+		if (id >= WeaponInfoList.size())
 		{
 			return false;
 		}
