@@ -288,6 +288,21 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Get NPC train speed
 	virtual float getVehicleTrainSpeed() const = 0;
+
+	/// Reset NPC animation in foot sync
+	virtual void resetAnimation() = 0;
+
+	/// Set NPC animation in foot sync
+	virtual void setAnimation(int animationId, float delta, bool loop, bool lockX, bool lockY, bool freeze, int time) = 0;
+
+	/// Get NPC animation from foot sync
+	virtual void getAnimation(int& animationId, float& delta, bool& loop, bool& lockX, bool& lockY, bool& freeze, int& time) = 0;
+
+	/// Apply NPC animation
+	virtual void applyAnimation(const AnimationData& animationData) = 0;
+
+	/// Clear NPC animations
+	virtual void clearAnimations() = 0;
 };
 
 struct NPCEventHandler
