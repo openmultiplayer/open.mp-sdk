@@ -340,8 +340,8 @@ struct NPCEventHandler
 	virtual bool onNPCShotVehicle(INPC& npc, IVehicle& target, const PlayerBulletData& bulletData) { return true; }
 	virtual bool onNPCShotObject(INPC& npc, IObject& target, const PlayerBulletData& bulletData) { return true; }
 	virtual bool onNPCShotPlayerObject(INPC& npc, IPlayerObject& target, const PlayerBulletData& bulletData) { return true; }
-	virtual void onNPCPlaybackStart(INPC& npc, int recordId) {}
-	virtual void onNPCPlaybackEnd(INPC& npc, int recordId) {}
+	virtual void onNPCPlaybackStart(INPC& npc, int recordId) { }
+	virtual void onNPCPlaybackEnd(INPC& npc, int recordId) { }
 };
 
 static const UID NPCComponent_UID = UID(0x3D0E59E87F4E90BC);
