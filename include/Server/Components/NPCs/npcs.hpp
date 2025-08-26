@@ -303,6 +303,24 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Clear NPC animations
 	virtual void clearAnimations() = 0;
+
+	/// Start playing a recorded playback
+	virtual bool startPlayback(StringView recordName, bool autoUnload = true, const Vector3& point = Vector3(0.0f, 0.0f, 0.0f), const GTAQuat& rotation = GTAQuat()) = 0;
+
+	/// Start playing a preloaded playback by record ID
+	virtual bool startPlayback(int recordId, bool autoUnload = true, const Vector3& point = Vector3(0.0f, 0.0f, 0.0f), const GTAQuat& rotation = GTAQuat()) = 0;
+
+	/// Stop current playback
+	virtual void stopPlayback() = 0;
+
+	/// Pause/resume current playback
+	virtual void pausePlayback(bool paused = true) = 0;
+
+	/// Check if playback is currently playing
+	virtual bool isPlayingPlayback() const = 0;
+
+	/// Check if playback is paused
+	virtual bool isPlaybackPaused() const = 0;
 };
 
 struct NPCEventHandler
@@ -322,6 +340,8 @@ struct NPCEventHandler
 	virtual bool onNPCShotVehicle(INPC& npc, IVehicle& target, const PlayerBulletData& bulletData) { return true; }
 	virtual bool onNPCShotObject(INPC& npc, IObject& target, const PlayerBulletData& bulletData) { return true; }
 	virtual bool onNPCShotPlayerObject(INPC& npc, IPlayerObject& target, const PlayerBulletData& bulletData) { return true; }
+	virtual void onNPCPlaybackStart(INPC& npc, int recordId) {}
+	virtual void onNPCPlaybackEnd(INPC& npc, int recordId) {}
 };
 
 static const UID NPCComponent_UID = UID(0x3D0E59E87F4E90BC);
@@ -367,4 +387,19 @@ struct INPCComponent : public IPool<INPC>, public INetworkComponent
 
 	/// Check if a path id is valid
 	virtual bool isValidPath(int pathId) = 0;
+
+	/// Load a record file for playback
+	virtual int loadRecord(StringView filePath) = 0;
+
+	/// Unload a previously loaded record
+	virtual bool unloadRecord(int recordId) = 0;
+
+	/// Check if a record ID is valid
+	virtual bool isValidRecord(int recordId) = 0;
+
+	/// Get total number of loaded records
+	virtual size_t getRecordCount() const = 0;
+
+	/// Unload all records
+	virtual void unloadAllRecords() = 0;
 };
