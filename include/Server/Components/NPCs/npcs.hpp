@@ -252,6 +252,42 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Get current point index in current path movement
 	virtual int getCurrentPathPointIndex() const = 0;
+
+	/// Get NPC vehicle
+	virtual IVehicle* getVehicle() const = 0;
+
+	/// Get NPC vehicle seat
+	virtual int getVehicleSeat() const = 0;
+
+	/// Set NPC vehicle siren
+	virtual void useVehicleSiren(bool use = true) = 0;
+
+	/// Check if vehicle siren is used
+	virtual bool isVehicleSirenUsed() const = 0;
+
+	/// Set NPC vehicle health;
+	virtual void setVehicleHealth(float health) = 0;
+
+	/// Get NPC vehicle health
+	virtual float getVehicleHealth() const = 0;
+
+	/// Set NPC vehicle hydra thruster direction
+	virtual void setVehicleHydraThrusters(int direction) = 0;
+
+	/// Get NPC vehicle hydra thruster direction
+	virtual int getVehicleHydraThrusters() const = 0;
+
+	/// Set NPC vehicle gear state
+	virtual void setVehicleGearState(int gear) = 0;
+
+	/// Get NPC vehicle gear state
+	virtual int getVehicleGearState() const = 0;
+
+	/// Set NPC train speed
+	virtual void setVehicleTrainSpeed(float speed) = 0;
+
+	/// Get NPC train speed
+	virtual float getVehicleTrainSpeed() const = 0;
 };
 
 struct NPCEventHandler
