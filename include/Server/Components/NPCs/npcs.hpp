@@ -321,6 +321,30 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Check if playback is paused
 	virtual bool isPlaybackPaused() const = 0;
+
+	/// Start node-based movement for the NPC
+	virtual bool playNode(int nodeId, NPCMoveType moveType, float moveSpeed = NPC_MOVE_SPEED_AUTO, float radius = 0.0f, bool setAngle = true) = 0;
+
+	/// Stop node-based movement
+	virtual void stopPlayingNode() = 0;
+
+	/// Pause node-based movement
+	virtual void pausePlayingNode() = 0;
+
+	/// Resume node-based movement
+	virtual void resumePlayingNode() = 0;
+
+	/// Check if node movement is paused
+	virtual bool isPlayingNodePaused() const = 0;
+
+	/// Check if NPC is currently following a node path
+	virtual bool isPlayingNode() const = 0;
+
+	/// Change to a different node with a specific link
+	virtual uint16_t changeNode(int nodeId, uint16_t linkId) = 0;
+
+	/// Update the current node point
+	virtual bool updateNodePoint(uint16_t pointId) = 0;
 };
 
 struct NPCEventHandler
@@ -342,6 +366,9 @@ struct NPCEventHandler
 	virtual bool onNPCShotPlayerObject(INPC& npc, IPlayerObject& target, const PlayerBulletData& bulletData) { return true; }
 	virtual void onNPCPlaybackStart(INPC& npc, int recordId) { }
 	virtual void onNPCPlaybackEnd(INPC& npc, int recordId) { }
+	virtual void onNPCFinishNodePoint(INPC& npc, int nodeId, uint16_t pointId) { }
+	virtual void onNPCFinishNode(INPC& npc, int nodeId) { }
+	virtual void onNPCChangeNode(INPC& npc, int newNodeId, int oldNodeId) { }
 };
 
 static const UID NPCComponent_UID = UID(0x3D0E59E87F4E90BC);
@@ -402,4 +429,28 @@ struct INPCComponent : public IPool<INPC>, public INetworkComponent
 
 	/// Unload all records
 	virtual void unloadAllRecords() = 0;
+
+	/// Open a node file for NPC path navigation
+	virtual bool openNode(int nodeId) = 0;
+
+	/// Close a previously opened node file
+	virtual void closeNode(int nodeId) = 0;
+
+	/// Check if a node is currently open
+	virtual bool isNodeOpen(int nodeId) const = 0;
+
+	/// Get node type information
+	virtual uint8_t getNodeType(int nodeId) = 0;
+
+	/// Set the current point in a node
+	virtual bool setNodePoint(int nodeId, uint16_t pointId) = 0;
+
+	/// Get the position of a specific point in a node
+	virtual bool getNodePointPosition(int nodeId, Vector3& position) = 0;
+
+	/// Get the total number of points in a node
+	virtual int getNodePointCount(int nodeId) = 0;
+
+	/// Get node information (vehicle nodes, pedestrian nodes, navigation nodes)
+	virtual bool getNodeInfo(int nodeId, uint32_t& vehicleNodes, uint32_t& pedNodes, uint32_t& naviNodes) = 0;
 };
