@@ -254,10 +254,16 @@ struct INPC : public IExtensible, public IIDProvider
 	virtual int getCurrentPathPointIndex() const = 0;
 
 	/// Get NPC vehicle
-	virtual IVehicle* getVehicle() const = 0;
+	virtual IVehicle* getVehicle() = 0;
 
 	/// Get NPC vehicle seat
 	virtual int getVehicleSeat() const = 0;
+
+	/// Get NPC's entering vehicle
+	virtual IVehicle* getEnteringVehicle() = 0;
+
+	/// Get NPC's entering vehicle's seat
+	virtual int getEnteringVehicleSeat() const = 0;
 
 	/// Set NPC vehicle siren
 	virtual void useVehicleSiren(bool use = true) = 0;
