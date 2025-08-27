@@ -340,8 +340,8 @@ struct INPC : public IExtensible, public IIDProvider
 	/// Check if NPC is currently following a node path
 	virtual bool isPlayingNode() const = 0;
 
-	/// Change to a different node with a specific link
-	virtual uint16_t changeNode(int nodeId, uint16_t linkId) = 0;
+	/// Change to a different node with a specific target point
+	virtual uint16_t changeNode(int nodeId, uint16_t targetPointId) = 0;
 
 	/// Update the current node point
 	virtual bool updateNodePoint(uint16_t pointId) = 0;
@@ -368,7 +368,7 @@ struct NPCEventHandler
 	virtual void onNPCPlaybackEnd(INPC& npc, int recordId) { }
 	virtual void onNPCFinishNodePoint(INPC& npc, int nodeId, uint16_t pointId) { }
 	virtual void onNPCFinishNode(INPC& npc, int nodeId) { }
-	virtual void onNPCChangeNode(INPC& npc, int newNodeId, int oldNodeId) { }
+	virtual bool onNPCChangeNode(INPC& npc, int newNodeId, int oldNodeId) { return true; }
 };
 
 static const UID NPCComponent_UID = UID(0x3D0E59E87F4E90BC);
