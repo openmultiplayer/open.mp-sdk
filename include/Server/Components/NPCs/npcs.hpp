@@ -304,6 +304,12 @@ struct INPC : public IExtensible, public IIDProvider
 	/// Clear NPC animations
 	virtual void clearAnimations() = 0;
 
+	/// Set NPC special action
+	virtual void setSpecialAction(PlayerSpecialAction action) = 0;
+
+	/// Get NPC special action
+	virtual PlayerSpecialAction getSpecialAction() const = 0;
+
 	/// Start playing a recorded playback
 	virtual bool startPlayback(StringView recordName, bool autoUnload = true, const Vector3& point = Vector3(0.0f, 0.0f, 0.0f), const GTAQuat& rotation = GTAQuat()) = 0;
 
