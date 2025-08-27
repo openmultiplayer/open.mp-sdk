@@ -149,12 +149,13 @@ struct DefaultEventDispatcher final : public IEventDispatcher<EventHandlerType>,
 	template <typename Fn>
 	auto anyTrue(Fn fn)
 	{
-		// `anyTrue` should still CALL them call, don't short-circuit.
+		// `anyTrue` should still CALL them all, don't short-circuit.
 		bool ret = false;
-		std::for_each(handlers.begin(), handlers.end(), typename Storage::template Func<bool, Fn>([&fn, &ret]()
-															{
-																ret = fn() || ret;
-															}));
+		std::for_each(handlers.begin(), handlers.end(),
+			[&fn, &ret](const typename Storage::Entry& entry)
+			{
+				ret = fn(entry.handler) || ret;
+			});
 		return ret;
 	}
 
@@ -168,10 +169,11 @@ struct DefaultEventDispatcher final : public IEventDispatcher<EventHandlerType>,
 	auto allTrue(Fn fn)
 	{
 		bool ret = true;
-		std::for_each(handlers.begin(), handlers.end(), typename Storage::template Func<bool, Fn>([&fn, &ret]()
-															{
-																ret = fn() && ret;
-															}));
+		std::for_each(handlers.begin(), handlers.end(),
+			[&fn, &ret](const typename Storage::Entry& entry)
+			{
+				ret = fn(entry.handler) && ret;
+			});
 		return ret;
 	}
 
