@@ -357,6 +357,12 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Update the current node point
 	virtual bool updateNodePoint(uint16_t pointId) = 0;
+
+	/// Set NPC invulnerability
+	virtual void setInvulnerable(bool toggle) = 0;
+
+	/// Check for NPC invulnerability
+	virtual bool isInvulnerable() const = 0;
 };
 
 struct NPCEventHandler
