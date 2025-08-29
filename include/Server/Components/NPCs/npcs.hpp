@@ -381,6 +381,7 @@ struct NPCEventHandler
 	virtual void onNPCFinishNodePoint(INPC& npc, int nodeId, uint16_t pointId) { }
 	virtual void onNPCFinishNode(INPC& npc, int nodeId) { }
 	virtual bool onNPCChangeNode(INPC& npc, int newNodeId, int oldNodeId) { return true; }
+	virtual void onNPCFinishMovePath(INPC& npc, int pathId) {};
 };
 
 static const UID NPCComponent_UID = UID(0x3D0E59E87F4E90BC);
