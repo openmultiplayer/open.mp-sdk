@@ -363,6 +363,15 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Check for NPC invulnerability
 	virtual bool isInvulnerable() const = 0;
+
+	/// Set NPC surfing data
+	virtual void setSurfingData(const PlayerSurfingData& data) = 0;
+
+	/// Get NPC surfing data
+	virtual PlayerSurfingData getSurfingData() = 0;
+
+	/// Reset NPC surfing data
+	virtual void resetSurfingData() = 0;
 };
 
 struct NPCEventHandler
