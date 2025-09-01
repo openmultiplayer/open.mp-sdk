@@ -440,6 +440,8 @@ struct INPCComponent : public IPool<INPC>, public INetworkComponent
 	/// Gets point information by the given point index in a path
 	virtual bool getPathPoint(int pathId, size_t pointIndex, Vector3& position, float& stopRange) = 0;
 
+	virtual bool hasPathPointInRange(int pathId, const Vector3& position, float radius) = 0;
+
 	/// Check if a path id is valid
 	virtual bool isValidPath(int pathId) = 0;
 
