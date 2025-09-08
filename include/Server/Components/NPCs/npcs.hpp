@@ -396,6 +396,7 @@ struct NPCEventHandler
 	virtual void onNPCFinishNodePoint(INPC& npc, int nodeId, uint16_t pointId) { }
 	virtual void onNPCFinishNode(INPC& npc, int nodeId) { }
 	virtual bool onNPCChangeNode(INPC& npc, int newNodeId, int oldNodeId) { return true; }
+	virtual void onNPCFinishMovePathPoint(INPC& npc, int pathId, int pointId) { }
 	virtual void onNPCFinishMovePath(INPC& npc, int pathId) {};
 };
 
