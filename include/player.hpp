@@ -328,7 +328,7 @@ struct WeaponInfo
 	static const WeaponInfo& get(uint8_t weapon);
 };
 
-static const StaticArray<WeaponInfo, MAX_WEAPON_ID> WeaponInfoList = { {
+constexpr StaticArray<WeaponInfo, MAX_WEAPON_ID> WeaponInfoList = { {
 	{ PlayerWeaponType_Melee, 0, 1.6f, 0, 250, 0 }, // 0
 	{ PlayerWeaponType_Melee, 0, 1.6f, 0, 250, 0 }, // 1
 	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 2
