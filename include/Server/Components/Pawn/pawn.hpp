@@ -70,6 +70,258 @@ struct PawnLookup
 
 PawnLookup* getAmxLookups();
 
+namespace Impl
+{
+template <typename T>
+class PawnRef
+{
+public:
+	using value_type = T;
+
+	PawnRef()
+		: value_ {}
+	{
+	}
+	PawnRef(T val)
+		: value_(val)
+	{
+	}
+
+	T get() const { return value_; }
+	T& ref() { return value_; }
+	const T& ref() const { return value_; }
+
+	operator T() const { return value_; }
+
+	PawnRef& operator=(T val)
+	{
+		value_ = val;
+		return *this;
+	}
+
+private:
+	T value_;
+};
+
+template <>
+class PawnRef<String>
+{
+public:
+	using value_type = String;
+
+	PawnRef(size_t maxLen = 256)
+		: value_ {}
+		, maxLen_(maxLen)
+	{
+	}
+	PawnRef(String val, size_t maxLen = 256)
+		: value_(val)
+		, maxLen_(maxLen)
+	{
+	}
+
+	String get() const { return value_; }
+	String& ref() { return value_; }
+	const String& ref() const { return value_; }
+
+	operator String() const { return value_; }
+
+	PawnRef& operator=(String val)
+	{
+		value_ = val;
+		return *this;
+	}
+
+	size_t getMaxLen() const { return maxLen_; }
+	const char* c_str() const { return value_.c_str(); }
+
+private:
+	String value_;
+	size_t maxLen_;
+};
+
+template <typename T>
+class PawnRef<DynamicArray<T>>
+{
+public:
+	using value_type = DynamicArray<T>;
+
+	PawnRef(size_t maxLen = 256)
+		: value_ {}
+		, maxLen_(maxLen)
+	{
+	}
+	PawnRef(const DynamicArray<T>& val, size_t maxLen = 256)
+		: value_(val)
+		, maxLen_(maxLen)
+	{
+	}
+	PawnRef(DynamicArray<T>&& val, size_t maxLen = 256)
+		: value_(std::move(val))
+		, maxLen_(maxLen)
+	{
+	}
+
+	DynamicArray<T> get() const { return value_; }
+	DynamicArray<T>& ref() { return value_; }
+	const DynamicArray<T>& ref() const { return value_; }
+
+	operator DynamicArray<T>() const { return value_; }
+
+	PawnRef& operator=(const DynamicArray<T>& val)
+	{
+		value_ = val;
+		return *this;
+	}
+
+	PawnRef& operator=(DynamicArray<T>&& val)
+	{
+		value_ = std::move(val);
+		return *this;
+	}
+
+	T& operator[](size_t index) { return value_[index]; }
+	const T& operator[](size_t index) const { return value_[index]; }
+
+	size_t getMaxLen() const { return maxLen_; }
+
+	size_t size() const { return value_.size(); }
+	void resize(size_t newSize) { value_.resize(newSize); }
+	void clear() { value_.clear(); }
+	bool empty() const { return value_.empty(); }
+
+	typename DynamicArray<T>::iterator begin() { return value_.begin(); }
+	typename DynamicArray<T>::iterator end() { return value_.end(); }
+	typename DynamicArray<T>::const_iterator begin() const { return value_.begin(); }
+	typename DynamicArray<T>::const_iterator end() const { return value_.end(); }
+
+private:
+	DynamicArray<T> value_;
+	size_t maxLen_;
+};
+
+// Native parameter for runtime native calls
+struct NativeParam
+{
+	enum class Type
+	{
+		Int,
+		Float,
+		Bool,
+		String,
+		ArrayInt,
+		ArrayFloat,
+		RefInt,
+		RefFloat,
+		RefBool,
+		RefString,
+		RefArrayInt,
+		RefArrayFloat
+	};
+
+	Type type;
+	union
+	{
+		int intValue;
+		float floatValue;
+		bool boolValue;
+		const char* stringValue;
+		void* refPtr;
+		const void* arrayPtr;
+	};
+	size_t arraySize; // For string/array refs and array values
+
+	// Value constructors
+	NativeParam(int v)
+		: type(Type::Int)
+		, intValue(v)
+		, arraySize(0)
+	{
+	}
+	NativeParam(unsigned int v)
+		: type(Type::Int)
+		, intValue(int(v))
+		, arraySize(0)
+	{
+	}
+	NativeParam(float v)
+		: type(Type::Float)
+		, floatValue(v)
+		, arraySize(0)
+	{
+	}
+	NativeParam(bool v)
+		: type(Type::Bool)
+		, boolValue(v)
+		, arraySize(0)
+	{
+	}
+	NativeParam(const char* v)
+		: type(Type::String)
+		, stringValue(v)
+		, arraySize(0)
+	{
+	}
+	NativeParam(const String& v)
+		: type(Type::String)
+		, stringValue(v.c_str())
+		, arraySize(0)
+	{
+	}
+	NativeParam(const DynamicArray<int>& arr)
+		: type(Type::ArrayInt)
+		, arrayPtr(arr.data())
+		, arraySize(arr.size())
+	{
+	}
+	NativeParam(const DynamicArray<float>& arr)
+		: type(Type::ArrayFloat)
+		, arrayPtr(arr.data())
+		, arraySize(arr.size())
+	{
+	}
+
+	// Reference parameter constructors
+	NativeParam(PawnRef<int>& ref)
+		: type(Type::RefInt)
+		, refPtr(&ref)
+		, arraySize(0)
+	{
+	}
+	NativeParam(PawnRef<float>& ref)
+		: type(Type::RefFloat)
+		, refPtr(&ref)
+		, arraySize(0)
+	{
+	}
+	NativeParam(PawnRef<bool>& ref)
+		: type(Type::RefBool)
+		, refPtr(&ref)
+		, arraySize(0)
+	{
+	}
+	NativeParam(PawnRef<String>& ref)
+		: type(Type::RefString)
+		, refPtr(&ref)
+		, arraySize(ref.getMaxLen())
+	{
+	}
+	NativeParam(PawnRef<DynamicArray<int>>& ref)
+		: type(Type::RefArrayInt)
+		, refPtr(&ref)
+		, arraySize(ref.getMaxLen())
+	{
+	}
+	NativeParam(PawnRef<DynamicArray<float>>& ref)
+		: type(Type::RefArrayFloat)
+		, refPtr(&ref)
+		, arraySize(ref.getMaxLen())
+	{
+	}
+};
+
+} // namespace Impl
+
 struct IPawnScript
 {
 	// Wrap the AMX API.
@@ -151,6 +403,47 @@ struct IPawnScript
 
 	virtual int GetID() const = 0;
 	virtual bool IsLoaded() const = 0;
+
+	/// Call a native with an array of type-erased parameters
+	/// @param name The name of the native function to call
+	/// @param params Span of NativeParam objects containing the parameters
+	/// @return The cell value returned by the native (use amx_ctof for float returns)
+	virtual cell CallNativeArray(const char* name, Span<Impl::NativeParam> params) = 0;
+
+	/// Templated wrapper around CallNativeArray for convenient SDK usage, with return type.
+	/// Automatically converts variadic arguments to NativeParam array.
+	/// @param name The name of the native function to call
+	/// @param args Variadic arguments of supported types
+	/// @return The return value converted to type RET
+	template <typename RET = cell, typename... Args>
+	RET CallNative(const char* name, Args&&... args)
+	{
+		cell result = 0;
+		if constexpr (sizeof...(args) == 0)
+		{
+			result = CallNativeArray(name, Span<Impl::NativeParam>());
+		}
+		else
+		{
+			Impl::DynamicArray<Impl::NativeParam> params;
+			params.reserve(sizeof...(args));
+			(params.push_back(Impl::NativeParam(std::forward<Args>(args))), ...);
+			result = CallNativeArray(name, Span<Impl::NativeParam>(params.data(), params.size()));
+		}
+
+		if constexpr (std::is_same_v<RET, float>)
+		{
+			return amx_ctof(result);
+		}
+		else if constexpr (std::is_same_v<RET, bool>)
+		{
+			return result != 0;
+		}
+		else
+		{
+			return static_cast<RET>(result);
+		}
+	}
 
 	template <typename... T>
 	void Call(cell& ret, int idx, T... args)
