@@ -568,6 +568,11 @@ struct PawnEventHandler
 {
 	virtual void onAmxLoad(IPawnScript& script) = 0;
 	virtual void onAmxUnload(IPawnScript& script) = 0;
+
+    virtual void onTick(Microseconds elapsed, TimePoint now) /// Call on every server tick to allow for example, plugins to process async operations
+    {
+        // Default empty     
+    }
 };
 
 static const UID PawnComponent_UID = UID(0x78906cd9f19c36a6);
