@@ -372,6 +372,21 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Reset NPC surfing data
 	virtual void resetSurfingData() = 0;
+
+	/// Check if NPC is moving towards a specific player
+	virtual bool isMovingToPlayer(IPlayer& player) const = 0;
+	
+	/// Simulate NPC death
+	virtual void kill(IPlayer* killer, uint8_t weapon) = 0;
+
+	/// Get player aiming at
+	virtual IPlayer* getPlayerAimingAt() = 0;
+
+	/// Get player moving to
+	virtual IPlayer* getPlayerMovingTo() = 0;
+
+	/// Set weapon state
+	virtual void setWeaponState(PlayerWeaponState state) = 0;
 };
 
 struct NPCEventHandler

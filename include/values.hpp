@@ -64,6 +64,9 @@ constexpr int MIN_CUSTOM_SKIN_ID = 20001;
 constexpr int MAX_CUSTOM_SKIN_ID = 30000;
 constexpr int MIN_CUSTOM_OBJECT_ID = -30000;
 constexpr int MAX_CUSTOM_OBJECT_ID = -1000;
+constexpr int INVALID_PATH_ID = -1;
+constexpr int INVALID_NODE_ID = -1;
+constexpr int INVALID_RECORD_ID = -1;
 
 enum Key
 {
