@@ -375,7 +375,7 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Check if NPC is moving towards a specific player
 	virtual bool isMovingToPlayer(IPlayer& player) const = 0;
-	
+
 	/// Simulate NPC death
 	virtual void kill(IPlayer* killer, uint8_t weapon) = 0;
 
