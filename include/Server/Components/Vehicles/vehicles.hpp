@@ -391,6 +391,12 @@ struct IVehicle : public IExtensible, public IEntity
 	/// Get vehicle siren status.
 	virtual uint8_t getSirenState() const = 0;
 
+	// Get virtual world of the vehicle.
+	virtual int getVirtualWorld() const = 0;
+
+	// Set virtual world of the vehicle.
+	virtual void setVirtualWorld(int vw) = 0;
+
 	/// Get hydra thrust angle
 	virtual uint32_t getHydraThrustAngle() const = 0;
 
