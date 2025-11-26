@@ -387,6 +387,9 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Set weapon state
 	virtual void setWeaponState(PlayerWeaponState state) = 0;
+
+	/// Get position NPC is moving to
+	virtual Vector3 getPositionMovingTo() const = 0;
 };
 
 struct NPCEventHandler
