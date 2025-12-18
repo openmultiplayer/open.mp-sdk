@@ -329,43 +329,43 @@ struct WeaponInfo
 };
 
 constexpr StaticArray<WeaponInfo, MAX_WEAPON_ID> WeaponInfoList = { {
-	{ PlayerWeaponType_Melee, 0, 1.6f, 0, 250, 0 }, // 0
-	{ PlayerWeaponType_Melee, 0, 1.6f, 0, 250, 0 }, // 1
-	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 2
-	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 3
-	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 4
-	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 5
+	{ PlayerWeaponType_Melee, 0, 1.76f, 0, 250, 0 }, // 0
+	{ PlayerWeaponType_Melee, 0, 1.76f, 0, 250, 0 }, // 1
+	{ PlayerWeaponType_Melee, 1, 1.76f, 0, 250, 0 }, // 2
+	{ PlayerWeaponType_Melee, 1, 1.76f, 0, 250, 0 }, // 3
+	{ PlayerWeaponType_Melee, 1, 1.76f, 0, 250, 0 }, // 4
+	{ PlayerWeaponType_Melee, 1, 1.76f, 0, 250, 0 }, // 5
 	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 6
-	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 7
-	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 250, 0 }, // 8
-	{ PlayerWeaponType_Melee, 1, 1.6f, 0, 30, 0 }, // 9
-	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 10
-	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 11
-	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 12
-	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 13
-	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 14
-	{ PlayerWeaponType_Melee, 10, 1.6f, 0, 250, 0 }, // 15
+	{ PlayerWeaponType_Melee, 1, 1.76f, 0, 250, 0 }, // 7
+	{ PlayerWeaponType_Melee, 1, 1.76f, 0, 250, 0 }, // 8
+	{ PlayerWeaponType_Melee, 1, 1.76f, 0, 30, 0 }, // 9
+	{ PlayerWeaponType_Melee, 10, 1.76f, 0, 250, 0 }, // 10
+	{ PlayerWeaponType_Melee, 10, 1.76f, 0, 250, 0 }, // 11
+	{ PlayerWeaponType_Melee, 10, 1.76f, 0, 250, 0 }, // 12
+	{ PlayerWeaponType_Melee, 10, 1.76f, 0, 250, 0 }, // 13
+	{ PlayerWeaponType_Melee, 10, 1.76f, 0, 250, 0 }, // 14
+	{ PlayerWeaponType_Melee, 10, 1.76f, 0, 250, 0 }, // 15
 	{ PlayerWeaponType_Throwable, 8, 40.0f, 1, 500, 0 }, // 16
 	{ PlayerWeaponType_Throwable, 8, 40.0f, 1, 500, 0 }, // 17
 	{ PlayerWeaponType_Throwable, 8, 40.0f, 1, 500, 0 }, // 18
 	{ PlayerWeaponType_None, INVALID_WEAPON_SLOT, 0.0f, 0, 0, 0 }, // 19
 	{ PlayerWeaponType_None, INVALID_WEAPON_SLOT, 0.0f, 0, 0, 0 }, // 20
 	{ PlayerWeaponType_None, INVALID_WEAPON_SLOT, 0.0f, 0, 0, 0 }, // 21
-	{ PlayerWeaponType_Bullet, 2, 35.0f, 17, 350, 1300 }, // 22
-	{ PlayerWeaponType_Bullet, 2, 35.0f, 17, 450, 1300 }, // 23
-	{ PlayerWeaponType_Bullet, 2, 35.0f, 7, 950, 1300 }, // 24
+	{ PlayerWeaponType_Bullet, 2, 35.0f, 17, 320, 1300 }, // 22
+	{ PlayerWeaponType_Bullet, 2, 35.0f, 17, 460, 1300 }, // 23
+	{ PlayerWeaponType_Bullet, 2, 35.0f, 7, 800, 1300 }, // 24
 	{ PlayerWeaponType_Bullet, 3, 40.0f, 1, 1100, 0 }, // 25
 	{ PlayerWeaponType_Bullet, 3, 35.0f, 2, 300, 1300 }, // 26
 	{ PlayerWeaponType_Bullet, 3, 40.0f, 7, 400, 1500 }, // 27
 	{ PlayerWeaponType_Bullet, 4, 35.0f, 50, 110, 1500 }, // 28
-	{ PlayerWeaponType_Bullet, 4, 45.0f, 30, 95, 1650 }, // 29
-	{ PlayerWeaponType_Bullet, 5, 70.0f, 30, 120, 1900 }, // 30
-	{ PlayerWeaponType_Bullet, 5, 90.0f, 50, 120, 1900 }, // 31
+	{ PlayerWeaponType_Bullet, 4, 45.0f, 30, 90, 1650 }, // 29
+	{ PlayerWeaponType_Bullet, 5, 70.0f, 30, 110, 1900 }, // 30
+	{ PlayerWeaponType_Bullet, 5, 90.0f, 50, 110, 1900 }, // 31
 	{ PlayerWeaponType_Bullet, 4, 35.0f, 50, 110, 1500 }, // 32
-	{ PlayerWeaponType_Bullet, 6, 100.0f, 1, 1050, 0 }, // 33
-	{ PlayerWeaponType_Bullet, 6, 100.0f, 1, 1050, 0 }, // 34
-	{ PlayerWeaponType_Rocket, 7, 55.0f, 1, 1050, 0 }, // 35
-	{ PlayerWeaponType_Rocket, 7, 55.0f, 1, 1050, 0 }, // 36
+	{ PlayerWeaponType_Bullet, 6, 100.0f, 1, 1060, 0 }, // 33
+	{ PlayerWeaponType_Bullet, 6, 200.0f, 1, 1060, 0 }, // 34
+	{ PlayerWeaponType_Rocket, 7, 55.0f, 1, 1060, 0 }, // 35
+	{ PlayerWeaponType_Rocket, 7, 55.0f, 1, 1060, 0 }, // 36
 	{ PlayerWeaponType_Sprayable, 7, 5.1f, 500, 500, 500 }, // 37
 	{ PlayerWeaponType_Bullet, 7, 75.0f, 500, 20, 200 }, // 38
 	{ PlayerWeaponType_Special, 8, 40.0f, 1, 500, 0 }, // 39
@@ -375,7 +375,7 @@ constexpr StaticArray<WeaponInfo, MAX_WEAPON_ID> WeaponInfoList = { {
 	{ PlayerWeaponType_Special, 9, 100.0f, 1, 1200, 0 }, // 43
 	{ PlayerWeaponType_Special, 11, 200.0f, 0, 1500, 0 }, // 44
 	{ PlayerWeaponType_Special, 11, 200.0f, 0, 1500, 0 }, // 45
-	{ PlayerWeaponType_Special, 11, 1.6f, 1, 1500, 0 } // 46
+	{ PlayerWeaponType_Special, 11, 1.76f, 1, 250, 0 } // 46
 } };
 
 inline const WeaponInfo& WeaponInfo::get(uint8_t weapon)
