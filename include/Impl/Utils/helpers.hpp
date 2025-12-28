@@ -164,7 +164,16 @@ inline int getConfigOptionAsString(ICore* core, const Impl::String& cvar, Impl::
 	}
 	else
 	{
-		buffer = config->getString(cvar).data();
+		const auto& data = config->getString(cvar).data();
+
+		// If key is invalid (no such variable exists), getString returns an uninitialized StringView. 
+		// So we need to check validity before copying data.
+
+		if (data != nullptr)
+		{
+			buffer = data;
+		}
 	}
+
 	return buffer.length();
 }
