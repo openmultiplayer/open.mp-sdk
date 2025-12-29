@@ -30,6 +30,15 @@ struct ITimer : public IExtensible
 
 	/// Get the handler associated with the timer
 	virtual TimerTimeOutHandler* handler() const = 0;
+
+	/// Get the timer paused state
+	virtual bool paused() const = 0;
+
+	/// Set the timer's interval
+	virtual void setInterval(Milliseconds interval) = 0;
+
+	/// Toggle the timer paused state
+	virtual void togglePause(bool paused) = 0;
 };
 
 struct TimerTimeOutHandler
