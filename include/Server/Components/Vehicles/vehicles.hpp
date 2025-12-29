@@ -418,6 +418,8 @@ struct VehicleEventHandler
 	virtual bool onUnoccupiedVehicleUpdate(IVehicle& vehicle, IPlayer& player, UnoccupiedVehicleUpdate const updateData) { return true; }
 	virtual bool onTrailerUpdate(IPlayer& player, IVehicle& trailer) { return true; }
 	virtual bool onVehicleSirenStateChange(IPlayer& player, IVehicle& vehicle, uint8_t sirenState) { return true; }
+	virtual bool onTrailerAttach(IPlayer& player, IVehicle& vehicle, IVehicle& trailer) { return true; }
+	virtual bool onTrailerDetach(IPlayer& player, IVehicle& vehicle, IVehicle& trailer) { return true; }
 };
 
 /// A vehicle pool
