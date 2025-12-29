@@ -215,7 +215,8 @@ struct IObject : public IBaseObject
 
 struct IPlayerObject : public IBaseObject
 {
-	virtual void attachToObject(IPlayerObject& object, Vector3 offset, Vector3 rotation) = 0;
+	/// Attach the object to another player object
+	virtual void attachToObject(IPlayerObject& object, Vector3 offset, Vector3 rotation, bool syncRotation) = 0;
 
 	/// Attach the object to a player
 	virtual void attachToPlayer(IPlayer& player, Vector3 offset, Vector3 rotation) = 0;
