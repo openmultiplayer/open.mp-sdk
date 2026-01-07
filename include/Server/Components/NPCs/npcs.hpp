@@ -390,6 +390,12 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Get position NPC is moving to
 	virtual Vector3 getPositionMovingTo() const = 0;
+
+	/// Set NPC vehicle position with ability to decide whether it needs immediate update or not
+	virtual void setVehiclePosition(const Vector3& position, bool immediateUpdate) = 0;
+
+	/// Set NPC vehicle rotation with ability to decide whether it needs immediate update or not
+	virtual void setVehicleRotation(const GTAQuat& rotation, bool immediateUpdate) = 0;
 };
 
 struct NPCEventHandler
