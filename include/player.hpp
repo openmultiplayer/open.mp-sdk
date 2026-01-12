@@ -476,6 +476,7 @@ struct PlayerSpectateData
 	bool spectating;
 	int spectateID;
 	ESpectateType type;
+	bool leftSpectating;
 };
 
 struct IPlayerPool;
