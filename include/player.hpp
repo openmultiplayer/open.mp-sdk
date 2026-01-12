@@ -476,7 +476,6 @@ struct PlayerSpectateData
 	bool spectating;
 	int spectateID;
 	ESpectateType type;
-	bool leftSpectating;
 };
 
 struct IPlayerPool;
@@ -966,6 +965,9 @@ struct IPlayer : public IExtensible, public IEntity
 
 	/// Check if player is using omp or not
 	virtual bool isUsingOmp() const = 0;
+
+	/// Check if player is leaving spectator mode
+	virtual bool isLeavingSpectatorMode() const = 0;
 };
 
 /// Player spawn event handlers
