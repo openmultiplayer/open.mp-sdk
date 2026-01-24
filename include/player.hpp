@@ -939,8 +939,8 @@ struct IPlayer : public IExtensible, public IEntity
 	/// Get player's collision status (ghost mode)
 	virtual bool isGhostModeEnabled() const = 0;
 
-	/// Get default objects removed (basically just how many times removeDefaultObject is called)
-	virtual int getDefaultObjectsRemoved() const = 0;
+	/// Get default objects removed array size (basically just how many times removeDefaultObject is called)
+	virtual int getDefaultObjectsRemovedCount() const = 0;
 
 	/// Get if player is kicked or not (about to be disconnected)
 	virtual bool getKickStatus() const = 0;
