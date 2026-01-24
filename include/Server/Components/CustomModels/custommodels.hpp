@@ -50,4 +50,6 @@ struct ICustomModelsComponent : public IComponent
 	virtual StringView getModelNameFromChecksum(uint32_t checksum) const = 0;
 	virtual bool isValidCustomModel(int32_t modelId) const = 0;
 	virtual bool getCustomModelPath(int32_t modelId, StringView& dffPath, StringView& txdPath) const = 0;
+	virtual bool setModelDownloadAtConnect(bool toggle) = 0;
+	virtual bool startDownloadForPlayer(IPlayer& player) = 0;
 };
