@@ -476,6 +476,7 @@ struct PlayerSpectateData
 	bool spectating;
 	int spectateID;
 	ESpectateType type;
+	bool leftSpectating;
 };
 
 struct IPlayerPool;
@@ -937,8 +938,8 @@ struct IPlayer : public IExtensible, public IEntity
 	/// Get player's collision status (ghost mode)
 	virtual bool isGhostModeEnabled() const = 0;
 
-	/// Get default objects removed (basically just how many times removeDefaultObject is called)
-	virtual int getDefaultObjectsRemoved() const = 0;
+	/// Get default objects removed array size (basically just how many times removeDefaultObject is called)
+	virtual int getDefaultObjectsRemovedCount() const = 0;
 
 	/// Get if player is kicked or not (about to be disconnected)
 	virtual bool getKickStatus() const = 0;
@@ -963,6 +964,11 @@ struct IPlayer : public IExtensible, public IEntity
 
 	/// Check if player is using omp or not
 	virtual bool isUsingOmp() const = 0;
+
+	/// Check if player is leaving spectator mode
+	virtual bool isLeavingSpectatorMode() const = 0;
+
+	virtual bool isDefaultObjectRemoved(unsigned model, Vector3 pos, float radius) const = 0;
 };
 
 /// Player spawn event handlers

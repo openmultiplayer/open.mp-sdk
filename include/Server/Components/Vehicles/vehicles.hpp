@@ -399,6 +399,12 @@ struct IVehicle : public IExtensible, public IEntity
 
 	/// Get last driver's pool id
 	virtual int getLastDriverPoolID() const = 0;
+
+	// Sets the new hidden state for the vehicle.
+	virtual void toggleHide(bool value) = 0;
+
+	// Gets the current hidden state of the vehicle.
+	virtual bool isHidden() const = 0;
 };
 
 /// A vehicle event handler
