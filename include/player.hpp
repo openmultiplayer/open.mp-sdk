@@ -688,6 +688,8 @@ struct IPlayer : public IExtensible, public IEntity
 	/// @param radius The radius to remove around
 	virtual void removeDefaultObjects(unsigned model, Vector3 pos, float radius) = 0;
 
+	virtual bool isDefaultObjectRemoved(unsigned model, Vector3 pos, float radius) = 0;
+
 	/// Force class selection for the player
 	virtual void forceClassSelection() = 0;
 
@@ -937,8 +939,8 @@ struct IPlayer : public IExtensible, public IEntity
 	/// Get player's collision status (ghost mode)
 	virtual bool isGhostModeEnabled() const = 0;
 
-	/// Get default objects removed (basically just how many times removeDefaultObject is called)
-	virtual int getDefaultObjectsRemoved() const = 0;
+	/// Get default objects removed array size (basically just how many times removeDefaultObject is called)
+	virtual int getDefaultObjectsRemovedCount() const = 0;
 
 	/// Get if player is kicked or not (about to be disconnected)
 	virtual bool getKickStatus() const = 0;
