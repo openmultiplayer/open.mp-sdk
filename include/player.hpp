@@ -689,8 +689,6 @@ struct IPlayer : public IExtensible, public IEntity
 	/// @param radius The radius to remove around
 	virtual void removeDefaultObjects(unsigned model, Vector3 pos, float radius) = 0;
 
-	virtual bool isDefaultObjectRemoved(unsigned model, Vector3 pos, float radius) const = 0;
-
 	/// Force class selection for the player
 	virtual void forceClassSelection() = 0;
 
@@ -969,6 +967,8 @@ struct IPlayer : public IExtensible, public IEntity
 
 	/// Check if player is leaving spectator mode
 	virtual bool isLeavingSpectatorMode() const = 0;
+
+	virtual bool isDefaultObjectRemoved(unsigned model, Vector3 pos, float radius) const = 0;
 };
 
 /// Player spawn event handlers
