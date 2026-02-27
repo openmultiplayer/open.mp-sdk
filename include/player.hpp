@@ -354,7 +354,7 @@ constexpr StaticArray<WeaponInfo, MAX_WEAPON_ID> WeaponInfoList = { {
 	{ PlayerWeaponType_Bullet, 2, 35.0f, 17, 320, 1300 }, // 22
 	{ PlayerWeaponType_Bullet, 2, 35.0f, 17, 460, 1300 }, // 23
 	{ PlayerWeaponType_Bullet, 2, 35.0f, 7, 800, 1300 }, // 24
-	{ PlayerWeaponType_Bullet, 3, 40.0f, 1, 1100, 0 }, // 25
+	{ PlayerWeaponType_Bullet, 3, 40.0f, 1, 1060, 0 }, // 25
 	{ PlayerWeaponType_Bullet, 3, 35.0f, 2, 300, 1300 }, // 26
 	{ PlayerWeaponType_Bullet, 3, 40.0f, 7, 400, 1500 }, // 27
 	{ PlayerWeaponType_Bullet, 4, 35.0f, 50, 110, 1500 }, // 28
