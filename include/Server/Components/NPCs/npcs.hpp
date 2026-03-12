@@ -429,6 +429,7 @@ struct NPCEventHandler
 	virtual void onNPCDeath(INPC& npc, IPlayer* killer, int reason) {};
 	virtual void onNPCVehicleEntryComplete(INPC& npc, IVehicle& vehicle, int seatId) {};
 	virtual void onNPCVehicleExitComplete(INPC& npc, IVehicle& vehicle) {};
+	virtual bool onNPCVehicleTakeDamage(INPC& npc, IPlayer& issuer, IVehicle& vehicle, float damage, uint8_t weapon, const Vector3& hitPos) { return true; };
 	virtual bool onNPCShotMissed(INPC& npc, const PlayerBulletData& bulletData) { return true; }
 	virtual bool onNPCShotPlayer(INPC& npc, IPlayer& target, const PlayerBulletData& bulletData) { return true; }
 	virtual bool onNPCShotNPC(INPC& npc, INPC& target, const PlayerBulletData& bulletData) { return true; }
