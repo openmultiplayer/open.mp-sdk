@@ -400,6 +400,8 @@ struct NPCEventHandler
 	virtual void onNPCSpawn(INPC& npc) {};
 	virtual void onNPCRespawn(INPC& npc) {};
 	virtual void onNPCUpdate(INPC& npc) {};
+	virtual void onNPCStreamIn(INPC& npc, IPlayer& forPlayer) {};
+	virtual void onNPCStreamOut(INPC& npc, IPlayer& forPlayer) {};
 	virtual void onNPCWeaponStateChange(INPC& npc, PlayerWeaponState newState, PlayerWeaponState oldState) {};
 	virtual bool onNPCTakeDamage(INPC& npc, IPlayer& damager, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
 	virtual bool onNPCGiveDamage(INPC& npc, IPlayer& damaged, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
