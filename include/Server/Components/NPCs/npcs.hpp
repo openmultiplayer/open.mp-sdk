@@ -385,6 +385,27 @@ struct INPC : public IExtensible, public IIDProvider
 	/// Get player moving to
 	virtual IPlayer* getPlayerMovingTo() = 0;
 
+	/// Find the closest entity intersecting a segment/ray between the NPC and a target point
+	virtual int getClosestEntityInBetween(const Vector3& point, float range, EntityCheckType betweenCheckFlags, const Vector3& offsetFrom, int& entityType, int& playerObjectOwnerId, Vector3& hitMap) = 0;
+
+	/// Set/get playback path prefix for path-based playback resolution
+	virtual void setPlaybackPath(StringView path) = 0;
+	virtual StringView getPlaybackPath() const = 0;
+
+	/// Set/get per-NPC weapon behaviour overrides
+	virtual void setWeaponInfo(uint8_t weapon, int reloadTime, int shootTime, int clipSize, float accuracy) = 0;
+	virtual bool getWeaponInfo(uint8_t weapon, int& reloadTime, int& shootTime, int& clipSize, float& accuracy) const = 0;
+
+	/// Control per-player tablist visibility for the NPC
+	virtual bool showInTabListForPlayer(IPlayer& forPlayer) = 0;
+	virtual bool hideInTabListForPlayer(IPlayer& forPlayer) = 0;
+
+	/// FCNPC-compatible move-mode and height callback tuning state
+	virtual bool setMoveMode(int mode) = 0;
+	virtual int getMoveMode() const = 0;
+	virtual void setMinHeightPosCall(float height) = 0;
+	virtual float getMinHeightPosCall() const = 0;
+
 	/// Set weapon state
 	virtual void setWeaponState(PlayerWeaponState state) = 0;
 
@@ -508,4 +529,8 @@ struct INPCComponent : public IPool<INPC>, public INetworkComponent
 
 	/// Get node information (vehicle nodes, pedestrian nodes, navigation nodes)
 	virtual bool getNodeInfo(int nodeId, uint32_t& vehicleNodes, uint32_t& pedNodes, uint32_t& naviNodes) = 0;
+
+	/// Set/get global default weapon behaviour overrides used for new NPC instances
+	virtual bool setWeaponDefaultInfo(int weapon, int reloadTime, int shootTime, int clipSize, float accuracy) = 0;
+	virtual bool getWeaponDefaultInfo(int weapon, int& reloadTime, int& shootTime, int& clipSize, float& accuracy) = 0;
 };
