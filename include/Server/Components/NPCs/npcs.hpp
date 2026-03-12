@@ -399,10 +399,13 @@ struct NPCEventHandler
 	virtual void onNPCDestroy(INPC& npc) {};
 	virtual void onNPCSpawn(INPC& npc) {};
 	virtual void onNPCRespawn(INPC& npc) {};
+	virtual void onNPCUpdate(INPC& npc) {};
 	virtual void onNPCWeaponStateChange(INPC& npc, PlayerWeaponState newState, PlayerWeaponState oldState) {};
 	virtual bool onNPCTakeDamage(INPC& npc, IPlayer& damager, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
 	virtual bool onNPCGiveDamage(INPC& npc, IPlayer& damaged, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
 	virtual void onNPCDeath(INPC& npc, IPlayer* killer, int reason) {};
+	virtual void onNPCVehicleEntryComplete(INPC& npc, IVehicle& vehicle, int seatId) {};
+	virtual void onNPCVehicleExitComplete(INPC& npc, IVehicle& vehicle) {};
 	virtual bool onNPCShotMissed(INPC& npc, const PlayerBulletData& bulletData) { return true; }
 	virtual bool onNPCShotPlayer(INPC& npc, IPlayer& target, const PlayerBulletData& bulletData) { return true; }
 	virtual bool onNPCShotNPC(INPC& npc, INPC& target, const PlayerBulletData& bulletData) { return true; }
@@ -411,6 +414,7 @@ struct NPCEventHandler
 	virtual bool onNPCShotPlayerObject(INPC& npc, IPlayerObject& target, const PlayerBulletData& bulletData) { return true; }
 	virtual void onNPCPlaybackStart(INPC& npc, int recordId) { }
 	virtual void onNPCPlaybackEnd(INPC& npc, int recordId) { }
+	virtual void onNPCChangeHeightPos(INPC& npc, float newZ, float oldZ) { }
 	virtual void onNPCFinishNodePoint(INPC& npc, int nodeId, uint16_t pointId) { }
 	virtual void onNPCFinishNode(INPC& npc, int nodeId) { }
 	virtual bool onNPCChangeNode(INPC& npc, int newNodeId, int oldNodeId) { return true; }
