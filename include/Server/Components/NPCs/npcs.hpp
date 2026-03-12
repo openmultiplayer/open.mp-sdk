@@ -385,6 +385,27 @@ struct INPC : public IExtensible, public IIDProvider
 	/// Get player moving to
 	virtual IPlayer* getPlayerMovingTo() = 0;
 
+	/// Find the closest entity intersecting a segment/ray between the NPC and a target point
+	virtual int getClosestEntityInBetween(const Vector3& point, float range, EntityCheckType betweenCheckFlags, const Vector3& offsetFrom, int& entityType, int& playerObjectOwnerId, Vector3& hitMap) = 0;
+
+	/// Set/get playback path prefix for path-based playback resolution
+	virtual void setPlaybackPath(StringView path) = 0;
+	virtual StringView getPlaybackPath() const = 0;
+
+	/// Set/get per-NPC weapon behaviour overrides
+	virtual void setWeaponInfo(uint8_t weapon, int reloadTime, int shootTime, int clipSize, float accuracy) = 0;
+	virtual bool getWeaponInfo(uint8_t weapon, int& reloadTime, int& shootTime, int& clipSize, float& accuracy) const = 0;
+
+	/// Control per-player tablist visibility for the NPC
+	virtual bool showInTabListForPlayer(IPlayer& forPlayer) = 0;
+	virtual bool hideInTabListForPlayer(IPlayer& forPlayer) = 0;
+
+	/// FCNPC-compatible move-mode and height callback tuning state
+	virtual bool setMoveMode(int mode) = 0;
+	virtual int getMoveMode() const = 0;
+	virtual void setMinHeightPosCall(float height) = 0;
+	virtual float getMinHeightPosCall() const = 0;
+
 	/// Set weapon state
 	virtual void setWeaponState(PlayerWeaponState state) = 0;
 
@@ -399,10 +420,16 @@ struct NPCEventHandler
 	virtual void onNPCDestroy(INPC& npc) {};
 	virtual void onNPCSpawn(INPC& npc) {};
 	virtual void onNPCRespawn(INPC& npc) {};
+	virtual void onNPCUpdate(INPC& npc) {};
+	virtual void onNPCStreamIn(INPC& npc, IPlayer& forPlayer) {};
+	virtual void onNPCStreamOut(INPC& npc, IPlayer& forPlayer) {};
 	virtual void onNPCWeaponStateChange(INPC& npc, PlayerWeaponState newState, PlayerWeaponState oldState) {};
 	virtual bool onNPCTakeDamage(INPC& npc, IPlayer& damager, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
 	virtual bool onNPCGiveDamage(INPC& npc, IPlayer& damaged, float damage, uint8_t weapon, BodyPart bodyPart) { return true; };
 	virtual void onNPCDeath(INPC& npc, IPlayer* killer, int reason) {};
+	virtual void onNPCVehicleEntryComplete(INPC& npc, IVehicle& vehicle, int seatId) {};
+	virtual void onNPCVehicleExitComplete(INPC& npc, IVehicle& vehicle) {};
+	virtual bool onNPCVehicleTakeDamage(INPC& npc, IPlayer& issuer, IVehicle& vehicle, float damage, uint8_t weapon, const Vector3& hitPos) { return true; };
 	virtual bool onNPCShotMissed(INPC& npc, const PlayerBulletData& bulletData) { return true; }
 	virtual bool onNPCShotPlayer(INPC& npc, IPlayer& target, const PlayerBulletData& bulletData) { return true; }
 	virtual bool onNPCShotNPC(INPC& npc, INPC& target, const PlayerBulletData& bulletData) { return true; }
@@ -411,6 +438,7 @@ struct NPCEventHandler
 	virtual bool onNPCShotPlayerObject(INPC& npc, IPlayerObject& target, const PlayerBulletData& bulletData) { return true; }
 	virtual void onNPCPlaybackStart(INPC& npc, int recordId) { }
 	virtual void onNPCPlaybackEnd(INPC& npc, int recordId) { }
+	virtual void onNPCChangeHeightPos(INPC& npc, float newZ, float oldZ) { }
 	virtual void onNPCFinishNodePoint(INPC& npc, int nodeId, uint16_t pointId) { }
 	virtual void onNPCFinishNode(INPC& npc, int nodeId) { }
 	virtual bool onNPCChangeNode(INPC& npc, int newNodeId, int oldNodeId) { return true; }
@@ -502,4 +530,8 @@ struct INPCComponent : public IPool<INPC>, public INetworkComponent
 
 	/// Get node information (vehicle nodes, pedestrian nodes, navigation nodes)
 	virtual bool getNodeInfo(int nodeId, uint32_t& vehicleNodes, uint32_t& pedNodes, uint32_t& naviNodes) = 0;
+
+	/// Set/get global default weapon behaviour overrides used for new NPC instances
+	virtual bool setWeaponDefaultInfo(int weapon, int reloadTime, int shootTime, int clipSize, float accuracy) = 0;
+	virtual bool getWeaponDefaultInfo(int weapon, int& reloadTime, int& shootTime, int& clipSize, float& accuracy) = 0;
 };
