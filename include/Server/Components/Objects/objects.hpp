@@ -297,3 +297,11 @@ struct IPlayerObjectData : public IExtension, public IPool<IPlayerObject>
 	/// Edit an attached object in an attachment slot for the player
 	virtual void editAttachedObject(int index) = 0;
 };
+
+static const UID PlayerCameraTargetData_UID = UID(0x7d2c8e1a4f3b6905);
+struct IPlayerCameraTargetData : public IExtension
+{
+	PROVIDE_EXT_UID(PlayerCameraTargetData_UID);
+
+	virtual IPlayerObject* getCameraTargetPlayerObject() = 0;
+};
