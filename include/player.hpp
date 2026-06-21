@@ -703,6 +703,9 @@ struct IPlayer : public IExtensible, public IEntity
 	/// Get the player's health
 	virtual float getHealth() const = 0;
 
+	/// Set both the player's health and armour to 100
+	virtual void setPlayerMaxHealth() = 0;
+
 	/// Set the player's score
 	virtual void setScore(int score) = 0;
 
