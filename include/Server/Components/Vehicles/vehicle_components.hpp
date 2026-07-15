@@ -20,7 +20,7 @@ inline bool isValidComponentForVehicleModel(int vehicleModel, int componentId)
 	// * I don't know yet if this can be used to our advantage to improve the code
 	// * somehow - it seems like that would require more explicit model handling.
 
-	static const StaticArray<uint32_t, MAX_VEHICLE_MODELS* 6> componentValidVehicleModel = {
+	static const StaticArray<uint32_t, MAX_VEHICLE_MODELS * 6> componentValidVehicleModel = {
 		0x033C2700, 0x00000000, 0x00FFFE00, 0x00000007, 0x00000000, 0x00000000,
 		0x021A27FA, 0x00000000, 0x00FFFE00, 0x00000007, 0x0003C000, 0x00000000,
 		0x02000700, 0x00000000, 0x00FFFE00, 0x00000007, 0x00000000, 0x00000000,
