@@ -11,7 +11,11 @@ enum HTTPRequestType
 {
 	HTTPRequestType_Get = 1,
 	HTTPRequestType_Post,
-	HTTPRequestType_Head
+	HTTPRequestType_Head,
+	HTTPRequestType_Put,
+	HTTPRequestType_Patch,
+	HTTPRequestType_Delete,
+	HTTPRequestType_Options,
 };
 
 struct HTTPResponseHandler
