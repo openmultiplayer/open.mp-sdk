@@ -32,7 +32,15 @@ struct IExtensible
 {
 	/// Try to get an extension by its UID
 	/// @return A pointer to the extension or nullptr if it's not supported
-	virtual IExtension* getExtension(UID id) { return nullptr; }
+	virtual IExtension* getExtension(UID id)
+	{
+		auto it = miscExtensions.find(id);
+		if (it != miscExtensions.end())
+		{
+			return it->second.first;
+		}
+		return nullptr;
+	}
 
 	/// Query an extension by its type
 	/// Don't call directly, use global queryExtension() instead
