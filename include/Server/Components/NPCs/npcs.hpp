@@ -396,6 +396,12 @@ struct INPC : public IExtensible, public IIDProvider
 
 	/// Set NPC vehicle rotation with ability to decide whether it needs immediate update or not
 	virtual void setVehicleRotation(const GTAQuat& rotation, bool immediateUpdate) = 0;
+
+	/// Get NPC vehicle position (zero vector when NPC is not in a vehicle)
+	virtual Vector3 getVehiclePosition() const = 0;
+
+	/// Get NPC vehicle rotation (identity quaternion when NPC is not in a vehicle)
+	virtual GTAQuat getVehicleRotation() const = 0;
 };
 
 struct NPCEventHandler
