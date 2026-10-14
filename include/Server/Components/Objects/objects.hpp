@@ -71,6 +71,14 @@ enum PlayerBone
 	PlayerBone_Jaw
 };
 
+/// Player object editing type
+enum ObjectEditingType
+{
+	ObjectEditingType_None,
+	ObjectEditingType_Object,
+	ObjectEditingType_AttachedObject
+};
+
 /* Interfaces, to be passed around */
 
 /// Trivial object material data
@@ -300,4 +308,7 @@ struct IPlayerObjectData : public IExtension, public IPool<IPlayerObject>
 
 	/// Edit an attached object in an attachment slot for the player
 	virtual void editAttachedObject(int index) = 0;
+
+	/// Get the type of object the player is editing
+	virtual ObjectEditingType getEditingType() const = 0;
 };
