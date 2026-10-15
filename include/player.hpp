@@ -14,6 +14,7 @@ struct IVehicle;
 struct IObject;
 struct IPlayerObject;
 struct IActor;
+struct INPC;
 
 enum PlayerFightingStyle
 {
@@ -909,6 +910,7 @@ struct IPlayer : public IExtensible, public IEntity
 
 	/// Get the actor the player is looking at or nullptr if none
 	virtual IActor* getCameraTargetActor() = 0;
+	virtual INPC* getCameraTargetNPC() = 0;
 
 	/// Get the player the player is targeting or nullptr if none
 	virtual IPlayer* getTargetPlayer() = 0;
