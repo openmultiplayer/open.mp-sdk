@@ -675,20 +675,20 @@ inline void getRandomVehicleColour(int modelid, int& colour1, int& colour2, int&
 		colour1 = vehiclePrimaryColours[index];
 		colour2 = vehicleSecondaryColours[index];
 		switch (modelid)
-		{
-		case 83:
-			colour3 = colour3Camper[index],
-			colour4 = colour4Camper[index];
-			break;
-		case 124:
-			colour3 = colour3Cement[index],
-			colour4 = colour4Cement[index];
-			break;
-		case 46:
-			colour3 = colour3Squalo[index],
-			colour4 = colour4Squalo[index];
-			break;
-		}
+        {
+        case 483:
+            colour3 = colour3Camper[index - start];
+            colour4 = colour4Camper[index - start];
+            break;
+        case 524:
+            colour3 = colour3Cement[index - start];
+            colour4 = colour4Cement[index - start];
+            break;
+        case 446:
+            colour3 = colour3Squalo[index - start];
+            colour4 = colour4Squalo[index - start];
+            break;
+        }
 	}
 }
 
